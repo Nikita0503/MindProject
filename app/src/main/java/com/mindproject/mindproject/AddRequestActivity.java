@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ public class AddRequestActivity extends AppCompatActivity {
     MaterialCalendarView datePicker;
 
     @BindView(R.id.timePicker)
-    TimePicker timePicker;
+    NumberPicker timePicker;
 
     @BindView(R.id.textViewDate)
     TextView textViewDate;
@@ -63,12 +64,7 @@ public class AddRequestActivity extends AppCompatActivity {
         if(timePicker.getVisibility()==View.GONE) {
             Calendar currentTime = Calendar.getInstance();
             int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-            int minute = currentTime.get(Calendar.MINUTE);
-            if(minute<10) {
-                textViewTime.setText(hour + ":0" + minute);
-            }else{
-                textViewTime.setText(hour + ":" + minute);
-            }
+            textViewTime.setText(hour + ":00");
             timePicker.setVisibility(View.VISIBLE);
         }else{
             timePicker.setVisibility(View.GONE);
@@ -107,14 +103,12 @@ public class AddRequestActivity extends AppCompatActivity {
                 }
             }
         });
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+        timePicker.setMinValue(0);
+        timePicker.setMaxValue(24);
+        timePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                if(minute<10) {
-                    textViewTime.setText(hourOfDay + ":0" + minute);
-                }else{
-                    textViewTime.setText(hourOfDay + ":" + minute);
-                }
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                textViewTime.setText(picker.getValue() + ":00");
             }
         });
         mAdapter = new PhotosAdapter(this);
