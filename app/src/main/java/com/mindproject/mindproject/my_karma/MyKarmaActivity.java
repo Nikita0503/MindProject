@@ -1,4 +1,4 @@
-package com.mindproject.mindproject;
+package com.mindproject.mindproject.my_karma;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,9 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.mindproject.mindproject.add_request.AddRequestActivity;
+import com.mindproject.mindproject.R;
+import com.mindproject.mindproject.edit_profile.EditProfileActivity;
 
 public class MyKarmaActivity extends AppCompatActivity {
     @OnClick(R.id.buttonEdit)

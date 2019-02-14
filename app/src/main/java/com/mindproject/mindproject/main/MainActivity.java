@@ -1,4 +1,4 @@
-package com.mindproject.mindproject;
+package com.mindproject.mindproject.main;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,15 +15,18 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mindproject.mindproject.data.EventData;
+import com.mindproject.mindproject.R;
+import com.mindproject.mindproject.data.EventDataInList;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import com.mindproject.mindproject.main.EventListAdapter;
+import com.mindproject.mindproject.my_karma.MyKarmaActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,33 +56,15 @@ public class MainActivity extends AppCompatActivity {
         mEventAdapter.addEvents(initData());
     }
 
-    private ArrayList<EventData> initData(){
+    private ArrayList<EventDataInList> initData(){
         Drawable drawable = getDrawable(R.drawable.ic_launcher_background);
-        ArrayList<EventData> events = new ArrayList<EventData>();
+        ArrayList<EventDataInList> events = new ArrayList<EventDataInList>();
         for (int i = 0; i < 10; i++){
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.HOUR_OF_DAY, i);
-            EventData data = new EventData("Event"+i, calendar.getTime(), drawable);
+            EventDataInList data = new EventDataInList("Event"+i, calendar.getTime(), drawable);
             events.add(data);
         }
         return events;
-    }
-
-    private void telephoneNumber(){
-        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        String mPhoneNumber = tMgr.getLine1Number();
-        String simID = tMgr.getSimSerialNumber();
-        Log.d("TAG", mPhoneNumber);
-        Log.d("TAG", simID);
     }
 }

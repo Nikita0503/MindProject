@@ -1,14 +1,12 @@
-package com.mindproject.mindproject;
+package com.mindproject.mindproject.edit_profile;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import java.io.IOException;
+import com.mindproject.mindproject.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

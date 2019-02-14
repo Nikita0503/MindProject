@@ -11,16 +11,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MyKarmaActivity" android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".EditProfileActivity" android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".AddRequestActivity" android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".my_karma.MyKarmaActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".edit_profile.EditProfileActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".add_request.AddRequestActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".support.SupportActivity"></activity>
     </application>
 
 </manifest>

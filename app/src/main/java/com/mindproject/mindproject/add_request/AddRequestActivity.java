@@ -1,27 +1,28 @@
-package com.mindproject.mindproject;
+package com.mindproject.mindproject.add_request;
 
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.mindproject.mindproject.R;
+import com.mindproject.mindproject.add_request.PhotosAdapter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +34,9 @@ import butterknife.OnClick;
 
 public class AddRequestActivity extends AppCompatActivity {
 
-    PhotosAdapter mAdapter;
+    public static final int MAKE_A_PHOTO = 0;
+    public static final int ADD_PHOTOS = 1;
+    private PhotosAdapter mAdapter;
 
     @BindView(R.id.datePicker)
     MaterialCalendarView datePicker;
@@ -73,15 +76,17 @@ public class AddRequestActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonAddPhotos)
     void onClickAddPhotos(){
-        /*Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, 0);*/
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+    }
+
+    @OnClick(R.id.buttonMakePhoto)
+    void onClickMakeAPhoto(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 0);
     }
 
     @Override
@@ -122,21 +127,41 @@ public class AddRequestActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         if(resultCode == RESULT_OK) {
-            ClipData clipData = imageReturnedIntent.getClipData();
-            if (clipData != null) {
-                for (int i = 0; i < clipData.getItemCount(); i++) {
+            if(requestCode==MAKE_A_PHOTO){
+                if (imageReturnedIntent == null) {
+                } else {
+                    Bundle bndl = imageReturnedIntent.getExtras();
+                    if (bndl != null) {
+                        Object obj = imageReturnedIntent.getExtras().get("data");
+                        if (obj instanceof Bitmap) {
+                            Bitmap bitmap = (Bitmap) obj;
+                            mAdapter.addPhotos(bitmap);
+                        }
+                    }
+                }
+            }
+            if(requestCode==ADD_PHOTOS) {
+                ClipData clipData = imageReturnedIntent.getClipData();
+                if (clipData != null) {
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        try {
+                            Uri uri = clipData.getItemAt(i).getUri();
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            mAdapter.addPhotos(bitmap);
+                        } catch (Exception c) {
+                            c.printStackTrace();
+                        }
+                    }
+                } else {
                     try {
-                        Uri uri = clipData.getItemAt(i).getUri();
-                        mAdapter.addPhotos(uri);
+                        Uri selectedImage = imageReturnedIntent.getData();
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                        mAdapter.addPhotos(bitmap);
                     } catch (Exception c) {
                         c.printStackTrace();
                     }
                 }
-            } else {
-                Uri selectedImage = imageReturnedIntent.getData();
-                mAdapter.addPhotos(selectedImage);
             }
         }
     }
-
 }

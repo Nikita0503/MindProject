@@ -1,6 +1,7 @@
-package com.mindproject.mindproject;
+package com.mindproject.mindproject.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mindproject.mindproject.data.EventData;
+import com.mindproject.mindproject.main.MainActivity;
+import com.mindproject.mindproject.R;
+import com.mindproject.mindproject.data.EventDataInList;
+import com.mindproject.mindproject.support.SupportActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,20 +30,20 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
     private SimpleDateFormat mDifferenceDateFormat;
     private SimpleDateFormat mEventDateFormat;
-    private ArrayList<EventData> mEvents;
+    private ArrayList<EventDataInList> mEvents;
     private MainActivity mActivity;
 
     public EventListAdapter(MainActivity activity) {
         mEventDateFormat = new SimpleDateFormat("d MMM H:mm", Locale.ENGLISH);
         mDifferenceDateFormat = new SimpleDateFormat("H:mm:ss", Locale.ENGLISH);
-        mEvents = new ArrayList<EventData>();
+        mEvents = new ArrayList<EventDataInList>();
         mActivity = activity;
         Timer mTimer = new Timer();
         AdapterTimerTask mMyTimerTask = new AdapterTimerTask();
         mTimer.schedule(mMyTimerTask, 0, 500);
     }
 
-    public void addEvents(ArrayList<EventData> events){
+    public void addEvents(ArrayList<EventDataInList> events){
         mEvents.addAll(events);
         notifyDataSetChanged();
     }
@@ -58,6 +62,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         holder.textViewTimer.setText(getTimeDifference(mEvents.get(position).eventDate));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity.getApplicationContext(), SupportActivity.class);
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override
