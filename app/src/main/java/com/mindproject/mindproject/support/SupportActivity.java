@@ -3,6 +3,7 @@ package com.mindproject.mindproject.support;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SupportActivity extends AppCompatActivity {
 
-    private int mSecondsRemaining;
+    private boolean isTouched;
 
     @BindView(R.id.textViewName)
     TextView textViewName;
@@ -67,6 +68,7 @@ public class SupportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isTouched = false;
         setContentView(R.layout.activity_support);
         ButterKnife.bind(this);
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
@@ -83,7 +85,8 @@ public class SupportActivity extends AppCompatActivity {
             public void onChronometerTick(Chronometer chronometer) {
                 long elapsedMillis = SystemClock.elapsedRealtime()
                         - chronometer.getBase();
-
+                Log.d("SEC", elapsedMillis+"");
+                progressBar.setProgress((int) elapsedMillis);
                 if (elapsedMillis > 0) {
                     String strElapsedMillis = "Прошло больше 5 секунд";
                     Toast.makeText(getApplicationContext(),
@@ -97,17 +100,79 @@ public class SupportActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
+
+        /*CountDownTimer cdt = new CountDownTimer(1 * 60 * 1000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                int total = (int) ((timePassed/ 60) * 100);
+                progressBar.setProgress(total);
+            }
+
+            public void onFinish() {
+                // DO something when 1 minute is up
+            }
+        }.start();*/
+
+
+
         buttonSupport.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN: // нажатие
-                        mSecondsRemaining = -5000;
                         chronometer.setBase(SystemClock.elapsedRealtime()+6000);
                         chronometer.start();
                         chronometer.setTextColor(Color.RED);
+                        isTouched = true;
 
-                        Observable.interval(50000,TimeUnit.MICROSECONDS, Schedulers.io())
+                        /*Observable.interval(1,TimeUnit.SECONDS, Schedulers.io())
+                                .take(100)
+                                .map(v -> 100 - v)
+                                .subscribe(new Observer<Long>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(Long value) {
+                                        if(isTouched){
+                                            progressBar.setProgress(Math.toIntExact(value));
+                                        }else{
+                                            onComplete();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        progressBar.setProgress(0);
+                                    }
+                                });*/
+                        /*countDownTimer = new CountDownTimer(10000, 100) {
+                            public void onTick(long millisUntilFinished) {
+                                progressBar.setProgress(Math.abs((int) millisUntilFinished / 100 - 100));
+                            }
+
+                            @Override
+                            public void onFinish() {
+
+                            }
+                        };*/
+
+
+                        /*Observable.interval(50000,TimeUnit.MICROSECONDS, Schedulers.io())
                                 .take(100)
                                 .subscribe(new Observer<Long>() {
                                     @Override
@@ -118,7 +183,11 @@ public class SupportActivity extends AppCompatActivity {
                                     @Override
                                     public void onNext(Long value) {
                                         Log.d("TAG2", value+"");
-                                        progressBar.setProgress(Math.toIntExact(value));
+                                        if(isTouched) {
+                                            progressBar.setProgress(Math.toIntExact(value));
+                                        }else{
+                                            onComplete();
+                                        }
                                     }
 
                                     @Override
@@ -128,9 +197,9 @@ public class SupportActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onComplete() {
-
+                                        progressBar.setProgress(0);
                                     }
-                                });
+                                });*/
 
 
                         Log.d("TAG", "DOWN");
@@ -142,10 +211,12 @@ public class SupportActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP: // отпускание
                         Log.d("TAG", "UP");
                         chronometerStop();
+                        isTouched = false;
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         Log.d("TAG", "CANCEL");
                         chronometerStop();
+                        isTouched = false;
                         break;
                 }
                 return true;
@@ -157,6 +228,11 @@ public class SupportActivity extends AppCompatActivity {
         chronometer.stop();
         chronometer.setTextColor(Color.GRAY);
         chronometer.setText("00:05");
+        progressBar.setProgress(-6000);
     }
+
+
+
+
 
 }
