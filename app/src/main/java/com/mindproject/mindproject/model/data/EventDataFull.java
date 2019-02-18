@@ -1,4 +1,4 @@
-package com.mindproject.mindproject.data;
+package com.mindproject.mindproject.model.data;
 
 import android.graphics.Bitmap;
 

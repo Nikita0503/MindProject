@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mindproject.mindproject.main.MainActivity;
 import com.mindproject.mindproject.R;
-import com.mindproject.mindproject.data.EventDataInList;
+import com.mindproject.mindproject.model.data.EventDataInList;
 import com.mindproject.mindproject.support.SupportActivity;
 
 import java.text.SimpleDateFormat;

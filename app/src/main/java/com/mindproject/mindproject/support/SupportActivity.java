@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 
 import org.threeten.bp.LocalDate;
@@ -37,7 +38,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class SupportActivity extends AppCompatActivity {
+public class SupportActivity extends AppCompatActivity implements BaseContract.BaseView{
 
     private boolean isTouched;
 
