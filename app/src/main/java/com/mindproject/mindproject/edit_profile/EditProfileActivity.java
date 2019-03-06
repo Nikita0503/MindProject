@@ -16,6 +16,8 @@ import butterknife.OnClick;
 public class EditProfileActivity extends AppCompatActivity implements BaseContract.BaseView {
 
     static final int GALLERY_REQUEST = 1;
+    private String mDeviceId;
+    private String mToken;
 
     @BindView(R.id.imageViewUser)
     ImageView imageViewUser;
@@ -31,6 +33,9 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        mDeviceId = intent.getStringExtra("id");
+        mToken = intent.getStringExtra("token");
     }
 
     @Override

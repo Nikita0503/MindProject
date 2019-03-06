@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mindproject.mindproject.MainActivity">
+    tools:context="com.mindproject.mindproject.main.MainActivity">
 
     <TextView
         android:id="@+id/textViewKarmaPoint"

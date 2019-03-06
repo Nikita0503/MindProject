@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mindproject.mindproject.AddRequestActivity">
+    tools:context="com.mindproject.mindproject.add_request.AddRequestActivity">
 
     <ScrollView
         android:id="@+id/scroll"

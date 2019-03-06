@@ -10,7 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mindproject.mindproject.R;
-import com.mindproject.mindproject.model.data.EventDataInList;
+import com.mindproject.mindproject.model.data.EventData;
+import com.mindproject.mindproject.model.data.EventDataForEventList;
 import com.mindproject.mindproject.support.SupportActivity;
 
 import java.text.SimpleDateFormat;
@@ -29,20 +30,20 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
     private SimpleDateFormat mDifferenceDateFormat;
     private SimpleDateFormat mEventDateFormat;
-    private ArrayList<EventDataInList> mEvents;
+    private ArrayList<EventDataForEventList> mEvents;
     private MainActivity mActivity;
 
     public EventListAdapter(MainActivity activity) {
         mEventDateFormat = new SimpleDateFormat("d MMM H:mm", Locale.ENGLISH);
         mDifferenceDateFormat = new SimpleDateFormat("H:mm:ss", Locale.ENGLISH);
-        mEvents = new ArrayList<EventDataInList>();
+        mEvents = new ArrayList<EventDataForEventList>();
         mActivity = activity;
         Timer mTimer = new Timer();
         AdapterTimerTask mMyTimerTask = new AdapterTimerTask();
         mTimer.schedule(mMyTimerTask, 0, 500);
     }
 
-    public void addEvents(ArrayList<EventDataInList> events){
+    public void addEvents(ArrayList<EventDataForEventList> events){
         mEvents.addAll(events);
         notifyDataSetChanged();
     }
@@ -57,7 +58,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textViewEventDescription.setText(mEvents.get(position).description);
+        holder.textViewEventTitle.setText(mEvents.get(position).title);
         holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         holder.textViewTimer.setText(getTimeDifference(mEvents.get(position).eventDate));
@@ -77,7 +78,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textViewEventDescription;
+        TextView textViewEventTitle;
         TextView textViewActivationTime;
         TextView textViewTimer;
         ImageView imageViewEvent;
@@ -85,7 +86,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         public ViewHolder(View itemView) {
             super(itemView);
             imageViewEvent = (ImageView) itemView.findViewById(R.id.imageViewEvent);
-            textViewEventDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
+            textViewEventTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
             textViewActivationTime = (TextView) itemView.findViewById(R.id.textViewActivationTime);
             textViewTimer = (TextView) itemView.findViewById(R.id.textViewTimerToEvent);
         }

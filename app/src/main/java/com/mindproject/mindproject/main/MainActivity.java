@@ -13,7 +13,8 @@ import android.widget.Toast;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
-import com.mindproject.mindproject.model.data.EventDataInList;
+import com.mindproject.mindproject.model.data.EventData;
+import com.mindproject.mindproject.model.data.EventDataForEventList;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,11 +23,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.my_karma.MyKarmaActivity;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
+    private String mDeviceId;
+    private String mToken;
     private MainPresenter mPresenter;
     private EventListAdapter mEventAdapter;
 
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     @OnClick(R.id.textViewKarmaPoint)
     void onClick(){
         Intent intent = new Intent(getApplicationContext(), MyKarmaActivity.class);
+        intent.putExtra("id", mDeviceId);
+        intent.putExtra("token", mToken);
         startActivity(intent);
         Toast.makeText(getApplicationContext(), "Welcome to karma activity", Toast.LENGTH_SHORT).show();
     }
@@ -50,27 +54,37 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         ButterKnife.bind(this);
         mPresenter = new MainPresenter(this);
         mPresenter.onStart();
-        String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
+        mDeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        Log.d("DEVICE_ID", android_id);
+        Log.d("DEVICE_ID", mDeviceId);
 
         mEventAdapter = new EventListAdapter(this);
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerViewEvents.setAdapter(mEventAdapter);
-        mEventAdapter.addEvents(initData());
-        mPresenter.fetchToken(android_id);
+        //mEventAdapter.addEvents(initData());
+        mPresenter.fetchToken(mDeviceId);
     }
 
-    private ArrayList<EventDataInList> initData(){
+    public void setToken(String token){
+        mToken = token;
+        mPresenter.fetchEvents(mToken);
+        Log.d("TOKEN", mToken);
+    }
+
+    private ArrayList<EventDataForEventList> initData(){
         Drawable drawable = getDrawable(R.drawable.ic_launcher_background);
-        ArrayList<EventDataInList> events = new ArrayList<EventDataInList>();
+        ArrayList<EventDataForEventList> events = new ArrayList<EventDataForEventList>();
         for (int i = 0; i < 10; i++){
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.HOUR_OF_DAY, i);
-            EventDataInList data = new EventDataInList("Event"+i, calendar.getTime(), drawable);
+            EventDataForEventList data = new EventDataForEventList("Event"+i, calendar.getTime(), drawable);
             events.add(data);
         }
         return events;
+    }
+
+    public void addEventsToList(ArrayList<EventDataForEventList> events){
+        mEventAdapter.addEvents(events);
     }
 
 

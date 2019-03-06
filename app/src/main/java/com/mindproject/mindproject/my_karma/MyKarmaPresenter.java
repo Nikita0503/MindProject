@@ -22,6 +22,10 @@ public class MyKarmaPresenter implements BaseContract.BasePresenter{
         mDisposable = new CompositeDisposable();
     }
 
+    public void fetchUserInfo(String deviceId){
+
+    }
+
     @Override
     public void onStop() {
         mDisposable.clear();
