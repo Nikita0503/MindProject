@@ -65,6 +65,14 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mPresenter.fetchToken(mDeviceId);
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        if(mToken!=null){
+            mPresenter.fetchEvents(mToken);
+        }
+    }
+
     public void setToken(String token){
         mToken = token;
         mPresenter.fetchEvents(mToken);
@@ -84,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     }
 
     public void addEventsToList(ArrayList<EventDataForEventList> events){
-        mEventAdapter.addEvents(events);
+        mEventAdapter.setEvents(events);
     }
 
 

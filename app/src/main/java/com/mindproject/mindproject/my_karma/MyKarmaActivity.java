@@ -30,6 +30,7 @@ public class MyKarmaActivity extends AppCompatActivity {
     @OnClick(R.id.buttonSend)
     void onClickAdd(){
         Intent intent = new Intent(getApplicationContext(), AddRequestActivity.class);
+        intent.putExtra("token", mToken);
         startActivity(intent);
         Toast.makeText(getApplicationContext(), "Welcome to send activity", Toast.LENGTH_SHORT).show();
     }
@@ -42,8 +43,8 @@ public class MyKarmaActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mDeviceId = intent.getStringExtra("id");
         mToken = intent.getStringExtra("token");
-        Log.d("KARMA_DATA", mDeviceId);
-        Log.d("KARMA_DATA", mToken);
+        Log.d("deviceId", mDeviceId);
+        Log.d("token", mToken);
         mPresenter = new MyKarmaPresenter(this);
     }
 }

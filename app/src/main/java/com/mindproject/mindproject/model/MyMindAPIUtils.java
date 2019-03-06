@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.AccessToken;
+import com.mindproject.mindproject.model.data.AddRequestData;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 import com.mindproject.mindproject.model.data.UserData;
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -67,6 +69,12 @@ public class MyMindAPIUtils {
                 e.onComplete();
             };
         });
+    }
+
+    public Completable sendRequestData(String token, AddRequestData data){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.sendRequestData("Bearer " + token, data);
     }
 
 

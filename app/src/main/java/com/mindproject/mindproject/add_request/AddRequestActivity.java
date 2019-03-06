@@ -31,11 +31,14 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 
 public class AddRequestActivity extends AppCompatActivity {
 
     public static final int MAKE_A_PHOTO = 0;
     public static final int ADD_PHOTOS = 1;
+    private String mToken;
+    private AddRequestPresenter mPresenter;
     private PhotosAdapter mAdapter;
 
     @BindView(R.id.datePicker)
@@ -49,6 +52,12 @@ public class AddRequestActivity extends AppCompatActivity {
 
     @BindView(R.id.textViewTime)
     TextView textViewTime;
+
+    @BindView(R.id.extended_edit_text_description)
+    ExtendedEditText editTextDescription;
+
+    @BindView(R.id.extended_edit_text_name)
+    ExtendedEditText editTextName;
 
     @BindView(R.id.recycler_view_photos)
     RecyclerView recyclerViewPhotos;
@@ -89,11 +98,26 @@ public class AddRequestActivity extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
+    @OnClick(R.id.buttonSend)
+    void onClickSendRequest(){
+        String description = editTextDescription.getText().toString();
+        String title = editTextDescription.getText().toString();
+        String date = textViewDate.getText().toString();
+        String time = textViewTime.getText().toString();
+        Bitmap photo = mAdapter.getPhotos().get(0);
+        mPresenter.generateData(mToken, title, description, date, time, photo);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_request);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        mToken = intent.getStringExtra("token");
+        Log.d("token", mToken);
+        mPresenter = new AddRequestPresenter(this);
+        mPresenter.onStart();
         datePicker.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
@@ -163,5 +187,10 @@ public class AddRequestActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
     }
 }

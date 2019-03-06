@@ -1,12 +1,14 @@
 package com.mindproject.mindproject.model;
 
 import com.mindproject.mindproject.model.data.AccessToken;
+import com.mindproject.mindproject.model.data.AddRequestData;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.model.data.UserDataAuthorization;
 
 import java.util.ArrayList;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -23,4 +25,7 @@ public interface APIService {
 
     @GET("request")
     Single<ArrayList<EventData>> getEvents(@Header("Authorization") String header);
+
+    @POST("request")
+    Completable sendRequestData(@Header("Authorization") String header, @Body AddRequestData data);
 }

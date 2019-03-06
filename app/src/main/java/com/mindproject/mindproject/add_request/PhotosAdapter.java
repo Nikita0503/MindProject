@@ -34,6 +34,10 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public ArrayList<Bitmap> getPhotos(){
+        return mPhotoList;
+    }
+
     @Override
     public PhotosAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();

@@ -43,7 +43,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         mTimer.schedule(mMyTimerTask, 0, 500);
     }
 
-    public void addEvents(ArrayList<EventDataForEventList> events){
+    public void setEvents(ArrayList<EventDataForEventList> events){
+        mEvents.clear();
         mEvents.addAll(events);
         notifyDataSetChanged();
     }
