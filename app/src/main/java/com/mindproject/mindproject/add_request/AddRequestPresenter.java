@@ -63,7 +63,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                     @Override
                     public void onComplete() {
                         Toast.makeText(mActivity.getApplicationContext(), "Event has been created!", Toast.LENGTH_SHORT).show();
-
+                        mActivity.finish();
                     }
 
                     @Override

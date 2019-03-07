@@ -1,18 +1,17 @@
 package com.mindproject.mindproject.support;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.CountDownTimer;
-import android.os.SystemClock;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
+import android.os.SystemClock;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Chronometer;
@@ -20,27 +19,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.EventData;
 
-import org.threeten.bp.LocalDate;
-
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
-public class SupportActivity extends AppCompatActivity implements BaseContract.BaseView{
+/**
+ * Created by Nikita on 07.03.2019.
+ */
+
+public class SupportFragment extends Fragment {
+
+    EventData mEventData;
 
     private boolean isTouched;
 
@@ -69,18 +62,25 @@ public class SupportActivity extends AppCompatActivity implements BaseContract.B
     ProgressBar progressBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //mPresenter = new CalendarPresenter(this);
+        //mPresenter.onStart();
         isTouched = false;
-        setContentView(R.layout.activity_support);
-        ButterKnife.bind(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_support, container, false);
+        Toast.makeText(getContext(), mEventData.title, Toast.LENGTH_SHORT).show();
+        ButterKnife.bind(this, view);
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_user));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_send));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_archive));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_archive));
-        PhotoPagerAdapter photoPagerAdapter = new PhotoPagerAdapter(getApplicationContext(), bitmaps);
+        PhotoPagerAdapter photoPagerAdapter = new PhotoPagerAdapter(getContext(), bitmaps);
         viewPagerPhotos.setAdapter(photoPagerAdapter);
         chronometer.setCountDown(true);
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
@@ -92,37 +92,13 @@ public class SupportActivity extends AppCompatActivity implements BaseContract.B
                 progressBar.setProgress((int) elapsedMillis);
                 if (elapsedMillis > 0) {
                     String strElapsedMillis = "Прошло больше 5 секунд";
-                    Toast.makeText(getApplicationContext(),
+                    Toast.makeText(getContext(),
                             strElapsedMillis, Toast.LENGTH_SHORT)
                             .show();
                     chronometerStop();
                 }
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-        /*CountDownTimer cdt = new CountDownTimer(1 * 60 * 1000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                int total = (int) ((timePassed/ 60) * 100);
-                progressBar.setProgress(total);
-            }
-
-            public void onFinish() {
-                // DO something when 1 minute is up
-            }
-        }.start();*/
-
-
 
         buttonSupport.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -225,6 +201,9 @@ public class SupportActivity extends AppCompatActivity implements BaseContract.B
                 return true;
             }
         });
+
+
+        return view;
     }
 
     private void chronometerStop(){
@@ -234,9 +213,7 @@ public class SupportActivity extends AppCompatActivity implements BaseContract.B
         progressBar.setProgress(-6000);
     }
 
-
-    @Override
-    public void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    public void setEventData(EventData eventData){
+        mEventData = eventData;
     }
 }

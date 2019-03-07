@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mEventAdapter.setEvents(events);
     }
 
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onStop(){

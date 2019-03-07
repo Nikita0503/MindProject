@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
@@ -48,5 +49,10 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
                     imageViewUser.setImageURI(selectedImage);
                 }
         }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

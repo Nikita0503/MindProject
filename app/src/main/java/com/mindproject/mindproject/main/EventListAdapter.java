@@ -2,6 +2,8 @@ package com.mindproject.mindproject.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 import com.mindproject.mindproject.support.SupportActivity;
+import com.mindproject.mindproject.support.SupportFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,8 +69,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity.getApplicationContext(), SupportActivity.class);
-                mActivity.startActivity(intent);
+                SupportFragment supportFragment = new SupportFragment();
+                supportFragment.setEventData(mEvents.get(position).eventData);
+                FragmentManager manager = mActivity.getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.fragment_container, supportFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
     }

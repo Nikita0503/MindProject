@@ -6,7 +6,7 @@ package com.mindproject.mindproject;
 
 public interface BaseContract {
     interface BaseView{
-
+        void showMessage(String message);
     }
 
     interface BasePresenter{

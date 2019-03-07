@@ -15,7 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.add_request.PhotosAdapter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -33,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 
-public class AddRequestActivity extends AppCompatActivity {
+public class AddRequestActivity extends AppCompatActivity implements BaseContract.BaseView{
 
     public static final int MAKE_A_PHOTO = 0;
     public static final int ADD_PHOTOS = 1;
@@ -189,6 +191,11 @@ public class AddRequestActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
