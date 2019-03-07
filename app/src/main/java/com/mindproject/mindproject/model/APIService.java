@@ -7,6 +7,7 @@ import com.mindproject.mindproject.model.data.AddRequestData;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.model.data.UserDataAuthorization;
+import com.mindproject.mindproject.model.data.Vote;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -39,4 +40,7 @@ public interface APIService {
     @FormUrlEncoded
     @POST("request")
     Completable sendRequestData(@Header("Authorization") String header, @Field("title") String title, @Field("description") String description, @Field("start_time") String start_time);
+
+    @POST("vote")
+    Completable voteForEvent(@Header("Authorization") String header, @Body Vote id);
 }

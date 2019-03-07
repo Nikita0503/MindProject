@@ -78,7 +78,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                                 String errorMessage = responseError.getString("message");
                                 String errorCode = responseError.getString("error_code");
                                 Log.d("Error", errorCode + " " + errorMessage);
-                                Toast.makeText(mActivity.getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                mActivity.showMessage(errorMessage);
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
                             } catch (IOException e1) {

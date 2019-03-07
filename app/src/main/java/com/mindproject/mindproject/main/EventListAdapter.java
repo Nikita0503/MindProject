@@ -31,12 +31,13 @@ import java.util.TimerTask;
 
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
+    private String mToken;
     private SimpleDateFormat mDifferenceDateFormat;
     private SimpleDateFormat mEventDateFormat;
     private ArrayList<EventDataForEventList> mEvents;
     private MainActivity mActivity;
 
-    public EventListAdapter(MainActivity activity) {
+    public EventListAdapter(MainActivity activity, String token) {
         mEventDateFormat = new SimpleDateFormat("d MMM H:mm", Locale.ENGLISH);
         mDifferenceDateFormat = new SimpleDateFormat("H:mm:ss", Locale.ENGLISH);
         mEvents = new ArrayList<EventDataForEventList>();
@@ -44,6 +45,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         Timer mTimer = new Timer();
         AdapterTimerTask mMyTimerTask = new AdapterTimerTask();
         mTimer.schedule(mMyTimerTask, 0, 500);
+        mToken = token;
     }
 
     public void setEvents(ArrayList<EventDataForEventList> events){
@@ -70,6 +72,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             @Override
             public void onClick(View v) {
                 SupportFragment supportFragment = new SupportFragment();
+                supportFragment.setToken(mToken);
                 supportFragment.setEventData(mEvents.get(position).eventData);
                 FragmentManager manager = mActivity.getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();

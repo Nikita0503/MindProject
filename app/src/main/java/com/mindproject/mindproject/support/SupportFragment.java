@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.EventData;
 
@@ -31,14 +32,15 @@ import butterknife.ButterKnife;
  * Created by Nikita on 07.03.2019.
  */
 
-public class SupportFragment extends Fragment {
-
-    EventData mEventData;
+public class SupportFragment extends Fragment implements BaseContract.BaseView {
 
     private boolean isTouched;
+    private String mToken;
+    private EventData mEventData;
+    private SupportPresenter mPresenter;
 
     @BindView(R.id.textViewName)
-    TextView textViewName;
+    TextView textViewTitle;
 
     @BindView(R.id.checkBox)
     CheckBox checkBox;
@@ -67,6 +69,8 @@ public class SupportFragment extends Fragment {
         //mPresenter = new CalendarPresenter(this);
         //mPresenter.onStart();
         isTouched = false;
+        mPresenter = new SupportPresenter(this);
+        mPresenter.onStart();
     }
 
     @Override
@@ -74,14 +78,7 @@ public class SupportFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_support, container, false);
         Toast.makeText(getContext(), mEventData.title, Toast.LENGTH_SHORT).show();
         ButterKnife.bind(this, view);
-        ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_user));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_send));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_archive));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_archive));
-        PhotoPagerAdapter photoPagerAdapter = new PhotoPagerAdapter(getContext(), bitmaps);
-        viewPagerPhotos.setAdapter(photoPagerAdapter);
+        mPresenter.downloadPhotos(mEventData.photos);
         chronometer.setCountDown(true);
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
@@ -92,9 +89,10 @@ public class SupportFragment extends Fragment {
                 progressBar.setProgress((int) elapsedMillis);
                 if (elapsedMillis > 0) {
                     String strElapsedMillis = "Прошло больше 5 секунд";
-                    Toast.makeText(getContext(),
-                            strElapsedMillis, Toast.LENGTH_SHORT)
-                            .show();
+                    //Toast.makeText(getContext(),
+                    //        strElapsedMillis, Toast.LENGTH_SHORT)
+                    //        .show();
+                    mPresenter.voteForEvent(mToken, mEventData.id);
                     chronometerStop();
                 }
             }
@@ -110,90 +108,14 @@ public class SupportFragment extends Fragment {
                         chronometer.start();
                         chronometer.setTextColor(Color.RED);
                         isTouched = true;
-
-                        /*Observable.interval(1,TimeUnit.SECONDS, Schedulers.io())
-                                .take(100)
-                                .map(v -> 100 - v)
-                                .subscribe(new Observer<Long>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(Long value) {
-                                        if(isTouched){
-                                            progressBar.setProgress(Math.toIntExact(value));
-                                        }else{
-                                            onComplete();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-                                        progressBar.setProgress(0);
-                                    }
-                                });*/
-                        /*countDownTimer = new CountDownTimer(10000, 100) {
-                            public void onTick(long millisUntilFinished) {
-                                progressBar.setProgress(Math.abs((int) millisUntilFinished / 100 - 100));
-                            }
-
-                            @Override
-                            public void onFinish() {
-
-                            }
-                        };*/
-
-
-                        /*Observable.interval(50000,TimeUnit.MICROSECONDS, Schedulers.io())
-                                .take(100)
-                                .subscribe(new Observer<Long>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(Long value) {
-                                        Log.d("TAG2", value+"");
-                                        if(isTouched) {
-                                            progressBar.setProgress(Math.toIntExact(value));
-                                        }else{
-                                            onComplete();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-                                        progressBar.setProgress(0);
-                                    }
-                                });*/
-
-
-                        Log.d("TAG", "DOWN");
                         break;
                     case MotionEvent.ACTION_MOVE: // движение
-                        Log.d("TAG", "MOVE");
-                        //progressBar.setProgress((int) mSecondsRemaining);
                         break;
                     case MotionEvent.ACTION_UP: // отпускание
-                        Log.d("TAG", "UP");
                         chronometerStop();
                         isTouched = false;
                         break;
                     case MotionEvent.ACTION_CANCEL:
-                        Log.d("TAG", "CANCEL");
                         chronometerStop();
                         isTouched = false;
                         break;
@@ -201,9 +123,18 @@ public class SupportFragment extends Fragment {
                 return true;
             }
         });
-
-
         return view;
+    }
+
+    public void showData(ArrayList<Bitmap> photos){
+        if(photos.size()==0){
+            viewPagerPhotos.setVisibility(View.GONE);
+        }else {
+            PhotoPagerAdapter photoPagerAdapter = new PhotoPagerAdapter(getContext(), photos);
+            viewPagerPhotos.setAdapter(photoPagerAdapter);
+        }
+        textViewTitle.setText(mEventData.title);
+        textViewDescription.setText(mEventData.description);
     }
 
     private void chronometerStop(){
@@ -215,5 +146,14 @@ public class SupportFragment extends Fragment {
 
     public void setEventData(EventData eventData){
         mEventData = eventData;
+    }
+
+    public void setToken(String token){
+        mToken = token;
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

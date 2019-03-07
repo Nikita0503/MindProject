@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 Settings.Secure.ANDROID_ID);
         Log.d("DEVICE_ID", mDeviceId);
 
-        mEventAdapter = new EventListAdapter(this);
-        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerViewEvents.setAdapter(mEventAdapter);
+
         //mEventAdapter.addEvents(initData());
         mPresenter.fetchToken(mDeviceId);
     }
@@ -77,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     public void setToken(String token){
         mToken = token;
         mPresenter.fetchEvents(mToken);
-        Log.d("TOKEN", mToken);
+        mEventAdapter = new EventListAdapter(this, mToken);
+        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerViewEvents.setAdapter(mEventAdapter);
     }
 
     private ArrayList<EventDataForEventList> initData(){

@@ -12,6 +12,7 @@ import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.model.data.UserDataAuthorization;
+import com.mindproject.mindproject.model.data.Vote;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -84,6 +85,11 @@ public class MyMindAPIUtils {
         return apiService.sendRequestData("Bearer " + token, data.title, data.description, data.start_time);
     }
 
+    public Completable voteForEvent(String token, int id){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.voteForEvent("Bearer " + token, new Vote(id));
+    }
 
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
