@@ -101,11 +101,13 @@ public class AddRequestActivity extends AppCompatActivity {
     @OnClick(R.id.buttonSend)
     void onClickSendRequest(){
         String description = editTextDescription.getText().toString();
-        String title = editTextDescription.getText().toString();
+        String title = editTextName.getText().toString();
+        Log.d("description", description);
+        Log.d("title", title);
         String date = textViewDate.getText().toString();
         String time = textViewTime.getText().toString();
-        Bitmap photo = mAdapter.getPhotos().get(0);
-        mPresenter.generateData(mToken, title, description, date, time, photo);
+        //Bitmap photo = mAdapter.getPhotos().get(0);
+        mPresenter.generateData(mToken, title, description, date, time);
     }
 
     @Override

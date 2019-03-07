@@ -17,12 +17,17 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -74,7 +79,9 @@ public class MyMindAPIUtils {
     public Completable sendRequestData(String token, AddRequestData data){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
-        return apiService.sendRequestData("Bearer " + token, data);
+        Map<String, AddRequestData> map = new HashMap<String, AddRequestData>();
+        map.put("data", data);
+        return apiService.sendRequestData("Bearer " + token, data.title, data.description, data.start_time);
     }
 
 

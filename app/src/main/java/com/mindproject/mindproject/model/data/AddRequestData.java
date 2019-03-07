@@ -15,11 +15,11 @@ public class AddRequestData {
 
     @SerializedName("start_time")
     @Expose
-    String start_time;
+    public String start_time;
 
     @SerializedName("title")
     @Expose
-    String title;
+    public String title;
 
     @SerializedName("description")
     @Expose
@@ -27,12 +27,11 @@ public class AddRequestData {
 
     @SerializedName("photo")
     @Expose
-    public File file;
-
-    public AddRequestData(String start_time, String title, String description, File file) {
+    public File photo;
+    public AddRequestData(String start_time, String title, String description) {
         this.start_time = start_time;
         this.title = title;
         this.description = description;
-        this.file = file;
+        this.photo = photo;
     }
 }
