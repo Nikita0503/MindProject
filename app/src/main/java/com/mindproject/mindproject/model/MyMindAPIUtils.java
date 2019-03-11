@@ -1,13 +1,19 @@
 package com.mindproject.mindproject.model;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.AccessToken;
 import com.mindproject.mindproject.model.data.AddRequestData;
+import com.mindproject.mindproject.model.data.ChangeUsernameAndPhone;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 import com.mindproject.mindproject.model.data.UserData;
@@ -15,6 +21,7 @@ import com.mindproject.mindproject.model.data.UserDataAuthorization;
 import com.mindproject.mindproject.model.data.Vote;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +47,7 @@ public class MyMindAPIUtils {
 
     public static final String BASE_URL = "http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com/api/v1/";
 
-    public Single<AccessToken> getToken(String deviceId){
+    public Single<UserData> getToken(String deviceId){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
         return apiService.getToken(new UserDataAuthorization(deviceId));
@@ -85,11 +92,33 @@ public class MyMindAPIUtils {
         return apiService.sendRequestData("Bearer " + token, data.title, data.description, data.start_time);
     }
 
-    public Completable voteForEvent(String token, int id){
+    public Completable voteForEvent(String token, Vote vote){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
-        return apiService.voteForEvent("Bearer " + token, new Vote(id));
+        return apiService.voteForEvent("Bearer " + token, vote);
     }
+
+    public Completable changeUsernameAndPhone(String token, ChangeUsernameAndPhone data){
+        Log.d("sss", token);
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.changeUsernameAndPhone("Bearer " + token, data);
+    }
+
+    public Completable changeAvatar(String token, String path) {
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        File file = new File(path);
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+// MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
+        return apiService.changeAvatar("Bearer " + token, body);
+    }
+
+
 
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()

@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
+
 import com.mindproject.mindproject.add_request.AddRequestActivity;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.edit_profile.EditProfileActivity;

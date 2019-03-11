@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     @BindView(R.id.textViewKarmaPoint)
     TextView textViewKarmaPoint;
-
     @BindView(R.id.recyclerViewEvents)
     RecyclerView recyclerViewEvents;
 
@@ -58,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mDeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         Log.d("DEVICE_ID", mDeviceId);
-
-
-        //mEventAdapter.addEvents(initData());
         mPresenter.fetchToken(mDeviceId);
     }
 

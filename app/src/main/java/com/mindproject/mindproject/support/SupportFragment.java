@@ -79,7 +79,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
         Toast.makeText(getContext(), mEventData.title, Toast.LENGTH_SHORT).show();
         ButterKnife.bind(this, view);
         mPresenter.downloadPhotos(mEventData.photos);
-        chronometer.setCountDown(true);
+
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {

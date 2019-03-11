@@ -46,25 +46,18 @@ public class SupportActivity extends AppCompatActivity implements BaseContract.B
 
     @BindView(R.id.textViewName)
     TextView textViewName;
-
     @BindView(R.id.checkBox)
     CheckBox checkBox;
-
     @BindView(R.id.viewPager)
     ViewPager viewPagerPhotos;
-
     @BindView(R.id.textViewDescription)
     TextView textViewDescription;
-
     @BindView(R.id.textViewTimer)
     Chronometer chronometer;
-
     @BindView(R.id.buttonSendToFriend)
     Button buttonSendToFriend;
-
     @BindView(R.id.buttonSupport)
     Button buttonSupport;
-
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 

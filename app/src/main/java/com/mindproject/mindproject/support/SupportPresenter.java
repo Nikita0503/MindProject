@@ -10,6 +10,7 @@ import com.mindproject.mindproject.model.MyMindAPIUtils;
 import com.mindproject.mindproject.model.PhotoDownloader;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.Photo;
+import com.mindproject.mindproject.model.data.Vote;
 import com.mindproject.mindproject.my_karma.MyKarmaActivity;
 
 import org.json.JSONException;
@@ -74,7 +75,7 @@ public class SupportPresenter implements BaseContract.BasePresenter {
 
     public void voteForEvent(String token, int id) {
         //Log.d("TOKEN", token);
-        Disposable vote = mAPIUtils.voteForEvent(token, id)
+        Disposable vote = mAPIUtils.voteForEvent(token, new Vote(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableCompletableObserver() {

@@ -42,7 +42,6 @@ public class MainPresenter implements BaseContract.BasePresenter {
 
     public MainPresenter(MainActivity activity){
         mActivity = activity;
-
     }
 
     @Override
@@ -55,18 +54,16 @@ public class MainPresenter implements BaseContract.BasePresenter {
         Disposable tokenDisposable = mAPIUtils.getToken(deviceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<AccessToken>() {
+                .subscribeWith(new DisposableSingleObserver<UserData>() {
                     @Override
-                    public void onSuccess(AccessToken data) {
-                        //Toast.makeText(mActivity.getApplicationContext(), data.accessToken, Toast.LENGTH_SHORT).show();
+                    public void onSuccess(UserData data) {
                         Log.d("USER_DATA", data.accessToken);
                         mActivity.setToken(data.accessToken);
-                        /*Log.d("USER_DATA", data.username);
-                        Log.d("USER_DATA", data.avatar.toString());
-                        Log.d("USER_DATA", String.valueOf(data.carma));
-                        Log.d("USER_DATA", data.phone);
-                        Log.d("USER_DATA", data.accessToken);*/
-
+                        //Log.d("USER_DATA", data.username);
+                        //Log.d("USER_DATA", data.avatar.toString());
+                        //Log.d("USER_DATA", String.valueOf(data.karma));
+                        //Log.d("USER_DATA", data.phone);
+                        //Log.d("USER_DATA", data.accessToken);
                     }
 
                     @Override

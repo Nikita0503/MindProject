@@ -45,22 +45,16 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
 
     @BindView(R.id.datePicker)
     MaterialCalendarView datePicker;
-
     @BindView(R.id.timePicker)
     NumberPicker timePicker;
-
     @BindView(R.id.textViewDate)
     TextView textViewDate;
-
     @BindView(R.id.textViewTime)
     TextView textViewTime;
-
     @BindView(R.id.extended_edit_text_description)
     ExtendedEditText editTextDescription;
-
     @BindView(R.id.extended_edit_text_name)
     ExtendedEditText editTextName;
-
     @BindView(R.id.recycler_view_photos)
     RecyclerView recyclerViewPhotos;
 
@@ -201,5 +195,6 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     @Override
     protected void onStop(){
         super.onStop();
+        mPresenter.onStop();
     }
 }
