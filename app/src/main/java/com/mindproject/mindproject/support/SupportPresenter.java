@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mindproject.mindproject.BaseContract;
+import com.mindproject.mindproject.main.MainActivity;
 import com.mindproject.mindproject.model.MyMindAPIUtils;
 import com.mindproject.mindproject.model.PhotoDownloader;
 import com.mindproject.mindproject.model.data.EventData;
@@ -82,6 +83,8 @@ public class SupportPresenter implements BaseContract.BasePresenter {
                     @Override
                     public void onComplete() {
                         mFragment.showMessage("Voted successfully!");
+                        MainActivity activity = (MainActivity) mFragment.getActivity();
+                        activity.updateKarmaPoints();
                     }
 
                     @Override

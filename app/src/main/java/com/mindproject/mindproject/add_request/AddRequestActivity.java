@@ -26,6 +26,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -36,10 +37,11 @@ import butterknife.OnClick;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 
 public class AddRequestActivity extends AppCompatActivity implements BaseContract.BaseView{
-
+    public static final int GALLERY_REQUEST = 1;
     public static final int MAKE_A_PHOTO = 0;
     public static final int ADD_PHOTOS = 1;
     private String mToken;
+    private ArrayList<Uri> mUriList;
     private AddRequestPresenter mPresenter;
     private PhotosAdapter mAdapter;
 
@@ -81,11 +83,14 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
 
     @OnClick(R.id.buttonAddPhotos)
     void onClickAddPhotos(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+        //Intent intent = new Intent();
+        //intent.setType("image/*");
+        //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        //intent.setAction(Intent.ACTION_GET_CONTENT);
+        //startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
     }
 
     @OnClick(R.id.buttonMakePhoto)
@@ -103,7 +108,7 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
         String date = textViewDate.getText().toString();
         String time = textViewTime.getText().toString();
         //Bitmap photo = mAdapter.getPhotos().get(0);
-        mPresenter.generateData(mToken, title, description, date, time);
+        mPresenter.generateData(mToken, title, description, date, time, mUriList);
     }
 
     @Override
@@ -111,6 +116,7 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_request);
         ButterKnife.bind(this);
+        mUriList = new ArrayList<Uri>();
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         Log.d("token", mToken);
@@ -149,41 +155,58 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         if(resultCode == RESULT_OK) {
-            if(requestCode==MAKE_A_PHOTO){
-                if (imageReturnedIntent == null) {
-                } else {
-                    Bundle bndl = imageReturnedIntent.getExtras();
-                    if (bndl != null) {
-                        Object obj = imageReturnedIntent.getExtras().get("data");
-                        if (obj instanceof Bitmap) {
-                            Bitmap bitmap = (Bitmap) obj;
-                            mAdapter.addPhotos(bitmap);
-                        }
-                    }
-                }
-            }
-            if(requestCode==ADD_PHOTOS) {
-                ClipData clipData = imageReturnedIntent.getClipData();
-                if (clipData != null) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
+            switch(requestCode) {
+                case GALLERY_REQUEST:
+                    if(resultCode == RESULT_OK){
                         try {
-                            Uri uri = clipData.getItemAt(i).getUri();
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            Uri selectedImage = imageReturnedIntent.getData();
+                            mUriList.add(selectedImage);
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                             mAdapter.addPhotos(bitmap);
-                        } catch (Exception c) {
+                        }catch (Exception c){
                             c.printStackTrace();
                         }
                     }
-                } else {
-                    try {
-                        Uri selectedImage = imageReturnedIntent.getData();
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                        mAdapter.addPhotos(bitmap);
-                    } catch (Exception c) {
-                        c.printStackTrace();
-                    }
-                }
             }
+            //if(requestCode==MAKE_A_PHOTO){
+            //    if (imageReturnedIntent == null) {
+            //    } else {
+            //        Bundle bndl = imageReturnedIntent.getExtras();
+            //        if (bndl != null) {
+            //            Object obj = imageReturnedIntent.getExtras().get("data");
+            //            if (obj instanceof Bitmap) {
+            //                Bitmap bitmap = (Bitmap) obj;
+            //                mAdapter.addPhotos(bitmap);
+            //            }
+            //        }
+            //    }
+            //}
+            //if(requestCode==ADD_PHOTOS) {
+            //    ClipData clipData = imageReturnedIntent.getClipData();
+            //    if (clipData != null) {
+            //        for (int i = 0; i < clipData.getItemCount(); i++) {
+            //            try {
+            //                Log.d("TAG", clipData.getItemAt(i).getUri().getPath());
+            //                Uri uri = clipData.getItemAt(i).getUri();
+            //                mUriList.add(uri);
+            //                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            //                mAdapter.addPhotos(bitmap);
+            //            } catch (Exception c) {
+            //                c.printStackTrace();
+            //            }
+            //        }
+            //    } else {
+            //        try {
+            //            Uri selectedImage = imageReturnedIntent.getData();
+            //            Log.d("TAG", selectedImage.getPath());
+            //            mUriList.add(selectedImage);
+            //            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            //            mAdapter.addPhotos(bitmap);
+            //        } catch (Exception c) {
+            //            c.printStackTrace();
+            //        }
+            //    }
+            //}
         }
     }
 

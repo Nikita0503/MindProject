@@ -46,6 +46,11 @@ public interface APIService {
     @POST("request")
     Completable sendRequestData(@Header("Authorization") String header, @Field("title") String title, @Field("description") String description, @Field("start_time") String start_time);
 
+    @Multipart
+    @POST("request")
+    Completable sendRequestData2(@Header("Authorization") String header, @Part("title") String title, @Part("description") String description, @Part("start_time") String start_time, @Part MultipartBody.Part data);
+
+
     @POST("vote")
     Completable voteForEvent(@Header("Authorization") String header, @Body Vote id);
 

@@ -1,7 +1,11 @@
 package com.mindproject.mindproject.add_request;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -52,11 +57,16 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         mAPIUtils = new MyMindAPIUtils();
     }
 
-    public void generateData(String token, String title, String description, String date, String time){
-        //RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), createFileFromBitmap(photo));
-        //MultipartBody.Part body = MultipartBody.Part.createFormData("upload", "photo", reqFile);
+    public void generateData(String token, String title, String description, String date, String time, ArrayList<Uri> uriList){
+        ArrayList<MultipartBody.Part> bodyList = new ArrayList<MultipartBody.Part>();
+        for(int i = 0; i < uriList.size(); i++){
+            File file = new File(getRealPathFromUri(mActivity.getApplicationContext(), uriList.get(i)));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+            bodyList.add(body);
+        }
         AddRequestData requestData = new AddRequestData(getDate(date, time), title, description);
-        Disposable sendData = mAPIUtils.sendRequestData(token, requestData)
+        Disposable sendData = mAPIUtils.sendRequestData(token, requestData, bodyList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableCompletableObserver() {
@@ -90,27 +100,6 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         mDisposable.add(sendData);
     }
 
-    private File createFileFromBitmap(Bitmap photo){
-        File f = new File(mActivity.getCacheDir(), "photo");
-        try {
-            f.createNewFile();
-
-//Convert bitmap to byte array
-            Bitmap bitmap = photo;
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
-            byte[] bitmapdata = bos.toByteArray();
-
-//write the bytes in file
-            FileOutputStream fos = new FileOutputStream(f);
-            fos.write(bitmapdata);
-            fos.flush();
-            fos.close();
-        }catch (Exception c){
-            c.printStackTrace();
-        }
-        return f;
-    }
 
     private String getDate(String date, String time){
         String startTime = null;
@@ -124,6 +113,21 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
             c.printStackTrace();
         }
         return startTime;
+    }
+
+    private String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     @Override

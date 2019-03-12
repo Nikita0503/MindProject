@@ -59,6 +59,7 @@ public class MainPresenter implements BaseContract.BasePresenter {
                     public void onSuccess(UserData data) {
                         Log.d("USER_DATA", data.accessToken);
                         mActivity.setToken(data.accessToken);
+                        mActivity.setKarmaPoints(data.karma);
                         //Log.d("USER_DATA", data.username);
                         //Log.d("USER_DATA", data.avatar.toString());
                         //Log.d("USER_DATA", String.valueOf(data.karma));

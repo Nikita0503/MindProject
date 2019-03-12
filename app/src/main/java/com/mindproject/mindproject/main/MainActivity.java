@@ -29,6 +29,7 @@ import com.mindproject.mindproject.my_karma.MyKarmaActivity;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
+    private int mKarmaPoints;
     private String mDeviceId;
     private String mToken;
     private MainPresenter mPresenter;
@@ -58,12 +59,13 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mDeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         Log.d("DEVICE_ID", mDeviceId);
-        mPresenter.fetchToken(mDeviceId);
     }
 
     @Override
     protected void onStart(){
+        Log.d("SSS", "onStart");
         super.onStart();
+        mPresenter.fetchToken(mDeviceId);
         if(mToken!=null){
             mPresenter.fetchEvents(mToken);
         }
@@ -75,6 +77,15 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mEventAdapter = new EventListAdapter(this, mToken);
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerViewEvents.setAdapter(mEventAdapter);
+    }
+
+    public void updateKarmaPoints(){
+        mPresenter.fetchToken(mDeviceId);
+    }
+
+    public void setKarmaPoints(int karmaPoints){
+        mKarmaPoints = karmaPoints;
+        textViewKarmaPoint.setText("Ваша карма " + mKarmaPoints);
     }
 
     private ArrayList<EventDataForEventList> initData(){
@@ -99,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     }
 
     @Override
-    public void onStop(){
+    protected void onStop(){
         super.onStop();
         mPresenter.onStop();
     }

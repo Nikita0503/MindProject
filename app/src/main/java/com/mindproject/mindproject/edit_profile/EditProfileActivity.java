@@ -136,7 +136,7 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
     }
 
     private boolean validatePhone(String phone){
-        if(phone.contains("+")){
+        if(phone.startsWith("+")){
             return true;
         }else{
             return false;

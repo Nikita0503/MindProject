@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -22,6 +23,9 @@ public class MyKarmaActivity extends AppCompatActivity {
     private String mToken;
     private UserData mUserData;
     private MyKarmaPresenter mPresenter;
+
+    @BindView(R.id.textViewKarmaPoint)
+    TextView textViewKarmaPoints;
 
     @OnClick(R.id.buttonEdit)
     void onClickEdit(){
@@ -61,6 +65,7 @@ public class MyKarmaActivity extends AppCompatActivity {
 
     public void setUserData(UserData userData){
         mUserData = userData;
+        textViewKarmaPoints.setText("Ваша карма " + userData.karma);
     }
 
     @Override

@@ -63,7 +63,6 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        mActivity.showMessage("Username and phone have been changed successfully");
                         mEditedUsernameAndPhone = true;
                         stopLoading();
                     }
@@ -78,13 +77,13 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
 
     public void changeAvatar(String token, Uri uri){
         if(uri!=null) {
+            Log.d("TAG", uri.getPath());
             Disposable avatar = mAPIUtils.changeAvatar(token, getRealPathFromUri(mActivity.getApplicationContext(), uri))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableCompletableObserver() {
                         @Override
                         public void onComplete() {
-                            mActivity.showMessage("Photo has been changed successfully");
                             mEditedAvatar = true;
                             stopLoading();
                         }
@@ -122,7 +121,6 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        mActivity.showMessage("Email has been changed successfully");
                         mEditedEmail = true;
                         stopLoading();
                     }
@@ -185,7 +183,7 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
         mDisposable.add(data);
     }
 
-    public static String getRealPathFromUri(Context context, Uri contentUri) {
+    private String getRealPathFromUri(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
@@ -206,6 +204,7 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
             mEditedUsernameAndPhone = false;
             mEditedEmail = false;
             mEditedAvatar = false;
+            mActivity.showMessage("Profile has been updated successfully");
         }
     }
 

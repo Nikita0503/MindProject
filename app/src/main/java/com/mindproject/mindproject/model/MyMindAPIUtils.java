@@ -76,7 +76,6 @@ public class MyMindAPIUtils {
                     }else {
                         image = context.getResources().getDrawable(R.drawable.ic_photo);
                     }
-                    //Drawable image = context.getResources().getDrawable(R.drawable.ic_user);
                     EventDataForEventList event = new EventDataForEventList(title, date, image, events.get(i));
                     e.onNext(event);
                 }
@@ -85,7 +84,7 @@ public class MyMindAPIUtils {
         });
     }
 
-    public Completable sendRequestData(String token, AddRequestData data){
+    public Completable sendRequestData(String token, AddRequestData data, ArrayList<MultipartBody.Part> bodyList){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
         Map<String, AddRequestData> map = new HashMap<String, AddRequestData>();

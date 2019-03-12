@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
+import com.mindproject.mindproject.main.MainActivity;
 import com.mindproject.mindproject.model.data.EventData;
 
 import java.util.ArrayList;
@@ -156,4 +157,5 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     public void showMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
+
 }
