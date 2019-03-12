@@ -51,7 +51,7 @@ public class SupportPresenter implements BaseContract.BasePresenter {
     public void downloadPhotos(List<Photo> photos){
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
         PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext());
-        Disposable data = downloader.getPhotos(photos)
+        Disposable data = downloader.fetchPhotos(photos)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<Bitmap>() {

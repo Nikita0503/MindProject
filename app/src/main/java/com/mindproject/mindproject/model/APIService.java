@@ -4,6 +4,7 @@ import android.provider.SyncStateContract;
 
 import com.mindproject.mindproject.model.data.AccessToken;
 import com.mindproject.mindproject.model.data.AddRequestData;
+import com.mindproject.mindproject.model.data.ChangeEmail;
 import com.mindproject.mindproject.model.data.ChangeUsernameAndPhone;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.UserData;
@@ -54,4 +55,7 @@ public interface APIService {
     @Multipart
     @POST("user/me/avatar")
     Completable changeAvatar(@Header("Authorization") String header, @Part MultipartBody.Part data);
+
+    @POST("email")
+    Completable changeEmail(@Header("Authorization") String header, @Body ChangeEmail email);
 }

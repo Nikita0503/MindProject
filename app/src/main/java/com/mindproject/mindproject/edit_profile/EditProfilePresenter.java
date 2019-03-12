@@ -2,24 +2,34 @@ package com.mindproject.mindproject.edit_profile;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.model.MyMindAPIUtils;
+import com.mindproject.mindproject.model.PhotoDownloader;
+import com.mindproject.mindproject.model.data.ChangeEmail;
 import com.mindproject.mindproject.model.data.ChangeUsernameAndPhone;
+import com.mindproject.mindproject.model.data.Photo;
+import com.mindproject.mindproject.model.data.UserData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
@@ -29,6 +39,9 @@ import okhttp3.ResponseBody;
 
 public class EditProfilePresenter implements BaseContract.BasePresenter {
 
+    private boolean mEditedUsernameAndPhone;
+    private boolean mEditedEmail;
+    private boolean mEditedAvatar;
     private EditProfileActivity mActivity;
     private CompositeDisposable mDisposable;
     private MyMindAPIUtils mAPIUtils;
@@ -51,6 +64,8 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
                     @Override
                     public void onComplete() {
                         mActivity.showMessage("Username and phone have been changed successfully");
+                        mEditedUsernameAndPhone = true;
+                        stopLoading();
                     }
 
                     @Override
@@ -62,35 +77,112 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
     }
 
     public void changeAvatar(String token, Uri uri){
-        Disposable avatar = mAPIUtils.changeAvatar(token, getRealPathFromUri(mActivity.getApplicationContext(), uri))
+        if(uri!=null) {
+            Disposable avatar = mAPIUtils.changeAvatar(token, getRealPathFromUri(mActivity.getApplicationContext(), uri))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(new DisposableCompletableObserver() {
+                        @Override
+                        public void onComplete() {
+                            mActivity.showMessage("Photo has been changed successfully");
+                            mEditedAvatar = true;
+                            stopLoading();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            if (e instanceof HttpException) {
+                                HttpException exception = (HttpException) e;
+                                ResponseBody responseBody = exception.response().errorBody();
+                                try {
+                                    JSONObject responseError = new JSONObject(responseBody.string());
+                                    JSONArray arrayError = responseError.getJSONArray("errors");
+                                    JSONObject errorMessage = arrayError.getJSONObject(0);
+                                    mActivity.showMessage(errorMessage.getString("ERROR_MESSAGE"));
+                                } catch (JSONException e1) {
+                                    e1.printStackTrace();
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+            mDisposable.add(avatar);
+        }else {
+            mEditedAvatar = true;
+            stopLoading();
+        }
+    }
+
+    public void changeEmail(String token, String email){
+        Disposable emailDisposable = mAPIUtils.changeEmail(token, new ChangeEmail(email))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        mActivity.showMessage("Photo has been changed successfully");
+                        mActivity.showMessage("Email has been changed successfully");
+                        mEditedEmail = true;
+                        stopLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+        mDisposable.add(emailDisposable);
+    }
+
+    public void fetchUserData(String deviceId){
+        mActivity.startLoading();
+        Disposable tokenDisposable = mAPIUtils.getToken(deviceId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<UserData>() {
+                    @Override
+                    public void onSuccess(UserData data) {
+                        Log.d("USER_DATA", data.accessToken);
+                        if(data.avatar!=null) {
+                            downloadPhoto(data.avatar);
+                        }
+                        if(data.username!=null) {
+                            mActivity.setName(data.username);
+                        }
+                        if(data.phone!=null) {
+                            mActivity.setPhone(data.phone);
+                        }
+                        if(data.email!=null) {
+                            mActivity.setEmail(data.email);
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        if (e instanceof HttpException) {
-                            HttpException exception = (HttpException) e;
-                            ResponseBody responseBody = exception.response().errorBody();
-                            try {
-                                JSONObject responseError = new JSONObject(responseBody.string());
-                                JSONArray arrayError = responseError.getJSONArray("errors");
-                                JSONObject errorMessage = arrayError.getJSONObject(0);
-                                mActivity.showMessage(errorMessage.getString("ERROR_MESSAGE"));
-                            } catch (JSONException e1) {
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
                     }
                 });
-        mDisposable.add(avatar);
+        mDisposable.add(tokenDisposable);
+    }
+
+    public void downloadPhoto(Object photo){
+        PhotoDownloader downloader = new PhotoDownloader(mActivity.getApplicationContext());
+        Disposable data = downloader.fetchPhoto(photo.toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Bitmap>() {
+                    @Override
+                    public void onSuccess(Bitmap value) {
+                        mActivity.setPhoto(value);
+                        mActivity.stopLoading();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+        mDisposable.add(data);
     }
 
     public static String getRealPathFromUri(Context context, Uri contentUri) {
@@ -105,6 +197,15 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
             if (cursor != null) {
                 cursor.close();
             }
+        }
+    }
+
+    private void stopLoading(){
+        if(mEditedUsernameAndPhone && mEditedAvatar && mEditedEmail){
+            mActivity.stopLoading();
+            mEditedUsernameAndPhone = false;
+            mEditedEmail = false;
+            mEditedAvatar = false;
         }
     }
 

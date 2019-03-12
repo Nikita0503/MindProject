@@ -1,20 +1,31 @@
 package com.mindproject.mindproject.edit_profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
+import com.mindproject.mindproject.model.PhotoDownloader;
+import com.mindproject.mindproject.model.data.UserData;
+import com.victor.loading.newton.NewtonCradleLoading;
+import com.victor.loading.rotate.RotateLoading;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
+import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
 public class EditProfileActivity extends AppCompatActivity implements BaseContract.BaseView {
 
@@ -24,6 +35,12 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
     private Uri mImageURL;
     private EditProfilePresenter mPresenter;
 
+    @BindView(R.id.text_field_boxes_name)
+    TextFieldBoxes textFieldBoxesName;
+    @BindView(R.id.text_field_boxes_phone)
+    TextFieldBoxes textFieldBoxesPhone;
+    @BindView(R.id.text_field_boxes_email)
+    TextFieldBoxes textFieldBoxesEmail;
     @BindView(R.id.extended_edit_text_name)
     ExtendedEditText extendedEditTextName;
     @BindView(R.id.extended_edit_text_phone)
@@ -32,12 +49,34 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
     ExtendedEditText extendedEditTextEmail;
     @BindView(R.id.imageViewUser)
     ImageView imageViewUser;
+    @BindView(R.id.rotateloading)
+    RotateLoading rotateLoading;
+    @BindView(R.id.buttonEdit)
+    Button buttonEdit;
     @OnClick(R.id.buttonEdit)
     void onClickEdit(){
         String username = extendedEditTextName.getText().toString();
         String phone = extendedEditTextPhone.getText().toString();
-        mPresenter.changeUsernameAndPhone(mToken, username, phone);
-        mPresenter.changeAvatar(mToken, mImageURL);
+        String email = extendedEditTextEmail.getText().toString();
+        boolean validateName = validateName(username);
+        boolean validateEmail = validateEmail(email);
+        boolean validatePhone = validatePhone(phone);
+        if(validateName){
+            if(validatePhone){
+                if(validateEmail){
+                    mPresenter.changeUsernameAndPhone(mToken, username, phone);
+                    mPresenter.changeEmail(mToken, email);
+                    mPresenter.changeAvatar(mToken, mImageURL);
+                    startLoading();
+                }else{
+                    showMessage("Not correct email");
+                }
+            }else{
+                showMessage("Not correct phone");
+            }
+        }else{
+            showMessage("Not correct name");
+        }
     }
 
     @OnClick(R.id.imageViewUser)
@@ -55,8 +94,9 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
         mPresenter = new EditProfilePresenter(this);
         mPresenter.onStart();
         Intent intent = getIntent();
-        mDeviceId = intent.getStringExtra("id");
         mToken = intent.getStringExtra("token");
+        mDeviceId = intent.getStringExtra("deviceId");
+        mPresenter.fetchUserData(mDeviceId);
     }
 
     @Override
@@ -70,6 +110,63 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
                     mImageURL = selectedImage;
                 }
         }
+    }
+
+    public void setPhoto(Bitmap bitmap){
+        imageViewUser.setImageBitmap(bitmap);
+    }
+
+    public void setName(String name){
+        extendedEditTextName.setText(name);
+    }
+
+    public void setPhone(String phone){
+        extendedEditTextPhone.setText(phone);
+    }
+
+    public void setEmail(String email){
+        extendedEditTextEmail.setText(email);
+    }
+
+    private boolean validateEmail(String emailStr) {
+        Pattern VALID_EMAIL_ADDRESS_REGEX =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        return matcher.find();
+    }
+
+    private boolean validatePhone(String phone){
+        if(phone.contains("+")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private boolean validateName(String name){
+        if(name.length()>3 && name.length() < 128){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void startLoading(){
+        textFieldBoxesName.setEnabled(false);
+        textFieldBoxesPhone.setEnabled(false);
+        textFieldBoxesEmail.setEnabled(false);
+        buttonEdit.setEnabled(false);
+        imageViewUser.setEnabled(false);
+        rotateLoading.start();
+    }
+
+    public void stopLoading(){
+        textFieldBoxesName.setEnabled(true);
+        textFieldBoxesPhone.setEnabled(true);
+        textFieldBoxesEmail.setEnabled(true);
+        buttonEdit.setEnabled(true);
+        imageViewUser.setEnabled(true);
+        rotateLoading.stop();
     }
 
     @Override

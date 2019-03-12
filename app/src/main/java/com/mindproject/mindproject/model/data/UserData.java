@@ -4,11 +4,16 @@ package com.mindproject.mindproject.model.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserData {
+import java.io.Serializable;
+
+public class UserData implements Serializable{
 
     @SerializedName("id")
     @Expose
     public Integer id;
+    @SerializedName("email")
+    @Expose
+    public String email;
     @SerializedName("username")
     @Expose
     public String username;

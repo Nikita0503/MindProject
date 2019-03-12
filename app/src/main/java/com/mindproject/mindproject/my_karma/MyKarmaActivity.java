@@ -14,18 +14,20 @@ import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 import com.mindproject.mindproject.add_request.AddRequestActivity;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.edit_profile.EditProfileActivity;
+import com.mindproject.mindproject.model.data.UserData;
 
 public class MyKarmaActivity extends AppCompatActivity {
 
     private String mDeviceId;
     private String mToken;
+    private UserData mUserData;
     private MyKarmaPresenter mPresenter;
 
     @OnClick(R.id.buttonEdit)
     void onClickEdit(){
         Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
-        intent.putExtra("id", mDeviceId);
         intent.putExtra("token", mToken);
+        intent.putExtra("deviceId", mDeviceId);
         startActivity(intent);
         Toast.makeText(getApplicationContext(), "Welcome to edit activity", Toast.LENGTH_SHORT).show();
     }
@@ -44,10 +46,26 @@ public class MyKarmaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_karma);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        mDeviceId = intent.getStringExtra("id");
         mToken = intent.getStringExtra("token");
-        Log.d("deviceId", mDeviceId);
+        mDeviceId = intent.getStringExtra("deviceId");
         Log.d("token", mToken);
         mPresenter = new MyKarmaPresenter(this);
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        mPresenter.fetchUserData(mDeviceId);
+    }
+
+    public void setUserData(UserData userData){
+        mUserData = userData;
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mPresenter.onStop();
     }
 }

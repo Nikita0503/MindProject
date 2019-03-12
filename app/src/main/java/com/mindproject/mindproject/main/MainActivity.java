@@ -24,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.my_karma.MyKarmaActivity;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     @OnClick(R.id.textViewKarmaPoint)
     void onClick(){
         Intent intent = new Intent(getApplicationContext(), MyKarmaActivity.class);
-        intent.putExtra("id", mDeviceId);
         intent.putExtra("token", mToken);
+        intent.putExtra("deviceId", mDeviceId);
         startActivity(intent);
         Toast.makeText(getApplicationContext(), "Welcome to karma activity", Toast.LENGTH_SHORT).show();
     }

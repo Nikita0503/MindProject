@@ -13,6 +13,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.AccessToken;
 import com.mindproject.mindproject.model.data.AddRequestData;
+import com.mindproject.mindproject.model.data.ChangeEmail;
 import com.mindproject.mindproject.model.data.ChangeUsernameAndPhone;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
@@ -99,7 +100,6 @@ public class MyMindAPIUtils {
     }
 
     public Completable changeUsernameAndPhone(String token, ChangeUsernameAndPhone data){
-        Log.d("sss", token);
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
         return apiService.changeUsernameAndPhone("Bearer " + token, data);
@@ -109,16 +109,16 @@ public class MyMindAPIUtils {
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
         File file = new File(path);
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
-// MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
         return apiService.changeAvatar("Bearer " + token, body);
     }
 
-
+    public Completable changeEmail(String token, ChangeEmail email){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.changeEmail("Bearer " + token, email);
+    }
 
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()

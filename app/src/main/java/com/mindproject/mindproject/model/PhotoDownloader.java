@@ -14,6 +14,9 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 
 
 /**
@@ -28,17 +31,29 @@ public class PhotoDownloader {
         mContext = context;
     }
 
-    public Observable<Bitmap> getPhotos(List<Photo> photos){
+    public Observable<Bitmap> fetchPhotos(List<Photo> photos){
         return Observable.create(new ObservableOnSubscribe<Bitmap>() {
             @Override
             public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
                 for(int i = 0; i < photos.size(); i++){
                     Bitmap image = Picasso.with(mContext)
-                                .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com"+photos.get(0).photo)
+                                .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photos.get(0).photo)
                                 .get();
                     e.onNext(image);
                 }
                 e.onComplete();
+            }
+        });
+    }
+
+    public Single<Bitmap> fetchPhoto(String photoURL){
+        return Single.create(new SingleOnSubscribe<Bitmap>() {
+            @Override
+            public void subscribe(SingleEmitter<Bitmap> e) throws Exception {
+                Bitmap image = Picasso.with(mContext)
+                        .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photoURL)
+                        .get();
+                e.onSuccess(image);
             }
         });
     }

@@ -7,6 +7,18 @@
     tools:context="com.mindproject.mindproject.edit_profile.EditProfileActivity"
     tools:layout_editor_absoluteY="81dp">
 
+
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotateloading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:loading_width="5dp"
+        app:loading_color="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -141,5 +153,7 @@
                 app:srcCompat="@drawable/ic_user" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
+
+
 
 </android.support.constraint.ConstraintLayout>
