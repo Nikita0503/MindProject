@@ -42,13 +42,29 @@ public interface APIService {
     @GET("request")
     Single<ArrayList<EventData>> getEvents(@Header("Authorization") String header);
 
-    @FormUrlEncoded
+    @Multipart
     @POST("request")
-    Completable sendRequestData(@Header("Authorization") String header, @Field("title") String title, @Field("description") String description, @Field("start_time") String start_time);
+    Completable sendRequestData(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time);
 
     @Multipart
     @POST("request")
-    Completable sendRequestData2(@Header("Authorization") String header, @Part("title") String title, @Part("description") String description, @Part("start_time") String start_time, @Part MultipartBody.Part data);
+    Completable sendRequestDataWith1Photo(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo);
+
+    @Multipart
+    @POST("request")
+    Completable sendRequestDataWith2Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2);
+
+    @Multipart
+    @POST("request")
+    Completable sendRequestDataWith3Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2, @Part MultipartBody.Part photo3);
+
+    @Multipart
+    @POST("request")
+    Completable sendRequestDataWith4Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2, @Part MultipartBody.Part photo3, @Part MultipartBody.Part photo4);
+
+    @Multipart
+    @POST("request")
+    Completable sendRequestDataWith5Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2, @Part MultipartBody.Part photo3, @Part MultipartBody.Part photo4, @Part MultipartBody.Part photo5);
 
 
     @POST("vote")

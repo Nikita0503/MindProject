@@ -41,7 +41,6 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     public static final int MAKE_A_PHOTO = 0;
     public static final int ADD_PHOTOS = 1;
     private String mToken;
-    private ArrayList<Uri> mUriList;
     private AddRequestPresenter mPresenter;
     private PhotosAdapter mAdapter;
 
@@ -107,8 +106,32 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
         Log.d("title", title);
         String date = textViewDate.getText().toString();
         String time = textViewTime.getText().toString();
-        //Bitmap photo = mAdapter.getPhotos().get(0);
-        mPresenter.generateData(mToken, title, description, date, time, mUriList);
+        if(mAdapter.getUriList().size()<=5) {
+            if(!title.equals("")) {
+                if(!description.equals("")) {
+                    if(!date.equals("Pick date")) {
+                        if(!time.equals("Pick time")) {
+                            mPresenter.generateData(mToken, title, description, date, time, mAdapter.getUriList());
+                        }else{
+                            showMessage("Select time, please");
+                            return;
+                        }
+                    }else {
+                        showMessage("Select date, please");
+                        return;
+                    }
+                }else{
+                    showMessage("The description must not be empty");
+                    return;
+                }
+            }else{
+                showMessage("The title must not be empty");
+                return;
+            }
+        }else{
+            showMessage("Number of photos should not be more than 5");
+            return;
+        }
     }
 
     @Override
@@ -116,7 +139,6 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_request);
         ButterKnife.bind(this);
-        mUriList = new ArrayList<Uri>();
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         Log.d("token", mToken);
@@ -160,9 +182,9 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                     if(resultCode == RESULT_OK){
                         try {
                             Uri selectedImage = imageReturnedIntent.getData();
-                            mUriList.add(selectedImage);
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                             mAdapter.addPhotos(bitmap);
+                            mAdapter.addUri(selectedImage);
                         }catch (Exception c){
                             c.printStackTrace();
                         }

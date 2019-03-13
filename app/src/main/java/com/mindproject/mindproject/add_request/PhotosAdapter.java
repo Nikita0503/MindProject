@@ -2,6 +2,7 @@ package com.mindproject.mindproject.add_request;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
     //private Picasso mPicasso;
     private ArrayList<Bitmap> mPhotoList;
+    private ArrayList<Uri> mUriList;
     private AddRequestActivity mActivity;
 
     public PhotosAdapter(AddRequestActivity addRequestActivity) {
         mPhotoList = new ArrayList<Bitmap>();
+        mUriList = new ArrayList<Uri>();
         mActivity = addRequestActivity;
         //mPicasso = Picasso.with(addRequestActivity.getApplicationContext());
     }
@@ -38,6 +41,13 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         return mPhotoList;
     }
 
+    public void addUri(Uri uri){
+        mUriList.add(uri);
+    }
+
+    public ArrayList<Uri> getUriList(){
+        return mUriList;
+    }
     @Override
     public PhotosAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -55,6 +65,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 mPhotoList.remove(position);
+                mUriList.remove(position);
                 notifyDataSetChanged();
             }
         });

@@ -72,6 +72,7 @@ public class MyMindAPIUtils {
                     if(events.get(i).photos.size() != 0){
                         image = new BitmapDrawable(context.getResources(), Picasso.with(context)
                                 .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com"+events.get(i).photos.get(0).photo)
+                                .resize(200,200)
                                 .get());
                     }else {
                         image = context.getResources().getDrawable(R.drawable.ic_photo);
@@ -84,12 +85,28 @@ public class MyMindAPIUtils {
         });
     }
 
-    public Completable sendRequestData(String token, AddRequestData data, ArrayList<MultipartBody.Part> bodyList){
+    public Completable sendRequestData(String token, AddRequestData data,  ArrayList<MultipartBody.Part> files) {
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
-        Map<String, AddRequestData> map = new HashMap<String, AddRequestData>();
-        map.put("data", data);
-        return apiService.sendRequestData("Bearer " + token, data.title, data.description, data.start_time);
+        //Map<String, AddRequestData> map = new HashMap<String, AddRequestData>();
+        //map.put("data", data);
+        RequestBody title = RequestBody.create(MediaType.parse("text/plain"), data.title);
+        RequestBody description = RequestBody.create(MediaType.parse("text/plain"), data.description);
+        RequestBody start_time = RequestBody.create(MediaType.parse("text/plain"), data.start_time);
+        switch (files.size()) {
+            case 1:
+                return apiService.sendRequestDataWith1Photo("Bearer " + token, title, description, start_time, files.get(0));
+            case 2:
+                return apiService.sendRequestDataWith2Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1));
+            case 3:
+                return apiService.sendRequestDataWith3Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1), files.get(2));
+            case 4:
+                return apiService.sendRequestDataWith4Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1), files.get(2), files.get(3));
+            case 5:
+                return apiService.sendRequestDataWith5Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1), files.get(2), files.get(3), files.get(4));
+            default:
+                return apiService.sendRequestData("Bearer " + token, title, description, start_time);
+        }
     }
 
     public Completable voteForEvent(String token, Vote vote){

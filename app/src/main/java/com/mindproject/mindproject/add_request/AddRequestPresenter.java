@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -85,10 +86,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                             ResponseBody responseBody = exception.response().errorBody();
                             try {
                                 JSONObject responseError = new JSONObject(responseBody.string());
-                                String errorMessage = responseError.getString("message");
-                                String errorCode = responseError.getString("error_code");
-                                Log.d("Error", errorCode + " " + errorMessage);
-                                mActivity.showMessage(errorMessage);
+                                Log.d("Error", responseError.toString());
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
                             } catch (IOException e1) {
@@ -107,8 +105,28 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
             SimpleDateFormat dateFormatBefore = new SimpleDateFormat("dd MMM yyyy H:mm", Locale.ENGLISH);
 
             Date date1 = dateFormatBefore.parse(date + " " + time);
-            SimpleDateFormat dateFormatAfter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
+            SimpleDateFormat dateFormatAfter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH);
+            TimeZone timeZone = TimeZone.getDefault();
+            int timeZoneInt = timeZone.getRawOffset()/3600000;
+            String timeZoneStr = "";
+            if(timeZoneInt > 0) {
+                if (timeZoneInt < 10) {
+                    timeZoneStr = "+0" + String.valueOf(timeZoneInt);
+                } else {
+                    timeZoneStr = "+" + String.valueOf(timeZoneInt);
+                }
+            }else{
+                if(timeZoneInt>-10){
+                    timeZoneStr = "-0" + String.valueOf(Math.abs(timeZoneInt));
+                }else{
+                    timeZoneStr = String.valueOf(timeZoneInt);
+                }
+            }
+
+            Log.d("Жирный", timeZoneStr);
+
             startTime = dateFormatAfter.format(date1);
+            startTime = startTime + timeZoneStr+":00";
         }catch (Exception c){
             c.printStackTrace();
         }
