@@ -61,6 +61,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
     public void generateData(String token, String title, String description, String date, String time, ArrayList<Uri> uriList){
         ArrayList<MultipartBody.Part> bodyList = new ArrayList<MultipartBody.Part>();
         for(int i = 0; i < uriList.size(); i++){
+            Log.d("IMAGE", uriList.get(i).getPath());
             File file = new File(getRealPathFromUri(mActivity.getApplicationContext(), uriList.get(i)));
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);

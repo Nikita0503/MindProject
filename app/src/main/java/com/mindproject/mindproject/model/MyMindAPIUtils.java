@@ -93,19 +93,10 @@ public class MyMindAPIUtils {
         RequestBody title = RequestBody.create(MediaType.parse("text/plain"), data.title);
         RequestBody description = RequestBody.create(MediaType.parse("text/plain"), data.description);
         RequestBody start_time = RequestBody.create(MediaType.parse("text/plain"), data.start_time);
-        switch (files.size()) {
-            case 1:
-                return apiService.sendRequestDataWith1Photo("Bearer " + token, title, description, start_time, files.get(0));
-            case 2:
-                return apiService.sendRequestDataWith2Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1));
-            case 3:
-                return apiService.sendRequestDataWith3Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1), files.get(2));
-            case 4:
-                return apiService.sendRequestDataWith4Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1), files.get(2), files.get(3));
-            case 5:
-                return apiService.sendRequestDataWith5Photos("Bearer " + token, title, description, start_time, files.get(0), files.get(1), files.get(2), files.get(3), files.get(4));
-            default:
-                return apiService.sendRequestData("Bearer " + token, title, description, start_time);
+        if(files.size()!=0) {
+            return apiService.sendRequestDataWith1Photo("Bearer " + token, title, description, start_time, files);
+        }else{
+            return apiService.sendRequestData("Bearer " + token, title, description, start_time);
         }
     }
 

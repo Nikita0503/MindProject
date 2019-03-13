@@ -37,7 +37,7 @@ public class PhotoDownloader {
             public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
                 for(int i = 0; i < photos.size(); i++){
                     Bitmap image = Picasso.with(mContext)
-                                .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photos.get(0).photo)
+                                .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photos.get(i).photo)
                                 .get();
                     e.onNext(image);
                 }

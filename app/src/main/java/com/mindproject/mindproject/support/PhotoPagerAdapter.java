@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,9 @@ public class PhotoPagerAdapter extends PagerAdapter {
     public PhotoPagerAdapter(Context context, ArrayList<Bitmap> images) {
         mContext = context;
         mImages = images;
+        for(int i = 0; i < mImages.size(); i++){
+            Log.d("PHOTO", mImages.get(i).toString());
+        }
     }
 
     @Override

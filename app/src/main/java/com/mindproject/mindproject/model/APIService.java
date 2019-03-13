@@ -48,24 +48,7 @@ public interface APIService {
 
     @Multipart
     @POST("request")
-    Completable sendRequestDataWith1Photo(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo);
-
-    @Multipart
-    @POST("request")
-    Completable sendRequestDataWith2Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2);
-
-    @Multipart
-    @POST("request")
-    Completable sendRequestDataWith3Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2, @Part MultipartBody.Part photo3);
-
-    @Multipart
-    @POST("request")
-    Completable sendRequestDataWith4Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2, @Part MultipartBody.Part photo3, @Part MultipartBody.Part photo4);
-
-    @Multipart
-    @POST("request")
-    Completable sendRequestDataWith5Photos(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part MultipartBody.Part photo, @Part MultipartBody.Part photo2, @Part MultipartBody.Part photo3, @Part MultipartBody.Part photo4, @Part MultipartBody.Part photo5);
-
+    Completable sendRequestDataWith1Photo(@Header("Authorization") String header, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("start_time") RequestBody start_time, @Part ArrayList<MultipartBody.Part> photos);
 
     @POST("vote")
     Completable voteForEvent(@Header("Authorization") String header, @Body Vote id);
