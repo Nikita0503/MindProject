@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.mindproject.mindproject.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import com.mindproject.mindproject.add_request.AddRequestActivity;
 /**
@@ -23,12 +24,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
     //private Picasso mPicasso;
     private ArrayList<Bitmap> mPhotoList;
-    private ArrayList<Uri> mUriList;
+    private ArrayList<File> mFileList;
     private AddRequestActivity mActivity;
 
     public PhotosAdapter(AddRequestActivity addRequestActivity) {
         mPhotoList = new ArrayList<Bitmap>();
-        mUriList = new ArrayList<Uri>();
+        mFileList = new ArrayList<File>();
         mActivity = addRequestActivity;
         //mPicasso = Picasso.with(addRequestActivity.getApplicationContext());
     }
@@ -42,13 +43,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         return mPhotoList;
     }
 
-    public void addUri(Uri uri){
-        Log.d("IMAGE", uri.getPath());
-        mUriList.add(uri);
+    public void addFile(File file){
+        mFileList.add(file);
     }
 
-    public ArrayList<Uri> getUriList(){
-        return mUriList;
+    public ArrayList<File> getFileList(){
+        return mFileList;
     }
     @Override
     public PhotosAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -67,7 +67,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 mPhotoList.remove(position);
-                mUriList.remove(position);
+                mFileList.remove(position);
                 notifyDataSetChanged();
             }
         });

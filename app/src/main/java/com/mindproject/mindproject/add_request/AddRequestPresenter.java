@@ -58,13 +58,13 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         mAPIUtils = new MyMindAPIUtils();
     }
 
-    public void generateData(String token, String title, String description, String date, String time, ArrayList<Uri> uriList){
+    public void generateData(String token, String title, String description, String date, String time, ArrayList<File> fileList){
         ArrayList<MultipartBody.Part> bodyList = new ArrayList<MultipartBody.Part>();
-        for(int i = 0; i < uriList.size(); i++){
-            Log.d("IMAGE", uriList.get(i).getPath());
-            File file = new File(getRealPathFromUri(mActivity.getApplicationContext(), uriList.get(i)));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+        for(int i = 0; i < fileList.size(); i++){
+            Log.d("IMAGE", fileList.get(i).getPath());
+            //File file = new File(getRealPathFromUri(mActivity.getApplicationContext(), uriList.get(i)));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileList.get(i));
+            MultipartBody.Part body = MultipartBody.Part.createFormData("photo", fileList.get(i).getName(), requestFile);
             bodyList.add(body);
         }
         AddRequestData requestData = new AddRequestData(getDate(date, time), title, description);
@@ -134,20 +134,6 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         return startTime;
     }
 
-    private String getRealPathFromUri(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
 
     @Override
     public void onStop() {

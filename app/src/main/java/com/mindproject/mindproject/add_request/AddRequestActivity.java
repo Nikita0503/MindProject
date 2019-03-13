@@ -1,7 +1,9 @@
 package com.mindproject.mindproject.add_request;
 
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
@@ -24,7 +26,9 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +43,6 @@ import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 public class AddRequestActivity extends AppCompatActivity implements BaseContract.BaseView{
     public static final int GALLERY_REQUEST = 1;
     public static final int MAKE_A_PHOTO = 0;
-    public static final int ADD_PHOTOS = 1;
     private String mToken;
     private AddRequestPresenter mPresenter;
     private PhotosAdapter mAdapter;
@@ -95,7 +98,7 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     @OnClick(R.id.buttonMakePhoto)
     void onClickMakeAPhoto(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, MAKE_A_PHOTO);
     }
 
     @OnClick(R.id.buttonSend)
@@ -106,12 +109,13 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
         Log.d("title", title);
         String date = textViewDate.getText().toString();
         String time = textViewTime.getText().toString();
-        if(mAdapter.getUriList().size()<=5) {
+        if(mAdapter.getFileList().size()<=5) {
             if(!title.equals("")) {
                 if(!description.equals("")) {
                     if(!date.equals("Pick date")) {
                         if(!time.equals("Pick time")) {
-                            mPresenter.generateData(mToken, title, description, date, time, mAdapter.getUriList());
+
+                            mPresenter.generateData(mToken, title, description, date, time, mAdapter.getFileList());
                         }else{
                             showMessage("Select time, please");
                             return;
@@ -184,26 +188,49 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                             Uri selectedImage = imageReturnedIntent.getData();
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                             mAdapter.addPhotos(bitmap);
-                            mAdapter.addUri(selectedImage);
+                            File file = new File(getRealPathFromUri(getApplicationContext(), selectedImage));
+                            mAdapter.addFile(file);
                         }catch (Exception c){
                             c.printStackTrace();
                         }
                     }
             }
-            //if(requestCode==MAKE_A_PHOTO){
-            //    if (imageReturnedIntent == null) {
-            //    } else {
-            //        Bundle bndl = imageReturnedIntent.getExtras();
-            //        if (bndl != null) {
-            //            Object obj = imageReturnedIntent.getExtras().get("data");
-            //            if (obj instanceof Bitmap) {
-            //                Bitmap bitmap = (Bitmap) obj;
-            //                mAdapter.addPhotos(bitmap);
-            //            }
-            //        }
-            //    }
-            //}
-            //if(requestCode==ADD_PHOTOS) {
+            if(requestCode==MAKE_A_PHOTO){
+                if (imageReturnedIntent == null) {
+                } else {
+                    Bundle bndl = imageReturnedIntent.getExtras();
+                    if (bndl != null) {
+                        Object obj = imageReturnedIntent.getExtras().get("data");
+                        if (obj instanceof Bitmap) {
+                            try {
+                                Bitmap bitmap = (Bitmap) obj;
+                                String root = Environment.getExternalStorageDirectory().toString();
+                                File myDir = new File(root + "/saved_images");
+                                myDir.mkdirs();
+
+                                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                                String fname = "Shutta_"+ timeStamp +".jpg";
+
+                                File file = new File(myDir, fname);
+                                if (file.exists()) file.delete ();
+                                try {
+                                    FileOutputStream out = new FileOutputStream(file);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                                    out.flush();
+                                    out.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                mAdapter.addPhotos(bitmap);
+                                mAdapter.addFile(file);
+                            }catch (Exception c){
+                                c.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+            //if(requestCode==ADD_PHOTOS) { File file = new File(getRealPathFromUri(mActivity.getApplicationContext(), uriList.get(i)));
             //    ClipData clipData = imageReturnedIntent.getClipData();
             //    if (clipData != null) {
             //        for (int i = 0; i < clipData.getItemCount(); i++) {
@@ -229,6 +256,22 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
             //        }
             //    }
             //}
+        }
+    }
+
+
+    private String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
