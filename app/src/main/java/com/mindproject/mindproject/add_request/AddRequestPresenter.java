@@ -74,19 +74,24 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        Toast.makeText(mActivity.getApplicationContext(), "Event has been created!", Toast.LENGTH_SHORT).show();
+                        mActivity.showMessage("Event has been created!");
+                        mActivity.stopLoading();
                         mActivity.finish();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mActivity.stopLoading();
                         e.printStackTrace();
                         if (e instanceof HttpException) {
                             HttpException exception = (HttpException) e;
                             ResponseBody responseBody = exception.response().errorBody();
                             try {
                                 JSONObject responseError = new JSONObject(responseBody.string());
+                                JSONArray arrayError = responseError.getJSONArray("errors");
+                                JSONObject errorMessage = arrayError.getJSONObject(0);
+                                mActivity.showMessage(errorMessage.getString("ERROR_MESSAGE"));
+
                                 Log.d("Error", responseError.toString());
                             } catch (JSONException e1) {
                                 e1.printStackTrace();

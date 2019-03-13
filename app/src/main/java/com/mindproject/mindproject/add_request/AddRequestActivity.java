@@ -25,6 +25,7 @@ import com.mindproject.mindproject.add_request.PhotosAdapter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,7 +62,8 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     ExtendedEditText editTextName;
     @BindView(R.id.recycler_view_photos)
     RecyclerView recyclerViewPhotos;
-
+    @BindView(R.id.rotateloading)
+    RotateLoading rotateLoading;
     @OnClick(R.id.textViewDate)
     void onClickDate(){
         if(datePicker.getVisibility()==View.GONE) {
@@ -114,7 +116,7 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                 if(!description.equals("")) {
                     if(!date.equals("Pick date")) {
                         if(!time.equals("Pick time")) {
-
+                            startLoading();
                             mPresenter.generateData(mToken, title, description, date, time, mAdapter.getFileList());
                         }else{
                             showMessage("Select time, please");
@@ -259,6 +261,13 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
         }
     }
 
+    public void startLoading(){
+        rotateLoading.start();
+    }
+
+    public void stopLoading(){
+        rotateLoading.stop();
+    }
 
     private String getRealPathFromUri(Context context, Uri contentUri) {
         Cursor cursor = null;
