@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,7 +41,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
     public EventListAdapter(MainActivity activity, String token) {
         mEventDateFormat = new SimpleDateFormat("d MMM H:mm", Locale.ENGLISH);
+        TimeZone timeZone = TimeZone.getDefault();
         mDifferenceDateFormat = new SimpleDateFormat("H:mm:ss", Locale.ENGLISH);
+        mDifferenceDateFormat.setTimeZone(timeZone);
         mEvents = new ArrayList<EventDataForEventList>();
         mActivity = activity;
         Timer mTimer = new Timer();
@@ -67,7 +71,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.textViewEventTitle.setText(mEvents.get(position).title);
         holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
-        holder.textViewTimer.setText(getTimeDifference(mEvents.get(position).eventDate));
+        Date difference = getTimeDifference(mEvents.get(position).eventDate);
+        if(position == 0 && difference.getTime()<1800000){
+            holder.textViewTimer.setTextColor(mActivity.getResources().getColor(R.color.colorAccent));
+        }
+        holder.textViewTimer.setText(mDifferenceDateFormat.format(difference));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,10 +112,16 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         }
     }
 
-    private String getTimeDifference(Date date){
-        Date currentDate = Calendar.getInstance().getTime();
+    private Date getTimeDifference(Date date){
+        TimeZone timeZone = TimeZone.getDefault();
+        int timeZoneInt = timeZone.getRawOffset()/3600000;
+        //mEventDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Calendar today = Calendar.getInstance();
+        today.add(Calendar.HOUR_OF_DAY, timeZoneInt);
+        Date currentDate = today.getTime();
+        //Log.d("TAG", currentDate.getTime()+"");
         long differenceLong = date.getTime() - currentDate.getTime();
-        return mDifferenceDateFormat.format(new Date(differenceLong));
+        return new Date(differenceLong);
     }
 
     class AdapterTimerTask extends TimerTask {

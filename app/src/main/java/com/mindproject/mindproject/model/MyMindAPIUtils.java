@@ -25,9 +25,11 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -57,7 +59,8 @@ public class MyMindAPIUtils {
     public Single<ArrayList<EventData>> getEvents(String token){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
-        return apiService.getEvents("Bearer " + token);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        return apiService.getEvents("Bearer " + token, simpleDateFormat.format(Calendar.getInstance().getTime()));
     }
 
     public Observable<EventDataForEventList> getEventsForList(ArrayList<EventData> events, Context context){
@@ -66,6 +69,7 @@ public class MyMindAPIUtils {
             public void subscribe(ObservableEmitter<EventDataForEventList> e) throws Exception {
                 for(int i = 0; i < events.size(); i++){
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                    //Log.d("TIMEZONE", events.get(i).startTime); //String .valueOf(simpleDateFormat.getTimeZone().getRawOffset()/3600000)
                     String title = events.get(i).title;
                     Date date = simpleDateFormat.parse(events.get(i).startTime);
                     Drawable image;

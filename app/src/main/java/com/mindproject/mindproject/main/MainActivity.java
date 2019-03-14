@@ -17,8 +17,11 @@ import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     @Override
     protected void onStart(){
-        Log.d("SSS", "onStart");
         super.onStart();
         mPresenter.fetchToken(mDeviceId);
         if(mToken!=null){

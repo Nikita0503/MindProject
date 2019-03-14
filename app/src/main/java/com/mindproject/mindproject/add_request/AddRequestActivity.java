@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,10 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     private AddRequestPresenter mPresenter;
     private PhotosAdapter mAdapter;
 
+    @BindView(R.id.buttonOk)
+    Button buttonOk;
+    @BindView(R.id.buttonSend)
+    Button buttonSend;
     @BindView(R.id.datePicker)
     MaterialCalendarView datePicker;
     @BindView(R.id.timePicker)
@@ -64,6 +69,11 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     RecyclerView recyclerViewPhotos;
     @BindView(R.id.rotateloading)
     RotateLoading rotateLoading;
+    @OnClick(R.id.buttonOk)
+    void onClickOk(){
+        timePicker.setVisibility(View.GONE);
+        buttonOk.setVisibility(View.GONE);
+    }
     @OnClick(R.id.textViewDate)
     void onClickDate(){
         if(datePicker.getVisibility()==View.GONE) {
@@ -80,8 +90,10 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
             int hour = currentTime.get(Calendar.HOUR_OF_DAY);
             textViewTime.setText(hour + ":00");
             timePicker.setVisibility(View.VISIBLE);
+            buttonOk.setVisibility(View.VISIBLE);
         }else{
             timePicker.setVisibility(View.GONE);
+            buttonOk.setVisibility(View.GONE);
         }
     }
 
@@ -263,10 +275,12 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
 
     public void startLoading(){
         rotateLoading.start();
+        buttonSend.setEnabled(false);
     }
 
     public void stopLoading(){
         rotateLoading.stop();
+        buttonSend.setEnabled(true);
     }
 
     private String getRealPathFromUri(Context context, Uri contentUri) {

@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.acl.LastOwnerException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,8 +62,6 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
     public void generateData(String token, String title, String description, String date, String time, ArrayList<File> fileList){
         ArrayList<MultipartBody.Part> bodyList = new ArrayList<MultipartBody.Part>();
         for(int i = 0; i < fileList.size(); i++){
-            Log.d("IMAGE", fileList.get(i).getPath());
-            //File file = new File(getRealPathFromUri(mActivity.getApplicationContext(), uriList.get(i)));
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileList.get(i));
             MultipartBody.Part body = MultipartBody.Part.createFormData("photo", fileList.get(i).getName(), requestFile);
             bodyList.add(body);
@@ -88,10 +87,8 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                             ResponseBody responseBody = exception.response().errorBody();
                             try {
                                 JSONObject responseError = new JSONObject(responseBody.string());
-                                JSONArray arrayError = responseError.getJSONArray("errors");
-                                JSONObject errorMessage = arrayError.getJSONObject(0);
-                                mActivity.showMessage(errorMessage.getString("ERROR_MESSAGE"));
-
+                                Log.d("TAG", responseError.toString());
+                                mActivity.showMessage(responseError.getString("message"));
                                 Log.d("Error", responseError.toString());
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
@@ -109,11 +106,11 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         String startTime = null;
         try {
             SimpleDateFormat dateFormatBefore = new SimpleDateFormat("dd MMM yyyy H:mm", Locale.ENGLISH);
-
             Date date1 = dateFormatBefore.parse(date + " " + time);
-            SimpleDateFormat dateFormatAfter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH);
+            SimpleDateFormat dateFormatAfter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
             TimeZone timeZone = TimeZone.getDefault();
             int timeZoneInt = timeZone.getRawOffset()/3600000;
+            //Log.d("TIMEZONE_ADD", String.valueOf(timeZoneInt));
             String timeZoneStr = "";
             if(timeZoneInt > 0) {
                 if (timeZoneInt < 10) {
@@ -121,18 +118,19 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                 } else {
                     timeZoneStr = "+" + String.valueOf(timeZoneInt);
                 }
-            }else{
+            }if(timeZoneInt < 0){
                 if(timeZoneInt>-10){
                     timeZoneStr = "-0" + String.valueOf(Math.abs(timeZoneInt));
                 }else{
                     timeZoneStr = String.valueOf(timeZoneInt);
                 }
             }
-
-            Log.d("Жирный", timeZoneStr);
-
+            if(timeZoneInt==0){
+                timeZoneStr = "00";
+            }
             startTime = dateFormatAfter.format(date1);
             startTime = startTime + timeZoneStr+":00";
+            //Log.d("TIMEZONE_ADD", startTime);
         }catch (Exception c){
             c.printStackTrace();
         }
