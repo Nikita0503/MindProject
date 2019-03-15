@@ -17,6 +17,7 @@ import com.mindproject.mindproject.model.data.ChangeEmail;
 import com.mindproject.mindproject.model.data.ChangeUsernameAndPhone;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
+import com.mindproject.mindproject.model.data.Response;
 import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.model.data.UserDataAuthorization;
 import com.mindproject.mindproject.model.data.Vote;
@@ -56,11 +57,36 @@ public class MyMindAPIUtils {
         return apiService.getToken(new UserDataAuthorization(deviceId));
     }
 
-    public Single<ArrayList<EventData>> getEvents(String token){
+    public Single<Response> getEvents(String token){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         return apiService.getEvents("Bearer " + token, simpleDateFormat.format(Calendar.getInstance().getTime()));
+    }
+
+    //public Single<Response> getMyEvents(String token, String id, int count, int totalCount){
+    //    Retrofit retrofit = getClient(BASE_URL);
+    //    APIService apiService = retrofit.create(APIService.class);
+    //    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    //    Calendar calendar = Calendar.getInstance();
+    //    calendar.set(Calendar.MONTH, -1);
+    //    int page = (count / 10) + 1;
+    //    //Log.d("COUNT", "page = " + page + " totalCount = " + totalPageCount);
+    //    if(count<=totalCount) {
+    //        //Log.d("COUNT", "start = " + count / 20 + " end = " + totalCount);
+    //        return apiService.getMyEvents("Bearer " + token, simpleDateFormat.format(calendar.getTime()), id, page, 10);
+    //    }else{
+    //        return null;
+    //    }
+    //}
+
+    public Single<Response> getMyEvents(String token, String id){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, -1);
+        return apiService.getMyEvents("Bearer " + token, simpleDateFormat.format(calendar.getTime()), id, 1, 20);
     }
 
     public Observable<EventDataForEventList> getEventsForList(ArrayList<EventData> events, Context context){

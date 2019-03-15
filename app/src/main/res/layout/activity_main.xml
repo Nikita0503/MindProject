@@ -6,7 +6,18 @@
     android:layout_height="match_parent"
     tools:context="com.mindproject.mindproject.main.MainActivity">
 
-
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotateloading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewKarmaPoint"
+        app:loading_color="@color/colorPrimary"
+        app:loading_width="5dp" />
 
     <TextView
         android:id="@+id/textViewKarmaPoint"

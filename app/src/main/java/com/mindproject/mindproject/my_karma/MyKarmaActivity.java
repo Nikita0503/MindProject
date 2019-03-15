@@ -12,12 +12,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 
+import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.add_request.AddRequestActivity;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.edit_profile.EditProfileActivity;
 import com.mindproject.mindproject.model.data.UserData;
+import com.mindproject.mindproject.my_requests.MyRequestsActivity;
 
-public class MyKarmaActivity extends AppCompatActivity {
+public class MyKarmaActivity extends AppCompatActivity implements BaseContract.BaseView {
 
     private String mDeviceId;
     private String mToken;
@@ -34,6 +36,15 @@ public class MyKarmaActivity extends AppCompatActivity {
         intent.putExtra("deviceId", mDeviceId);
         startActivity(intent);
         Toast.makeText(getApplicationContext(), "Welcome to edit activity", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.buttonArchive)
+    void onClickMyRequests(){
+        Intent intent = new Intent(getApplicationContext(), MyRequestsActivity.class);
+        intent.putExtra("token", mToken);
+        intent.putExtra("deviceId", mDeviceId);
+        startActivity(intent);
+        Toast.makeText(getApplicationContext(), "Welcome to requests activity", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.buttonSend)
@@ -72,5 +83,10 @@ public class MyKarmaActivity extends AppCompatActivity {
     public void onStop(){
         super.onStop();
         mPresenter.onStop();
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

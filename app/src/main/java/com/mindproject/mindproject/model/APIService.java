@@ -7,6 +7,7 @@ import com.mindproject.mindproject.model.data.AddRequestData;
 import com.mindproject.mindproject.model.data.ChangeEmail;
 import com.mindproject.mindproject.model.data.ChangeUsernameAndPhone;
 import com.mindproject.mindproject.model.data.EventData;
+import com.mindproject.mindproject.model.data.Response;
 import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.model.data.UserDataAuthorization;
 import com.mindproject.mindproject.model.data.Vote;
@@ -41,7 +42,10 @@ public interface APIService {
     Single<UserData> getToken(@Body UserDataAuthorization dataAuthorization);
 
     @GET("request")
-    Single<ArrayList<EventData>> getEvents(@Header("Authorization") String header, @Query("start_time") String start_time);
+    Single<Response> getEvents(@Header("Authorization") String header, @Query("start_time") String start_time);
+
+    @GET("request")
+    Single<Response> getMyEvents(@Header("Authorization") String header, @Query("start_time") String start_time, @Query("user_id") String user_id, @Query("page") int page, @Query("per_page") int per_page);
 
     @Multipart
     @POST("request")

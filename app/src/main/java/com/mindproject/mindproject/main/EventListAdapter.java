@@ -56,6 +56,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         mEvents.clear();
         mEvents.addAll(events);
         notifyDataSetChanged();
+        //for(int i = 0; i < events.size(); i++){
+        //    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        //    Log.d("TIMEZONE", simpleDateFormat.format(events.get(i).eventDate));
+        //}
     }
 
     @Override
@@ -72,7 +76,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         Date difference = getTimeDifference(mEvents.get(position).eventDate);
-        if(position == 0 && difference.getTime()<1800000){
+        if(position == 0 && difference.getTime()<1800000 ){
             holder.textViewTimer.setTextColor(mActivity.getResources().getColor(R.color.colorAccent));
         }
         holder.textViewTimer.setText(mDifferenceDateFormat.format(difference));

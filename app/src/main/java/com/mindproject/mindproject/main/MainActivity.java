@@ -29,6 +29,7 @@ import butterknife.OnClick;
 
 import com.mindproject.mindproject.model.data.UserData;
 import com.mindproject.mindproject.my_karma.MyKarmaActivity;
+import com.victor.loading.rotate.RotateLoading;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private MainPresenter mPresenter;
     private EventListAdapter mEventAdapter;
 
+    @BindView(R.id.rotateloading)
+    RotateLoading rotateLoading;
     @BindView(R.id.textViewKarmaPoint)
     TextView textViewKarmaPoint;
     @BindView(R.id.recyclerViewEvents)
@@ -70,12 +73,14 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mPresenter.fetchToken(mDeviceId);
         if(mToken!=null){
             mPresenter.fetchEvents(mToken);
+            rotateLoading.start();
         }
     }
 
     public void setToken(String token){
         mToken = token;
         mPresenter.fetchEvents(mToken);
+        rotateLoading.start();
         mEventAdapter = new EventListAdapter(this, mToken);
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerViewEvents.setAdapter(mEventAdapter);
@@ -104,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     public void addEventsToList(ArrayList<EventDataForEventList> events){
         mEventAdapter.setEvents(events);
+        rotateLoading.stop();
     }
 
     @Override

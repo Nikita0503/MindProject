@@ -96,7 +96,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 long elapsedMillis = SystemClock.elapsedRealtime()
                         - chronometer.getBase();
                 Log.d("SEC", elapsedMillis+"");
-                progressBar.setProgress((int) elapsedMillis);
+                progressBar.setProgress( Math.abs((int)elapsedMillis));
                 if (elapsedMillis > 0) {
                     String strElapsedMillis = "Прошло больше 5 секунд";
                     //Toast.makeText(getContext(),

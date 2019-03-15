@@ -3,9 +3,9 @@
     package="com.mindproject.mindproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +13,6 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
         <activity android:name=".main.MainActivity">
             <intent-filter>
@@ -31,7 +30,8 @@
         <activity
             android:name=".add_request.AddRequestActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".support.SupportActivity"></activity>
+        <activity android:name=".support.SupportActivity" />
+        <activity android:name=".my_requests.MyRequestsActivity"></activity>
     </application>
 
 </manifest>
