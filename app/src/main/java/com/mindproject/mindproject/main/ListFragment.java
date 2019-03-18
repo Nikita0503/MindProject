@@ -62,6 +62,7 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
     public void onStart(){
         super.onStart();
         mPresenter.fetchToken(mDeviceId);
+        rotateLoading.setVisibility(View.VISIBLE);
         rotateLoading.start();
         mEventAdapter = new EventListAdapter(this, mToken);
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -84,6 +85,7 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
 
     public void addEventsToList(ArrayList<EventDataForEventList> events){
         mEventAdapter.setEvents(events);
+        rotateLoading.setVisibility(View.INVISIBLE);
         rotateLoading.stop();
     }
 

@@ -15,6 +15,7 @@ import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.main.EventListAdapter;
 import com.mindproject.mindproject.main.MainActivity;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
+import com.mindproject.mindproject.past_event.PastEventFragment;
 import com.mindproject.mindproject.support.SupportFragment;
 
 import java.text.SimpleDateFormat;
@@ -62,19 +63,19 @@ public class MyEventListAdapter extends RecyclerView.Adapter<MyEventListAdapter.
         holder.textViewEventTitle.setText(mEvents.get(position).title);
         holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
-        //holder.itemView.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        SupportFragment supportFragment = new SupportFragment();
-        //        supportFragment.setToken(mToken);
-        //        supportFragment.setEventData(mEvents.get(position).eventData);
-        //        FragmentManager manager = mActivity.getSupportFragmentManager();
-        //        FragmentTransaction transaction = manager.beginTransaction();
-        //        transaction.replace(R.id.fragment_container, supportFragment);
-        //        transaction.addToBackStack(null);
-        //        transaction.commit();
-        //    }
-        //});
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PastEventFragment pastEventFragment = new PastEventFragment();
+                pastEventFragment.setToken(mToken);
+                pastEventFragment.setEventData(mEvents.get(position).eventData);
+                FragmentManager manager = mFragment.getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.fragment_container, pastEventFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         //if(position > mEvents.size()-3){
         //    mActivity.fetchMoreEvents(mEvents.size());

@@ -172,6 +172,12 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     }
 
     @Override
+    public void onStop(){
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
     public void onDestroy(){
         super.onDestroy();
         mTimer.cancel();
