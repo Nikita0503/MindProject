@@ -45,7 +45,7 @@ public interface APIService {
     Single<Response> getEvents(@Header("Authorization") String header, @Query("start_time") String start_time);
 
     @GET("request")
-    Single<Response> getMyEvents(@Header("Authorization") String header, @Query("start_time") String start_time, @Query("user_id") String user_id, @Query("page") int page, @Query("per_page") int per_page);
+    Single<Response> getMyEvents(@Header("Authorization") String header, @Query("end_time") String start_time, @Query("user_id") String user_id, @Query("page") int page, @Query("per_page") int per_page);
 
     @Multipart
     @POST("request")

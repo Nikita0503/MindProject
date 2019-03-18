@@ -44,15 +44,6 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
     @BindView(R.id.recyclerViewEvents)
     RecyclerView recyclerViewEvents;
 
-    //@OnClick(R.id.textViewKarmaPoint)
-    //void onClick(){
-    //    Intent intent = new Intent(getContext(), MyKarmaActivity.class);
-    //    intent.putExtra("token", mToken);
-    //    intent.putExtra("deviceId", mDeviceId);
-    //    startActivity(intent);
-    //    Toast.makeText(getContext(), "Welcome to karma activity", Toast.LENGTH_SHORT).show();
-    //}
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +79,7 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
 
     public void setKarmaPoints(int karmaPoints){
         mKarmaPoints = karmaPoints;
-        textViewKarmaPoint.setText("Ваша карма " + mKarmaPoints);
+        textViewKarmaPoint.setText("Your karma " + mKarmaPoints);
     }
 
     public void addEventsToList(ArrayList<EventDataForEventList> events){

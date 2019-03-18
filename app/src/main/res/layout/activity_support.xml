@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9B89E9"
+    android:background="@color/colorPrimary"
     tools:context="com.mindproject.mindproject.support.SupportActivity">
 
 
@@ -43,7 +43,6 @@
         android:background="@drawable/rect"
         android:elevation="2dp"
         android:padding="4dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +58,7 @@
         android:background="@drawable/rect"
         android:elevation="2dp"
         android:padding="4dp"
+        android:textColor="@color/colorPrimaryDark"
         android:text="Author Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,9 +72,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/rect"
+        android:textColor="@color/colorPrimaryDark"
         android:elevation="2dp"
         android:padding="4dp"
-        android:text="Увидомить меня о начале"
+        android:text="Notify me of the beginning"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewName" />
@@ -99,6 +100,7 @@
 
                     <TextView
                         android:id="@+id/textViewDescription"
+                        android:textColor="@color/colorPrimaryDark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Description\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\Description\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\n"/>
@@ -117,7 +119,8 @@
                 android:background="@drawable/rect_button"
                 android:elevation="2dp"
                 android:padding="4dp"
-                android:text="Отправить другу"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Send to friends"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +154,7 @@
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="00:05"
-                android:textColor="@android:color/background_dark"
+                android:textColor="@android:color/white"
                 android:textSize="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -170,7 +173,7 @@
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="00:05"
-                android:textColor="@android:color/background_dark"
+                android:textColor="@android:color/white"
                 android:textSize="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -189,7 +192,7 @@
                 android:backgroundTint="@android:color/holo_green_light"
                 android:elevation="2dp"
                 android:padding="4dp"
-                android:text="Поддержать"
+                android:text="Support!"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mMyRequestFragment.setDeviceId(mDeviceId);
         bottomNavigation.setVisibility(View.VISIBLE);
         rotateLoading.stop();
+        bottomNavigation.setSelectedItemId(R.id.eventsFragment);
     }
 
     public void updateKarmaPoints(){
