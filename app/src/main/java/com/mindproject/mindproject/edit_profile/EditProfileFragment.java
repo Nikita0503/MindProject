@@ -2,20 +2,19 @@ package com.mindproject.mindproject.edit_profile;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
-import com.mindproject.mindproject.model.PhotoDownloader;
-import com.mindproject.mindproject.model.data.UserData;
-import com.victor.loading.newton.NewtonCradleLoading;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.util.regex.Matcher;
@@ -27,7 +26,13 @@ import butterknife.OnClick;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
-public class EditProfileActivity extends AppCompatActivity implements BaseContract.BaseView {
+import static android.app.Activity.RESULT_OK;
+
+/**
+ * Created by Nikita on 18.03.2019.
+ */
+
+public class EditProfileFragment extends Fragment implements BaseContract.BaseView{
 
     static final int GALLERY_REQUEST = 1;
     private String mDeviceId;
@@ -87,20 +92,22 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
-        ButterKnife.bind(this);
-        //mPresenter = new EditProfilePresenter(this);
+        mPresenter = new EditProfilePresenter(this);
         mPresenter.onStart();
-        Intent intent = getIntent();
-        mToken = intent.getStringExtra("token");
-        mDeviceId = intent.getStringExtra("deviceId");
-        mPresenter.fetchUserData(mDeviceId);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_edit_profile, container, false);
+        ButterKnife.bind(this, view);
+        mPresenter.fetchUserData(mDeviceId);
+        return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch(requestCode) {
             case GALLERY_REQUEST:
@@ -110,6 +117,14 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
                     mImageURL = selectedImage;
                 }
         }
+    }
+
+    public void setToken(String token){
+        mToken = token;
+    }
+
+    public void setDeviceId(String deviceId){
+        mDeviceId = deviceId;
     }
 
     public void setPhoto(Bitmap bitmap){
@@ -171,11 +186,11 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    protected void onStop(){
+    public void onStop(){
         super.onStop();
         mPresenter.onStop();
     }

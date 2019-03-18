@@ -34,12 +34,12 @@ public class MyEventListAdapter extends RecyclerView.Adapter<MyEventListAdapter.
     private String mToken;
     private SimpleDateFormat mEventDateFormat;
     private ArrayList<EventDataForEventList> mEvents;
-    private MyRequestsActivity mActivity;
+    private MyRequestsFragment mFragment;
 
-    public MyEventListAdapter(MyRequestsActivity activity, String token) {
+    public MyEventListAdapter(MyRequestsFragment fragment, String token) {
         mEventDateFormat = new SimpleDateFormat("d MMM H:mm", Locale.ENGLISH);
         mEvents = new ArrayList<EventDataForEventList>();
-        mActivity = activity;
+        mFragment = fragment;
         mToken = token;
     }
 

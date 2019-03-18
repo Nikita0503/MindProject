@@ -31,12 +31,12 @@ import okhttp3.ResponseBody;
 
 public class MyRequestsPresenter implements BaseContract.BasePresenter {
 
-    private MyRequestsActivity mActivity;
+    private MyRequestsFragment mFragment;
     private CompositeDisposable mDisposable;
     private MyMindAPIUtils mAPIUtils;
 
-    public MyRequestsPresenter(MyRequestsActivity activity) {
-        mActivity = activity;
+    public MyRequestsPresenter(MyRequestsFragment fragment) {
+        mFragment = fragment;
         mAPIUtils = new MyMindAPIUtils();
     }
 
@@ -52,7 +52,8 @@ public class MyRequestsPresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableSingleObserver<UserData>() {
                     @Override
                     public void onSuccess(UserData data) {
-                        mActivity.setUserData(data);
+                        mFragment.setToken(data.accessToken);
+                        mFragment.setUserData(data);
                     }
 
                     @Override
@@ -102,7 +103,7 @@ public class MyRequestsPresenter implements BaseContract.BasePresenter {
 
     private void transformEvents(ArrayList<EventData> events) {
         ArrayList<EventDataForEventList> transformedEvents = new ArrayList<EventDataForEventList>();
-        Disposable transform = mAPIUtils.getEventsForList(events, mActivity.getApplicationContext())
+        Disposable transform = mAPIUtils.getEventsForList(events, mFragment.getContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<EventDataForEventList>() {
@@ -118,7 +119,7 @@ public class MyRequestsPresenter implements BaseContract.BasePresenter {
 
                     @Override
                     public void onComplete() {
-                        mActivity.addEventsToList(transformedEvents);
+                        mFragment.addEventsToList(transformedEvents);
                     }
                 });
         mDisposable.add(transform);

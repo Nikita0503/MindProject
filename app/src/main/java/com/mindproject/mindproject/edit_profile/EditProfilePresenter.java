@@ -42,12 +42,12 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
     private boolean mEditedUsernameAndPhone;
     private boolean mEditedEmail;
     private boolean mEditedAvatar;
-    private EditProfileActivity mActivity;
+    private EditProfileFragment mFragment;
     private CompositeDisposable mDisposable;
     private MyMindAPIUtils mAPIUtils;
 
-    public EditProfilePresenter(EditProfileActivity activity){
-        mActivity = activity;
+    public EditProfilePresenter(EditProfileFragment fragment){
+        mFragment = fragment;
         mAPIUtils = new MyMindAPIUtils();
     }
 
@@ -63,6 +63,7 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
+
                         mEditedUsernameAndPhone = true;
                         stopLoading();
                     }
@@ -78,12 +79,13 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
     public void changeAvatar(String token, Uri uri){
         if(uri!=null) {
             Log.d("TAG", uri.getPath());
-            Disposable avatar = mAPIUtils.changeAvatar(token, getRealPathFromUri(mActivity.getApplicationContext(), uri))
+            Disposable avatar = mAPIUtils.changeAvatar(token, getRealPathFromUri(mFragment.getContext(), uri))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableCompletableObserver() {
                         @Override
                         public void onComplete() {
+
                             mEditedAvatar = true;
                             stopLoading();
                         }
@@ -98,7 +100,7 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
                                     JSONObject responseError = new JSONObject(responseBody.string());
                                     JSONArray arrayError = responseError.getJSONArray("errors");
                                     JSONObject errorMessage = arrayError.getJSONObject(0);
-                                    mActivity.showMessage(errorMessage.getString("ERROR_MESSAGE"));
+                                    mFragment.showMessage(errorMessage.getString("ERROR_MESSAGE"));
                                 } catch (JSONException e1) {
                                     e1.printStackTrace();
                                 } catch (IOException e1) {
@@ -123,6 +125,7 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
                     public void onComplete() {
                         mEditedEmail = true;
                         stopLoading();
+
                     }
 
                     @Override
@@ -134,25 +137,26 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
     }
 
     public void fetchUserData(String deviceId){
-        mActivity.startLoading();
+        mFragment.startLoading();
         Disposable tokenDisposable = mAPIUtils.getToken(deviceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<UserData>() {
                     @Override
                     public void onSuccess(UserData data) {
+                        mFragment.setToken(data.accessToken);
                         Log.d("USER_DATA", data.accessToken);
                         if(data.avatar!=null) {
                             downloadPhoto(data.avatar);
                         }
                         if(data.username!=null) {
-                            mActivity.setName(data.username);
+                            mFragment.setName(data.username);
                         }
                         if(data.phone!=null) {
-                            mActivity.setPhone(data.phone);
+                            mFragment.setPhone(data.phone);
                         }
                         if(data.email!=null) {
-                            mActivity.setEmail(data.email);
+                            mFragment.setEmail(data.email);
                         }
                     }
 
@@ -165,15 +169,16 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
     }
 
     public void downloadPhoto(Object photo){
-        PhotoDownloader downloader = new PhotoDownloader(mActivity.getApplicationContext());
+        PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext());
         Disposable data = downloader.fetchPhoto(photo.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<Bitmap>() {
                     @Override
                     public void onSuccess(Bitmap value) {
-                        mActivity.setPhoto(value);
-                        mActivity.stopLoading();
+                        mFragment.setPhoto(value);
+                        Log.d("USER_DATA", "photo2");
+                        mFragment.stopLoading();
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -200,11 +205,11 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
 
     private void stopLoading(){
         if(mEditedUsernameAndPhone && mEditedAvatar && mEditedEmail){
-            mActivity.stopLoading();
+            mFragment.stopLoading();
             mEditedUsernameAndPhone = false;
             mEditedEmail = false;
             mEditedAvatar = false;
-            mActivity.showMessage("Profile has been updated successfully");
+            mFragment.showMessage("Profile has been updated successfully");
         }
     }
 

@@ -1,19 +1,19 @@
 package com.mindproject.mindproject.my_requests;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
-import com.mindproject.mindproject.main.EventListAdapter;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 import com.mindproject.mindproject.model.data.UserData;
-import com.mindproject.mindproject.my_karma.MyKarmaPresenter;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
@@ -21,7 +21,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyRequestsActivity extends AppCompatActivity implements BaseContract.BaseView {
+/**
+ * Created by Nikita on 18.03.2019.
+ */
+
+public class MyRequestsFragment extends Fragment implements BaseContract.BaseView{
 
     private String mDeviceId;
     private String mToken;
@@ -35,41 +39,44 @@ public class MyRequestsActivity extends AppCompatActivity implements BaseContrac
     RecyclerView recyclerViewMyEvents;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_requests);
-        ButterKnife.bind(this);
-        Intent intent = getIntent();
-        mToken = intent.getStringExtra("token");
-        mDeviceId = intent.getStringExtra("deviceId");
-        //mPresenter = new MyRequestsPresenter(this);
+        mPresenter = new MyRequestsPresenter(this);
         mPresenter.onStart();
     }
 
     @Override
-    protected void onStart(){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_my_requests, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+
+    @Override
+    public void onStart(){
         super.onStart();
         mPresenter.fetchUserData(mDeviceId);
+    }
+
+    public void setDeviceId(String deviceId){
+        mDeviceId = deviceId;
+    }
+
+    public void setToken(String token){
+        mToken = token;
     }
 
     public void setUserData(UserData userData){
         mUserData = userData;
         mPresenter.fetchMyRequests(mToken, mUserData.id);
-        //mEventAdapter = new MyEventListAdapter(this, mToken);
-        recyclerViewMyEvents.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mEventAdapter = new MyEventListAdapter(this, mToken);
+        recyclerViewMyEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewMyEvents.setAdapter(mEventAdapter);
         recyclerViewMyEvents.setVisibility(View.INVISIBLE);
         rotateLoading.setVisibility(View.VISIBLE);
         rotateLoading.start();
     }
-
-    //public void setTotalCount(int count){
-    //    mTotalCount = count;
-    //}
-
-    //public void fetchMoreEvents(int count){
-    //    mPresenter.fetchMyRequests(mToken, mUserData.id);
-    //}
 
     public void addEventsToList(ArrayList<EventDataForEventList> events){
         mEventAdapter.addEvents(events);
@@ -79,13 +86,13 @@ public class MyRequestsActivity extends AppCompatActivity implements BaseContrac
     }
 
     @Override
-    protected void onStop(){
+    public void onStop(){
         super.onStop();
         mPresenter.onStop();
     }
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

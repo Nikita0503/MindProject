@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.add_request.AddRequestFragment;
+import com.mindproject.mindproject.edit_profile.EditProfileFragment;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import com.mindproject.mindproject.my_karma.MyKarmaActivity;
+import com.mindproject.mindproject.my_requests.MyRequestsFragment;
 import com.victor.loading.rotate.RotateLoading;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private Fragment mFragment;
     private ListFragment mListFragment;
     private AddRequestFragment mAddRequestFragment;
+    private EditProfileFragment mEditProfileFragment;
+    private MyRequestsFragment mMyRequestFragment;
     private FragmentManager mFragmentManager;
 
     @BindView(R.id.bottom_navigation)
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mFragmentManager = getSupportFragmentManager();
         mListFragment = new ListFragment();
         mAddRequestFragment = new AddRequestFragment();
+        mEditProfileFragment = new EditProfileFragment();
+        mMyRequestFragment = new MyRequestsFragment();
         rotateLoading.start();
         Log.d("DEVICE_ID", mDeviceId);
 
@@ -81,10 +87,10 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                         mFragment = mAddRequestFragment;
                         break;
                     case R.id.profileFragment:
-                        mFragment = mListFragment;
+                        mFragment = mEditProfileFragment;
                         break;
                     case R.id.archiveFragment:
-                        mFragment = mListFragment;
+                        mFragment = mMyRequestFragment;
                         break;
                 }
                 FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -99,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mToken = token;
         mListFragment.setDeviceId(mDeviceId);
         mAddRequestFragment.setToken(mToken);
+        mEditProfileFragment.setDeviceId(mDeviceId);
+        mMyRequestFragment.setDeviceId(mDeviceId);
         bottomNavigation.setVisibility(View.VISIBLE);
         rotateLoading.stop();
     }

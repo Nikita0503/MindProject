@@ -70,11 +70,6 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public void onStart(){
         super.onStart();
-        //mPresenter.fetchToken(mDeviceId);
-        //if(mToken!=null){
-        //    mPresenter.fetchEvents(mToken);
-        //    rotateLoading.start();
-        //}
         mPresenter.fetchToken(mDeviceId);
         rotateLoading.start();
         mEventAdapter = new EventListAdapter(this, mToken);
