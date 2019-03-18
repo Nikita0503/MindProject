@@ -75,7 +75,6 @@ public class SupportPresenter implements BaseContract.BasePresenter {
     }
 
     public void voteForEvent(String token, int id) {
-        //Log.d("TOKEN", token);
         Disposable vote = mAPIUtils.voteForEvent(token, new Vote(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

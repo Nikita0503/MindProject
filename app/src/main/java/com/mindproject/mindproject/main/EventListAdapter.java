@@ -1,11 +1,9 @@
 package com.mindproject.mindproject.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mindproject.mindproject.R;
-import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
-import com.mindproject.mindproject.support.SupportActivity;
 import com.mindproject.mindproject.support.SupportFragment;
 
 import java.text.SimpleDateFormat;
@@ -37,15 +33,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     private SimpleDateFormat mDifferenceDateFormat;
     private SimpleDateFormat mEventDateFormat;
     private ArrayList<EventDataForEventList> mEvents;
-    private MainActivity mActivity;
+    private ListFragment mFragment;
 
-    public EventListAdapter(MainActivity activity, String token) {
+    public EventListAdapter(ListFragment fragment, String token) {
         mEventDateFormat = new SimpleDateFormat("d MMM H:mm", Locale.ENGLISH);
         TimeZone timeZone = TimeZone.getDefault();
         mDifferenceDateFormat = new SimpleDateFormat("H:mm:ss", Locale.ENGLISH);
         mDifferenceDateFormat.setTimeZone(timeZone);
         mEvents = new ArrayList<EventDataForEventList>();
-        mActivity = activity;
+        mFragment = fragment;
         Timer mTimer = new Timer();
         AdapterTimerTask mMyTimerTask = new AdapterTimerTask();
         mTimer.schedule(mMyTimerTask, 0, 500);
@@ -77,7 +73,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         Date difference = getTimeDifference(mEvents.get(position).eventDate);
         if(position == 0 && difference.getTime()<1800000 ){
-            holder.textViewTimer.setTextColor(mActivity.getResources().getColor(R.color.colorAccent));
+            holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.colorAccent));
         }
         holder.textViewTimer.setText(mDifferenceDateFormat.format(difference));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +82,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
                 SupportFragment supportFragment = new SupportFragment();
                 supportFragment.setToken(mToken);
                 supportFragment.setEventData(mEvents.get(position).eventData);
-                FragmentManager manager = mActivity.getSupportFragmentManager();
+                FragmentManager manager = mFragment.getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.fragment_container, supportFragment);
                 transaction.addToBackStack(null);
@@ -132,7 +128,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
         @Override
         public void run() {
-            mActivity.runOnUiThread(new Runnable() {
+            mFragment.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     notifyDataSetChanged();

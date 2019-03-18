@@ -1,20 +1,21 @@
 package com.mindproject.mindproject.add_request;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -22,17 +23,14 @@ import android.widget.Toast;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
-import com.mindproject.mindproject.add_request.PhotosAdapter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.victor.loading.rotate.RotateLoading;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -42,7 +40,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 
-public class AddRequestActivity extends AppCompatActivity implements BaseContract.BaseView{
+import static android.app.Activity.RESULT_OK;
+
+/**
+ * Created by Nikita on 18.03.2019.
+ */
+
+public class AddRequestFragment extends Fragment implements BaseContract.BaseView {
+
     public static final int GALLERY_REQUEST = 1;
     public static final int MAKE_A_PHOTO = 0;
     private String mToken;
@@ -99,11 +104,6 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
 
     @OnClick(R.id.buttonAddPhotos)
     void onClickAddPhotos(){
-        //Intent intent = new Intent();
-        //intent.setType("image/*");
-        //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        //intent.setAction(Intent.ACTION_GET_CONTENT);
-        //startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
@@ -153,15 +153,17 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_request);
-        ButterKnife.bind(this);
-        Intent intent = getIntent();
-        mToken = intent.getStringExtra("token");
         Log.d("token", mToken);
-        //mPresenter = new AddRequestPresenter(this);
+        mPresenter = new AddRequestPresenter(this);
         mPresenter.onStart();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_add_request, container, false);
+        ButterKnife.bind(this, view);
         datePicker.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
@@ -177,22 +179,21 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
             }
         });
         timePicker.setMinValue(0);
-        timePicker.setMaxValue(23);
+        timePicker.setMaxValue(24);
         timePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 textViewTime.setText(picker.getValue() + ":00");
             }
         });
-        //mAdapter = new PhotosAdapter(this);
-        recyclerViewPhotos.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        mAdapter = new PhotosAdapter(this);
+        recyclerViewPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewPhotos.setAdapter(mAdapter);
-
+        return view;
     }
 
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         if(resultCode == RESULT_OK) {
             switch(requestCode) {
@@ -200,9 +201,9 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                     if(resultCode == RESULT_OK){
                         try {
                             Uri selectedImage = imageReturnedIntent.getData();
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                             mAdapter.addPhotos(bitmap);
-                            File file = new File(getRealPathFromUri(getApplicationContext(), selectedImage));
+                            File file = new File(getRealPathFromUri(getContext(), selectedImage));
                             mAdapter.addFile(file);
                         }catch (Exception c){
                             c.printStackTrace();
@@ -244,33 +245,11 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                     }
                 }
             }
-            //if(requestCode==ADD_PHOTOS) { File file = new File(getRealPathFromUri(mActivity.getApplicationContext(), uriList.get(i)));
-            //    ClipData clipData = imageReturnedIntent.getClipData();
-            //    if (clipData != null) {
-            //        for (int i = 0; i < clipData.getItemCount(); i++) {
-            //            try {
-            //                Log.d("TAG", clipData.getItemAt(i).getUri().getPath());
-            //                Uri uri = clipData.getItemAt(i).getUri();
-            //                mUriList.add(uri);
-            //                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-            //                mAdapter.addPhotos(bitmap);
-            //            } catch (Exception c) {
-            //                c.printStackTrace();
-            //            }
-            //        }
-            //    } else {
-            //        try {
-            //            Uri selectedImage = imageReturnedIntent.getData();
-            //            Log.d("TAG", selectedImage.getPath());
-            //            mUriList.add(selectedImage);
-            //            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-            //            mAdapter.addPhotos(bitmap);
-            //        } catch (Exception c) {
-            //            c.printStackTrace();
-            //        }
-            //    }
-            //}
         }
+    }
+
+    public void setToken(String token){
+        mToken = token;
     }
 
     public void startLoading(){
@@ -298,14 +277,9 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
         }
     }
 
-    @Override
-    public void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
-    protected void onStop(){
-        super.onStop();
-        mPresenter.onStop();
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

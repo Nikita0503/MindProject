@@ -45,12 +45,12 @@ import okhttp3.ResponseBody;
 
 public class AddRequestPresenter implements BaseContract.BasePresenter {
 
-    private AddRequestActivity mActivity;
+    private AddRequestFragment mFragment;
     private CompositeDisposable mDisposable;
     private MyMindAPIUtils mAPIUtils;
 
-    public AddRequestPresenter(AddRequestActivity activity){
-        mActivity = activity;
+    public AddRequestPresenter(AddRequestFragment fragment){
+        mFragment = fragment;
     }
 
     @Override
@@ -73,14 +73,14 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        mActivity.showMessage("Event has been created!");
-                        mActivity.stopLoading();
-                        mActivity.finish();
+                        mFragment.showMessage("Event has been created!");
+                        mFragment.stopLoading();
+                        //mFragment.finish();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mActivity.stopLoading();
+                        mFragment.stopLoading();
                         e.printStackTrace();
                         if (e instanceof HttpException) {
                             HttpException exception = (HttpException) e;
@@ -88,7 +88,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                             try {
                                 JSONObject responseError = new JSONObject(responseBody.string());
                                 Log.d("TAG", responseError.toString());
-                                mActivity.showMessage(responseError.getString("message"));
+                                mFragment.showMessage(responseError.getString("message"));
                                 Log.d("Error", responseError.toString());
                             } catch (JSONException e1) {
                                 e1.printStackTrace();

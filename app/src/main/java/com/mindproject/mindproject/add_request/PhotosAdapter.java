@@ -25,12 +25,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     //private Picasso mPicasso;
     private ArrayList<Bitmap> mPhotoList;
     private ArrayList<File> mFileList;
-    private AddRequestActivity mActivity;
+    private AddRequestFragment mActivity;
 
-    public PhotosAdapter(AddRequestActivity addRequestActivity) {
+    public PhotosAdapter(AddRequestFragment fragment) {
         mPhotoList = new ArrayList<Bitmap>();
         mFileList = new ArrayList<File>();
-        mActivity = addRequestActivity;
+        mActivity = fragment;
         //mPicasso = Picasso.with(addRequestActivity.getApplicationContext());
     }
 
