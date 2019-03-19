@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +31,9 @@ import com.victor.loading.rotate.RotateLoading;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -54,14 +57,11 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     private AddRequestPresenter mPresenter;
     private PhotosAdapter mAdapter;
 
-    @BindView(R.id.buttonOk)
-    Button buttonOk;
     @BindView(R.id.buttonSend)
     Button buttonSend;
     @BindView(R.id.datePicker)
     MaterialCalendarView datePicker;
-    @BindView(R.id.timePicker)
-    NumberPicker timePicker;
+
     @BindView(R.id.textViewDate)
     TextView textViewDate;
     @BindView(R.id.textViewTime)
@@ -72,13 +72,11 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     ExtendedEditText editTextName;
     @BindView(R.id.recycler_view_photos)
     RecyclerView recyclerViewPhotos;
+    @BindView(R.id.timePicker)
+    RecyclerView recyclerViewtimePicker;
     @BindView(R.id.rotateloading)
     RotateLoading rotateLoading;
-    @OnClick(R.id.buttonOk)
-    void onClickOk(){
-        timePicker.setVisibility(View.GONE);
-        buttonOk.setVisibility(View.GONE);
-    }
+
     @OnClick(R.id.textViewDate)
     void onClickDate(){
         if(datePicker.getVisibility()==View.GONE) {
@@ -90,15 +88,10 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
 
     @OnClick(R.id.textViewTime)
     void onClickTime(){
-        if(timePicker.getVisibility()==View.GONE) {
-            Calendar currentTime = Calendar.getInstance();
-            int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-            textViewTime.setText(hour + ":00");
-            timePicker.setVisibility(View.VISIBLE);
-            buttonOk.setVisibility(View.VISIBLE);
+        if(recyclerViewtimePicker.getVisibility()==View.GONE) {
+            recyclerViewtimePicker.setVisibility(View.VISIBLE);
         }else{
-            timePicker.setVisibility(View.GONE);
-            buttonOk.setVisibility(View.GONE);
+            recyclerViewtimePicker.setVisibility(View.GONE);
         }
     }
 
@@ -173,22 +166,29 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
                     SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                     textViewDate.setText(newFormat.format(date));
                     datePicker.setVisibility(View.GONE);
+                    textViewTime.setText("Pick time");
+                    textViewTime.setVisibility(View.GONE);
+                    mPresenter.fetchForDateEvents(mToken, date);
+                    rotateLoading.start();
                 }catch (Exception c){
                     c.printStackTrace();
                 }
             }
         });
-        timePicker.setMinValue(0);
-        timePicker.setMaxValue(24);
-        timePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                textViewTime.setText(picker.getValue() + ":00");
-            }
-        });
+
+        //timePicker.setMinValue(0);
+        //timePicker.setMaxValue(24);
+        //timePicker.set
+        //timePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        //    @Override
+        //    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        //        textViewTime.setText(picker.getValue() + ":00");
+        //    }
+        //});
         mAdapter = new PhotosAdapter(this);
         recyclerViewPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewPhotos.setAdapter(mAdapter);
+
         return view;
     }
 
@@ -250,6 +250,19 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
 
     public void setToken(String token){
         mToken = token;
+    }
+
+    public void setTime(String time){
+        textViewTime.setText(time);
+        recyclerViewtimePicker.setVisibility(View.GONE);
+    }
+
+    public void setAvailableTime(ArrayList<Integer> list){
+        textViewTime.setVisibility(View.VISIBLE);
+        TimeAdapter timeAdapter = new TimeAdapter(list, this);
+        recyclerViewtimePicker.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewtimePicker.setAdapter(timeAdapter);
+        rotateLoading.stop();
     }
 
     public void startLoading(){

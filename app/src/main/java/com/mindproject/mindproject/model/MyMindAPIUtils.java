@@ -37,6 +37,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -112,6 +114,13 @@ public class MyMindAPIUtils {
                 e.onComplete();
             };
         });
+    }
+
+    public Single<Response> getEventsForDate(String token, String date){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        return apiService.getEventsForDate(token, date, date);
     }
 
     public Completable sendRequestData(String token, AddRequestData data,  ArrayList<MultipartBody.Part> files) {

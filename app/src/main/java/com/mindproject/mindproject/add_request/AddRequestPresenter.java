@@ -13,6 +13,8 @@ import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.model.MyMindAPIUtils;
 import com.mindproject.mindproject.model.data.AddRequestData;
+import com.mindproject.mindproject.model.data.EventData;
+import com.mindproject.mindproject.model.data.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -101,6 +104,44 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         mDisposable.add(sendData);
     }
 
+    public void fetchForDateEvents(String token, Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        Disposable dayEvents = mAPIUtils.getEventsForDate(token, simpleDateFormat.format(date))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Response>() {
+                    @Override
+                    public void onSuccess(Response response) {
+                        ArrayList<EventData> events = response.requests;
+                        for(int i = 0; i < events.size(); i++){
+                            Log.d("TAG", events.get(i).startTime);
+                        }
+                        mFragment.setAvailableTime(getAvailableTime(events));
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+        mDisposable.add(dayEvents);
+    }
+
+    private ArrayList<Integer> getAvailableTime(ArrayList<EventData> events){
+        ArrayList<Integer> hours = new ArrayList<Integer>();
+        for(int i = 0; i < 24; i++){
+            hours.add(i);
+        }
+        for(int i = 0; i < events.size(); i++){
+            String hour = events.get(i).startTime.split("T")[1].substring(0, 2);
+            for(int j = 0; j < hours.size(); j++){
+                if(hours.get(j)==Integer.parseInt(hour)){
+                    hours.remove(j);
+                    break;
+                }
+            }
+        }
+        return hours;
+    }
 
     private String getDate(String date, String time){
         String startTime = null;
@@ -136,7 +177,6 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         }
         return startTime;
     }
-
 
     @Override
     public void onStop() {

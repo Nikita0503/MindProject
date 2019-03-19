@@ -49,8 +49,6 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     private AddRequestPresenter mPresenter;
     private PhotosAdapter mAdapter;
 
-    @BindView(R.id.buttonOk)
-    Button buttonOk;
     @BindView(R.id.buttonSend)
     Button buttonSend;
     @BindView(R.id.datePicker)
@@ -69,11 +67,6 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     RecyclerView recyclerViewPhotos;
     @BindView(R.id.rotateloading)
     RotateLoading rotateLoading;
-    @OnClick(R.id.buttonOk)
-    void onClickOk(){
-        timePicker.setVisibility(View.GONE);
-        buttonOk.setVisibility(View.GONE);
-    }
     @OnClick(R.id.textViewDate)
     void onClickDate(){
         if(datePicker.getVisibility()==View.GONE) {
@@ -90,10 +83,8 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
             int hour = currentTime.get(Calendar.HOUR_OF_DAY);
             textViewTime.setText(hour + ":00");
             timePicker.setVisibility(View.VISIBLE);
-            buttonOk.setVisibility(View.VISIBLE);
         }else{
             timePicker.setVisibility(View.GONE);
-            buttonOk.setVisibility(View.GONE);
         }
     }
 
@@ -171,6 +162,7 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                     SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                     textViewDate.setText(newFormat.format(date));
                     datePicker.setVisibility(View.GONE);
+
                 }catch (Exception c){
                     c.printStackTrace();
                 }
@@ -272,6 +264,8 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
             //}
         }
     }
+
+
 
     public void startLoading(){
         rotateLoading.start();
