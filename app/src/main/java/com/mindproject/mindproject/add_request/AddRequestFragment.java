@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -157,12 +158,14 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_add_request, container, false);
         ButterKnife.bind(this, view);
+        datePicker.state().edit().setMinimumDate(CalendarDay.today().getDate()).commit();
         datePicker.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
                 try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
-                    Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy HH", Locale.ENGLISH);
+                    Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear() + " 12");
+                    Log.d("time_day", calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
                     SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                     textViewDate.setText(newFormat.format(date));
                     datePicker.setVisibility(View.GONE);

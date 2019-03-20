@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mEditProfileFragment = new EditProfileFragment();
         mMyRequestFragment = new MyRequestsFragment();
         rotateLoading.start();
-        Log.d("DEVICE_ID", mDeviceId);
+        Log.d("DEVICE_ID1", mDeviceId);
 
     }
 

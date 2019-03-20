@@ -114,7 +114,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                     public void onSuccess(Response response) {
                         ArrayList<EventData> events = response.requests;
                         for(int i = 0; i < events.size(); i++){
-                            Log.d("TAG", events.get(i).startTime);
+                            Log.d("time", events.get(i).startTime);
                         }
                         mFragment.setAvailableTime(getAvailableTime(events));
                     }
@@ -127,6 +127,8 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
     }
 
     private ArrayList<Integer> getAvailableTime(ArrayList<EventData> events){
+        TimeZone tZ = TimeZone.getDefault();
+        int timeZone = tZ.getRawOffset()/3600000;
         ArrayList<Integer> hours = new ArrayList<Integer>();
         for(int i = 0; i < 24; i++){
             hours.add(i);
@@ -134,7 +136,8 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         for(int i = 0; i < events.size(); i++){
             String hour = events.get(i).startTime.split("T")[1].substring(0, 2);
             for(int j = 0; j < hours.size(); j++){
-                if(hours.get(j)==Integer.parseInt(hour)){
+                if(hours.get(j)==Integer.parseInt(hour)+timeZone){
+                    Log.d("time", hours.get(j)+"");
                     hours.remove(j);
                     break;
                 }
