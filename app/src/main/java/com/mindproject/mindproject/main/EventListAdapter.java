@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         Date difference = getTimeDifference(mEvents.get(position).eventDate);
         if(position == 0 && difference.getTime()<1800000 ){
-            holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.colorAccent));
+            holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
         }
         holder.textViewTimer.setText(mDifferenceDateFormat.format(difference));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -113,10 +114,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     }
 
     private Date getTimeDifference(Date date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+        //Log.d("timezone", dateFormat.format(date));
         TimeZone timeZone = TimeZone.getDefault();
         int timeZoneInt = timeZone.getRawOffset()/3600000;
         //mEventDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        Calendar today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance(timeZone);
         today.add(Calendar.HOUR_OF_DAY, timeZoneInt);
         Date currentDate = today.getTime();
         //Log.d("TAG", currentDate.getTime()+"");

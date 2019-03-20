@@ -179,15 +179,6 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
             }
         });
 
-        //timePicker.setMinValue(0);
-        //timePicker.setMaxValue(24);
-        //timePicker.set
-        //timePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-        //    @Override
-        //    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-        //        textViewTime.setText(picker.getValue() + ":00");
-        //    }
-        //});
         mAdapter = new PhotosAdapter(this);
         recyclerViewPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewPhotos.setAdapter(mAdapter);

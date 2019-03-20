@@ -148,6 +148,8 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
                         Log.d("USER_DATA", data.accessToken);
                         if(data.avatar!=null) {
                             downloadPhoto(data.avatar);
+                        }else{
+                            mFragment.stopLoading();
                         }
                         if(data.username!=null) {
                             mFragment.setName(data.username);
