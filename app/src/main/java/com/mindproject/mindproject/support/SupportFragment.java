@@ -107,7 +107,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 }
             }
         });
-
+        showMessage(mEventData.id+"");
         buttonSupport.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {

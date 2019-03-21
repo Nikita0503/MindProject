@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.model.MyMindAPIUtils;
+import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.UserData;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -50,6 +51,24 @@ public class MainPresenter implements BaseContract.BasePresenter{
                     }
                 });
         mDisposable.add(tokenDisposable);
+    }
+
+    public void fetchEventDataByEventId(String token, String eventId){
+        Disposable eventData = mAPIUtils.getEventDataByEventId(token, eventId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<EventData>() {
+                    @Override
+                    public void onSuccess(EventData data) {
+                        mActivity.openSupportFragmentByInvitation(data);
+                        //mActivity.setKarmaPoints(data.karma);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     @Override

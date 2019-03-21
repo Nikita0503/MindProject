@@ -31,6 +31,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -40,6 +41,9 @@ import retrofit2.http.Query;
 public interface APIService {
     @POST("user")
     Single<UserData> getToken(@Body UserDataAuthorization dataAuthorization);
+
+    @GET("request/{event_id}")
+    Single<EventData> getEventDataByEventId(@Header("Authorization") String header, @Path("event_id") String event_id);
 
     @GET("request")
     Single<Response> getEvents(@Header("Authorization") String header, @Query("start_time") String start_time);

@@ -66,6 +66,12 @@ public class MyMindAPIUtils {
         return apiService.getEvents("Bearer " + token, simpleDateFormat.format(Calendar.getInstance().getTime()));
     }
 
+    public Single<EventData> getEventDataByEventId(String token, String eventId){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.getEventDataByEventId(token, eventId);
+    }
+
     //public Single<Response> getMyEvents(String token, String id, int count, int totalCount){
     //    Retrofit retrofit = getClient(BASE_URL);
     //    APIService apiService = retrofit.create(APIService.class);

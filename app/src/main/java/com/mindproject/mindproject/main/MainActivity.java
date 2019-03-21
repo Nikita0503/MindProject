@@ -22,6 +22,7 @@ import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.add_request.AddRequestFragment;
 import com.mindproject.mindproject.edit_profile.EditProfileFragment;
+import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 
 import java.util.ArrayList;
@@ -33,10 +34,12 @@ import butterknife.OnClick;
 
 import com.mindproject.mindproject.my_karma.MyKarmaActivity;
 import com.mindproject.mindproject.my_requests.MyRequestsFragment;
+import com.mindproject.mindproject.support.SupportFragment;
 import com.victor.loading.rotate.RotateLoading;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
+    private String mEventId;
     private String mDeviceId;
     private String mToken;
     private MainPresenter mPresenter;
@@ -71,7 +74,12 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mMyRequestFragment = new MyRequestsFragment();
         rotateLoading.start();
         Log.d("DEVICE_ID1", mDeviceId);
-
+        final Intent intent = getIntent();
+        final String action = intent.getAction();
+        final String data = intent.getDataString();
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            mEventId = data.substring(69);
+        }
     }
 
     private void initNavigationView(){
@@ -96,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 FragmentTransaction transaction = mFragmentManager.beginTransaction();
                 transaction.replace(R.id.fragment_container, mFragment).commit();
                 transaction.addToBackStack(null);
+
                 return true;
             }
         });
@@ -110,6 +119,20 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         bottomNavigation.setVisibility(View.VISIBLE);
         rotateLoading.stop();
         bottomNavigation.setSelectedItemId(R.id.eventsFragment);
+        if(mEventId!=null) {
+            mPresenter.fetchEventDataByEventId(mToken, mEventId);
+        }
+    }
+
+    public void openSupportFragmentByInvitation(EventData event){
+        SupportFragment supportFragment = new SupportFragment();
+        supportFragment.setToken(mToken);
+        supportFragment.setEventData(event);
+        FragmentManager manager = mFragment.getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fragment_container, supportFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void updateKarmaPoints(){
