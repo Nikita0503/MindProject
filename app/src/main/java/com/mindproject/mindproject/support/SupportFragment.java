@@ -1,5 +1,6 @@
 package com.mindproject.mindproject.support;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Nikita on 07.03.2019.
@@ -69,6 +71,13 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     Button buttonSupport;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @OnClick(R.id.buttonSendToFriend)
+    void onClickSendToFriend(){
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.setType("text/plain");
+        myIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.galCalApp&event_id=" + mEventData.id);
+        startActivity(Intent.createChooser(myIntent, "Share with"));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +96,6 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
         mPresenter.downloadPhotos(mEventData.photos);
         textViewRemainingTime.setVisibility(View.VISIBLE);
         chronometer.setVisibility(View.INVISIBLE);
-
         AdapterTimerTask mMyTimerTask = new AdapterTimerTask();
         mTimer.schedule(mMyTimerTask, 0, 500);
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
@@ -99,9 +107,6 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 progressBar.setProgress( Math.abs((int)elapsedMillis));
                 if (elapsedMillis > 0) {
                     String strElapsedMillis = "Прошло больше 5 секунд";
-                    //Toast.makeText(getContext(),
-                    //        strElapsedMillis, Toast.LENGTH_SHORT)
-                    //        .show();
                     mPresenter.voteForEvent(mToken, mEventData.id);
                     chronometerStop();
                 }
