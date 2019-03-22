@@ -61,8 +61,6 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     TextView textViewTime;
     @BindView(R.id.extended_edit_text_description)
     ExtendedEditText editTextDescription;
-    @BindView(R.id.extended_edit_text_name)
-    ExtendedEditText editTextName;
     @BindView(R.id.recycler_view_photos)
     RecyclerView recyclerViewPhotos;
     @BindView(R.id.rotateloading)
@@ -109,7 +107,7 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
     @OnClick(R.id.buttonSend)
     void onClickSendRequest(){
         String description = editTextDescription.getText().toString();
-        String title = editTextName.getText().toString();
+        String title = "eventWithoutTitle";
         Log.d("description", description);
         Log.d("title", title);
         String date = textViewDate.getText().toString();

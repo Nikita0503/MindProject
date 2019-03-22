@@ -51,7 +51,7 @@ public class SupportPresenter implements BaseContract.BasePresenter {
 
     public void downloadPhotos(List<Photo> photos){
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-        PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext());
+        PhotoDownloader downloader = new PhotoDownloader(mFragment);
         Disposable data = downloader.fetchPhotos(photos)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -91,15 +91,19 @@ public class SupportPresenter implements BaseContract.BasePresenter {
                         e.printStackTrace();
                         if (e instanceof HttpException) {
                             HttpException exception = (HttpException) e;
-                            ResponseBody responseBody = exception.response().errorBody();
-                            try {
-                                JSONObject responseError = new JSONObject(responseBody.string());
-                                String errorMessage = responseError.getString("message");
-                                mFragment.showMessage(errorMessage);
-                            } catch (JSONException e1) {
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
+                            if(exception.code()==422){
+                                mFragment.showMessage("You can not vote for own requests.");
+                            }else {
+                                ResponseBody responseBody = exception.response().errorBody();
+                                try {
+                                    JSONObject responseError = new JSONObject(responseBody.string());
+                                    String errorMessage = responseError.getString("message");
+                                    mFragment.showMessage(errorMessage);
+                                } catch (JSONException e1) {
+                                    e1.printStackTrace();
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                }
                             }
                         }
                     }

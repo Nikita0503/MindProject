@@ -73,6 +73,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         Date difference = getTimeDifference(mEvents.get(position).eventDate);
+        //if(difference.getTime()>86400000){
+        //    holder.textViewTimer.setVisibility(View.INVISIBLE);
+        //}
         if(position == 0 && difference.getTime()<1800000 ){
             holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
         }

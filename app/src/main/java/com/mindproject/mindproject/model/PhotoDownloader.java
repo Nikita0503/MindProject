@@ -1,10 +1,16 @@
 package com.mindproject.mindproject.model;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.mindproject.mindproject.model.data.Photo;
 import com.squareup.picasso.Picasso;
@@ -25,10 +31,10 @@ import io.reactivex.SingleOnSubscribe;
 
 public class PhotoDownloader {
 
-    private Context mContext;
+    private Fragment mFragment;
 
-    public PhotoDownloader(Context context) {
-        mContext = context;
+    public PhotoDownloader(Fragment fragment) {
+        mFragment = fragment;
     }
 
     public Observable<Bitmap> fetchPhotos(List<Photo> photos){
@@ -36,7 +42,7 @@ public class PhotoDownloader {
             @Override
             public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
                 for(int i = 0; i < photos.size(); i++){
-                    Bitmap image = Picasso.with(mContext)
+                    Bitmap image = Picasso.with(mFragment.getContext())
                                 .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photos.get(i).photo)
                                 .get();
                     e.onNext(image);
@@ -50,11 +56,13 @@ public class PhotoDownloader {
         return Single.create(new SingleOnSubscribe<Bitmap>() {
             @Override
             public void subscribe(SingleEmitter<Bitmap> e) throws Exception {
-                Bitmap image = Picasso.with(mContext)
+                Bitmap image = Picasso.with(mFragment.getContext())
                         .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photoURL)
+                        .resize(800, 600)
                         .get();
                 e.onSuccess(image);
             }
         });
     }
+
 }

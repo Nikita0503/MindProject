@@ -69,8 +69,6 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     TextView textViewTime;
     @BindView(R.id.extended_edit_text_description)
     ExtendedEditText editTextDescription;
-    @BindView(R.id.extended_edit_text_name)
-    ExtendedEditText editTextName;
     @BindView(R.id.recycler_view_photos)
     RecyclerView recyclerViewPhotos;
     @BindView(R.id.timePicker)
@@ -112,7 +110,7 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     @OnClick(R.id.buttonSend)
     void onClickSendRequest(){
         String description = editTextDescription.getText().toString();
-        String title = editTextName.getText().toString();
+        String title = "EventWithoutTitle";
         Log.d("description", description);
         Log.d("title", title);
         String date = textViewDate.getText().toString();

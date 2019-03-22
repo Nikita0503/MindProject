@@ -171,7 +171,7 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
     }
 
     public void downloadPhoto(Object photo){
-        PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext());
+        PhotoDownloader downloader = new PhotoDownloader(mFragment);
         Disposable data = downloader.fetchPhoto(photo.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -144,6 +144,9 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
     }
 
     private boolean validateEmail(String emailStr) {
+        if(emailStr.length()==0){
+            return true;
+        }
         Pattern VALID_EMAIL_ADDRESS_REGEX =
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
@@ -151,6 +154,9 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
     }
 
     private boolean validatePhone(String phone){
+        if(phone.length() == 0){
+            return true;
+        }
         if(phone.startsWith("+")){
             return true;
         }else{
@@ -159,6 +165,9 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
     }
 
     private boolean validateName(String name){
+        if(name.length()==0){
+            return true;
+        }
         if(name.length()>3 && name.length() < 128){
             return true;
         }else{
