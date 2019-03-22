@@ -50,7 +50,6 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(TimeAdapter.ViewHolder holder, int position) {
-        //holder.textViewTime.setText(mNumbers.get(position)+":00");
         holder.textViewTime.setText(position+":00");
         if(!mAllowed.get(position)){
             holder.textViewTime.setTextColor(Color.RED);
