@@ -1,6 +1,7 @@
 package com.mindproject.mindproject.main;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -78,10 +79,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         //holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         long difference = getTimeDifference(mEvents.get(position).eventDate);
-        if(position == 0 && difference<1800000  ){
+        if(position == 0 && difference < 1800000){
             holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
         }
-        holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000/ 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
+        if(difference < 0){
+            holder.textViewTimer.setText("You can vote!");
+            holder.textViewTimer.setTextColor(Color.GREEN);
+        }else {
+            holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

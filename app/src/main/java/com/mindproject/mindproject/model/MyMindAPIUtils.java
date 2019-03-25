@@ -65,7 +65,9 @@ public class MyMindAPIUtils {
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        return apiService.getEvents("Bearer " + token, simpleDateFormat.format(Calendar.getInstance().getTime()));
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -5);
+        return apiService.getEvents("Bearer " + token, simpleDateFormat.format(calendar.getTime()));
     }
 
     public Single<EventData> getEventDataByEventId(String token, String eventId){
