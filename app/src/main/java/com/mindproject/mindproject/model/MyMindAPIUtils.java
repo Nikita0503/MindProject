@@ -2,6 +2,7 @@ package com.mindproject.mindproject.model;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.AccessToken;
@@ -96,6 +98,8 @@ public class MyMindAPIUtils {
         return apiService.getMyEvents("Bearer " + token, simpleDateFormat.format(calendar.getTime()), id, 1, 20);
     }
 
+
+
     public Observable<EventDataForEventList> getEventsForList(ArrayList<EventData> events, Context context){
         return Observable.create(new ObservableOnSubscribe<EventDataForEventList>() {
             @Override
@@ -105,14 +109,19 @@ public class MyMindAPIUtils {
                     //Log.d("TIMEZONE", events.get(i).startTime); //String .valueOf(simpleDateFormat.getTimeZone().getRawOffset()/3600000)
                     String title = events.get(i).title;
                     Date date = simpleDateFormat.parse(events.get(i).startTime);
-                    Drawable image;
+                    Bitmap image;
                     if(events.get(i).photos.size() != 0){
-                        image = new BitmapDrawable(context.getResources(), Picasso.with(context)
+                        image = Glide.with(context)
+                                .asBitmap()
                                 .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com"+events.get(i).photos.get(0).photo)
-                                .resize(200,200)
-                                .get());
+                                .into(200,200)
+                                .get();
                     }else {
-                        image = context.getResources().getDrawable(R.drawable.ic_photo);
+                        image = Glide.with(context)
+                                .asBitmap()
+                                .load(R.drawable.ic_photo)
+                                .into(200, 200)
+                                .get();
                     }
                     EventDataForEventList event = new EventDataForEventList(title, date, image, events.get(i));
                     e.onNext(event);

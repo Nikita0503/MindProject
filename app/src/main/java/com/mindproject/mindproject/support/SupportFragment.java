@@ -254,12 +254,18 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                     try {
                         Date date = simpleDateFormat.parse(mEventData.startTime);
                         long difference = getTimeDifference(date);
-                        if((difference/1000)<300){
+                        if((difference/1000)>300){
                             buttonSupport.setEnabled(false);
                             buttonSupport.setBackground(getResources().getDrawable(R.drawable.rect_red));
                             buttonSupport.setText("Not active");
                             buttonCircle.setVisibility(View.INVISIBLE);
                             buttonCircle.setEnabled(false);
+                        }else{
+                            buttonSupport.setEnabled(true);
+                            buttonSupport.setBackground(getResources().getDrawable(R.drawable.rect_green));
+                            buttonSupport.setText("Support!");
+                            buttonCircle.setVisibility(View.VISIBLE);
+                            buttonCircle.setEnabled(true);
                         }
                         textViewRemainingTime.setText(String.format("%02d:%02d:%02d", difference / 1000/ 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
                     } catch (ParseException e) {

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.victor.loading.rotate.RotateLoading;
@@ -113,7 +114,11 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
             case GALLERY_REQUEST:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
-                    imageViewUser.setImageURI(selectedImage);
+                    //imageViewUser.setImageURI(selectedImage);
+                    Glide
+                            .with(this)
+                            .load(selectedImage)
+                            .into(imageViewUser);
                     mImageURL = selectedImage;
                 }
         }
@@ -129,6 +134,10 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
 
     public void setPhoto(Bitmap bitmap){
         imageViewUser.setImageBitmap(bitmap);
+        Glide
+                .with(this)
+                .load(bitmap)
+                .into(imageViewUser);
     }
 
     public void setName(String name){

@@ -190,8 +190,8 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                     if(resultCode == RESULT_OK){
                         try {
                             Uri selectedImage = imageReturnedIntent.getData();
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                            mAdapter.addPhotos(bitmap);
+                            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                            //mAdapter.addPhotos(bitmap);
                             File file = new File(getRealPathFromUri(getApplicationContext(), selectedImage));
                             mAdapter.addFile(file);
                         }catch (Exception c){
@@ -225,7 +225,7 @@ public class AddRequestActivity extends AppCompatActivity implements BaseContrac
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                mAdapter.addPhotos(bitmap);
+                                //mAdapter.addPhotos(bitmap);
                                 mAdapter.addFile(file);
                             }catch (Exception c){
                                 c.printStackTrace();

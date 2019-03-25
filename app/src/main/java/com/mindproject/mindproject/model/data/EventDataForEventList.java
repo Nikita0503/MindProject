@@ -1,5 +1,6 @@
 package com.mindproject.mindproject.model.data;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import java.util.Date;
@@ -11,16 +12,16 @@ import java.util.Date;
 public class EventDataForEventList {
     public String title;
     public Date eventDate;
-    public Drawable eventImage;
+    public Bitmap eventImage;
     public EventData eventData;
 
-    public EventDataForEventList(String description, Date eventDate, Drawable eventImage) {
+    public EventDataForEventList(String description, Date eventDate, Bitmap eventImage) {
         this.title = description;
         this.eventDate = eventDate;
         this.eventImage = eventImage;
     }
 
-    public EventDataForEventList(String description, Date eventDate, Drawable eventImage, EventData eventData) {
+    public EventDataForEventList(String description, Date eventDate, Bitmap eventImage, EventData eventData) {
         this.title = description;
         this.eventDate = eventDate;
         this.eventImage = eventImage;

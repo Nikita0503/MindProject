@@ -39,7 +39,7 @@ public class PastEventPresenter implements BaseContract.BasePresenter {
 
     public void downloadPhotos(List<Photo> photos){
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-        PhotoDownloader downloader = new PhotoDownloader(mFragment);
+        PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext(), this);
         Disposable data = downloader.fetchPhotos(photos)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

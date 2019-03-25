@@ -22,11 +22,13 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.squareup.picasso.Picasso;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.io.File;
@@ -193,8 +195,12 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
                     if(resultCode == RESULT_OK){
                         try {
                             Uri selectedImage = imageReturnedIntent.getData();
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
-                            mAdapter.addPhotos(bitmap);
+                            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                            //Bitmap bitmap = Picasso
+                            //        .with(getContext())
+                            //        .load(selectedImage)
+                            //        .get();
+                            //mAdapter.addPhotos(selectedImage);
                             File file = new File(getRealPathFromUri(getContext(), selectedImage));
                             mAdapter.addFile(file);
                         }catch (Exception c){
@@ -228,7 +234,7 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                mAdapter.addPhotos(bitmap);
+                                //mAdapter.addPhotos(bitmap);
                                 mAdapter.addFile(file);
                             }catch (Exception c){
                                 c.printStackTrace();

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.main.EventListAdapter;
 import com.mindproject.mindproject.main.MainActivity;
@@ -60,8 +61,11 @@ public class MyEventListAdapter extends RecyclerView.Adapter<MyEventListAdapter.
 
     @Override
     public void onBindViewHolder(MyEventListAdapter.ViewHolder holder, int position) {
-        holder.textViewEventTitle.setText(mEvents.get(position).title);
-        holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
+        holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
+        Glide
+                .with(mFragment.getContext())
+                .load(mEvents.get(position).eventImage)
+                .into(holder.imageViewEvent);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

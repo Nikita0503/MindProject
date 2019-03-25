@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.mindproject.mindproject.R;
 import com.squareup.picasso.Picasso;
 
@@ -23,28 +24,22 @@ import com.mindproject.mindproject.add_request.AddRequestActivity;
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
 
     //private Picasso mPicasso;
-    private ArrayList<Bitmap> mPhotoList;
     private ArrayList<File> mFileList;
     private AddRequestFragment mActivity;
 
     public PhotosAdapter(AddRequestFragment fragment) {
-        mPhotoList = new ArrayList<Bitmap>();
         mFileList = new ArrayList<File>();
         mActivity = fragment;
         //mPicasso = Picasso.with(addRequestActivity.getApplicationContext());
     }
 
-    public void addPhotos(Bitmap photo){
-        mPhotoList.add(photo);
-        notifyDataSetChanged();
-    }
-
-    public ArrayList<Bitmap> getPhotos(){
-        return mPhotoList;
-    }
+    //public void addPhotos(Uri photo){
+    //    notifyDataSetChanged();
+    //}
 
     public void addFile(File file){
         mFileList.add(file);
+        notifyDataSetChanged();
     }
 
     public ArrayList<File> getFileList(){
@@ -60,13 +55,13 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(PhotosAdapter.ViewHolder holder, final int position) {
-        //mPicasso.load(getItem(position)).resizeDimen(R.dimen.image_size, R.dimen.image_size). centerInside().into(imageView);
-        //mPicasso.load(mPhotoList.get(position)).resizeDimen(R.dimen.image_size, R.dimen.image_size). centerInside().into(holder.imageViewEvent);
-        holder.imageViewEvent.setImageBitmap(mPhotoList.get(position));
+        Glide
+                .with(mActivity.getContext())
+                .load(mFileList.get(position))
+                .into(holder.imageViewEvent);
         holder.imageViewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPhotoList.remove(position);
                 mFileList.remove(position);
                 notifyDataSetChanged();
             }
@@ -75,7 +70,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mPhotoList.size();
+        return mFileList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{

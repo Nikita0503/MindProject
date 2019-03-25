@@ -9,9 +9,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.mindproject.mindproject.BaseContract;
+import com.mindproject.mindproject.edit_profile.EditProfilePresenter;
 import com.mindproject.mindproject.model.data.Photo;
 import com.squareup.picasso.Picasso;
 
@@ -31,10 +38,12 @@ import io.reactivex.SingleOnSubscribe;
 
 public class PhotoDownloader {
 
-    private Fragment mFragment;
+    private Context mContext;
+    private BaseContract.BasePresenter mPresenter;
 
-    public PhotoDownloader(Fragment fragment) {
-        mFragment = fragment;
+    public PhotoDownloader(Context context, BaseContract.BasePresenter presenter) {
+        mContext = context;
+        mPresenter = presenter;
     }
 
     public Observable<Bitmap> fetchPhotos(List<Photo> photos){
@@ -42,8 +51,10 @@ public class PhotoDownloader {
             @Override
             public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
                 for(int i = 0; i < photos.size(); i++){
-                    Bitmap image = Picasso.with(mFragment.getContext())
+                    Bitmap image = Glide.with(mContext)
+                                .asBitmap()
                                 .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photos.get(i).photo)
+                                .into(200,200)
                                 .get();
                     e.onNext(image);
                 }
@@ -52,17 +63,20 @@ public class PhotoDownloader {
         });
     }
 
-    public Single<Bitmap> fetchPhoto(String photoURL){
-        return Single.create(new SingleOnSubscribe<Bitmap>() {
-            @Override
-            public void subscribe(SingleEmitter<Bitmap> e) throws Exception {
-                Bitmap image = Picasso.with(mFragment.getContext())
-                        .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photoURL)
-                        .resize(800, 600)
-                        .get();
-                e.onSuccess(image);
-            }
-        });
+    public void fetchPhoto(String photoURL){
+
+        Glide.with(mContext)
+                .asBitmap()
+                .load("http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com" + photoURL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        EditProfilePresenter presenter = (EditProfilePresenter) mPresenter;
+                        presenter.setPhoto(resource);
+                    }
+                });
+
+
     }
 
 }

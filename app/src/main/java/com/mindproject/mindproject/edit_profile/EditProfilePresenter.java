@@ -5,8 +5,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.model.MyMindAPIUtils;
@@ -171,23 +176,13 @@ public class EditProfilePresenter implements BaseContract.BasePresenter {
     }
 
     public void downloadPhoto(Object photo){
-        PhotoDownloader downloader = new PhotoDownloader(mFragment);
-        Disposable data = downloader.fetchPhoto(photo.toString())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<Bitmap>() {
-                    @Override
-                    public void onSuccess(Bitmap value) {
-                        mFragment.setPhoto(value);
-                        Log.d("USER_DATA", "photo2");
-                        mFragment.stopLoading();
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
-        mDisposable.add(data);
+        PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext(), this);
+        downloader.fetchPhoto(photo.toString());
+    }
+
+    public void setPhoto(Bitmap bitmap){
+        mFragment.setPhoto(bitmap);
+        mFragment.stopLoading();
     }
 
     private String getRealPathFromUri(Context context, Uri contentUri) {
