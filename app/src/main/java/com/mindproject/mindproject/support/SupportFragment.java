@@ -253,15 +253,15 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 public void run() {
                     try {
                         Date date = simpleDateFormat.parse(mEventData.startTime);
-                        Date difference = getTimeDifference(date);
-                        if((difference.getTime()/1000)<300){
+                        long difference = getTimeDifference(date);
+                        if((difference/1000)<300){
                             buttonSupport.setEnabled(false);
                             buttonSupport.setBackground(getResources().getDrawable(R.drawable.rect_red));
                             buttonSupport.setText("Not active");
                             buttonCircle.setVisibility(View.INVISIBLE);
                             buttonCircle.setEnabled(false);
                         }
-                        textViewRemainingTime.setText(eventDateFormat.format(difference));
+                        textViewRemainingTime.setText(String.format("%02d:%02d:%02d", difference / 1000/ 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -269,16 +269,12 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
             });
         }
 
-        private Date getTimeDifference(Date date){
+        private long getTimeDifference(Date date){
             TimeZone timeZone = TimeZone.getDefault();
-            int timeZoneInt = timeZone.getRawOffset()/3600000;
-            //mEventDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-            Calendar today = Calendar.getInstance();
-            today.add(Calendar.HOUR_OF_DAY, timeZoneInt);
+            Calendar today = Calendar.getInstance(timeZone);
             Date currentDate = today.getTime();
-            //Log.d("TAG", currentDate.getTime()+"");
             long differenceLong = date.getTime() - currentDate.getTime();
-            return new Date(differenceLong);
+            return differenceLong;
         }
     }
 }

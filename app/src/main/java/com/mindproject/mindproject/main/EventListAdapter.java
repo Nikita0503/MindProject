@@ -72,14 +72,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.textViewEventTitle.setText(mEvents.get(position).title);
         holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
         holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
-        Date difference = getTimeDifference(mEvents.get(position).eventDate);
-        //if(difference.getTime()>86400000){
-        //    holder.textViewTimer.setVisibility(View.INVISIBLE);
-        //}
-        if(position == 0 && difference.getTime()<1800000 ){
+        long difference = getTimeDifference(mEvents.get(position).eventDate);
+        if(position == 0 && difference<1800000 ){
             holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
         }
-        holder.textViewTimer.setText(mDifferenceDateFormat.format(difference));
+        holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000/ 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,18 +113,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         }
     }
 
-    private Date getTimeDifference(Date date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
-        //Log.d("timezone", dateFormat.format(date));
+    private long getTimeDifference(Date date){
         TimeZone timeZone = TimeZone.getDefault();
-        int timeZoneInt = timeZone.getRawOffset()/3600000;
-        //mEventDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         Calendar today = Calendar.getInstance(timeZone);
-        today.add(Calendar.HOUR_OF_DAY, timeZoneInt);
         Date currentDate = today.getTime();
-        //Log.d("TAG", currentDate.getTime()+"");
         long differenceLong = date.getTime() - currentDate.getTime();
-        return new Date(differenceLong);
+        return differenceLong;
     }
 
     class AdapterTimerTask extends TimerTask {
