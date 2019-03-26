@@ -262,6 +262,14 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     public void onDestroy(){
         super.onDestroy();
         mTimer.cancel();
+        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), TimeNotification.class);
+        intent.putExtra("id", mEventData.id);
+        intent.putExtra("description", mEventData.description);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0,
+                intent, PendingIntent.FLAG_CANCEL_CURRENT );
+        am.cancel(pendingIntent);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         if(checkBox.isChecked()){
             //NotificationManager notificationManager =
             //        (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -282,20 +290,15 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
 //
             //    notificationManager.notify(mEventData.id, builder.build());
             //}
-            AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(getContext(), TimeNotification.class);
-            intent.putExtra("id", mEventData.id);
-            intent.putExtra("description", mEventData.description);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0,
-                    intent, PendingIntent.FLAG_CANCEL_CURRENT );
-            am.cancel(pendingIntent);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
             try {
                 Date date = simpleDateFormat.parse(mEventData.startTime);
                 am.set(AlarmManager.RTC_WAKEUP, date.getTime(), pendingIntent);
             } catch (Exception c){
                 c.printStackTrace();
             }
+        }else{
+            am.cancel(pendingIntent);
         }
 
     }
