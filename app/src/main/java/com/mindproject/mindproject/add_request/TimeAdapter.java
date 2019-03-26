@@ -3,6 +3,7 @@ package com.mindproject.mindproject.add_request;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,14 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.ViewHolder> {
             boolean isAllowed = false;
             for(int j = 0; j < numbers.size(); j++) {
                 if (i == numbers.get(j)) {
+                    Log.d("filter", j+"");
                     isAllowed = true;
                     break;
                 }
             }
             mAllowed.put(i, isAllowed);
         }
+
     }
 
     @Override
@@ -50,12 +53,7 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(TimeAdapter.ViewHolder holder, int position) {
-        holder.textViewTime.setText(position+":00");
-        if(!mAllowed.get(position)){
-            holder.textViewTime.setTextColor(Color.RED);
-            holder.itemView.setBackgroundColor(Color.GRAY);
-            holder.itemView.setEnabled(false);
-        }
+        holder.textViewTime.setText(mNumbers.get(position)+":00");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +69,7 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mAllowed.size();
+        return mNumbers.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{

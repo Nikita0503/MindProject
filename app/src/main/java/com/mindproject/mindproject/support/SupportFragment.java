@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Chronometer;
@@ -47,7 +49,9 @@ import butterknife.OnClick;
 
 public class SupportFragment extends Fragment implements BaseContract.BaseView {
 
-    private boolean isTouched;
+    private boolean mIsTouched;
+    private int mIsAnimated;
+    private Animation mAnimation;
     private String mToken;
     private EventData mEventData;
     private SupportPresenter mPresenter;
@@ -84,7 +88,11 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isTouched = false;
+        mIsTouched = false;
+        mIsAnimated = 0;
+        mAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.alpha);
+        mAnimation.setRepeatMode(Animation.REVERSE);
+        mAnimation.setRepeatCount(200);
         mPresenter = new SupportPresenter(this);
         mPresenter.onStart();
         mTimer = new Timer();
@@ -108,30 +116,37 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                         - chronometer.getBase();
                 Log.d("SEC", elapsedMillis+"");
                 //progressBar.setProgress( Math.abs((int)elapsedMillis));
-                if(elapsedMillis < -5000 && elapsedMillis > -6000){
-                    chronometer.setText("6");
-                }
-                if(elapsedMillis < -4000 && elapsedMillis > -5000){
-                    chronometer.setText("5");
-                }
-                if(elapsedMillis < -3000 && elapsedMillis > -4000){
-                    chronometer.setText("4");
-                }
-                if(elapsedMillis < -2000 && elapsedMillis > -3000){
-                    chronometer.setText("3");
-                }
-                if(elapsedMillis < -1000 && elapsedMillis > -2000){
-                    chronometer.setText("2");
-                }
-                if(elapsedMillis < 0 && elapsedMillis > -1000){
-                    chronometer.setText("1");
-                }
                 if(elapsedMillis > 0) {
                     chronometer.setText("0");
                     String strElapsedMillis = "Прошло больше 5 секунд";
                     mPresenter.voteForEvent(mToken, mEventData.id);
                     chronometerStop();
                 }
+                for(int i = -60; i <= 0; i++){
+                    if(elapsedMillis < (i * 1000) && elapsedMillis > (i-1)*1000){
+                        chronometer.setText(String.valueOf(Math.abs(i-1)));
+                        progressBar.setProgress(60+i);
+                    }
+                }
+                //if(elapsedMillis < -5000 && elapsedMillis > -6000){
+                //    chronometer.setText("6");
+                //}
+                //if(elapsedMillis < -4000 && elapsedMillis > -5000){
+                //    chronometer.setText("5");
+                //}
+                //if(elapsedMillis < -3000 && elapsedMillis > -4000){
+                //    chronometer.setText("4");
+                //}
+                //if(elapsedMillis < -2000 && elapsedMillis > -3000){
+                //    chronometer.setText("3");
+                //}
+                //if(elapsedMillis < -1000 && elapsedMillis > -2000){
+                //    chronometer.setText("2");
+                //}
+                //if(elapsedMillis < 0 && elapsedMillis > -1000){
+                //    chronometer.setText("1");
+                //}
+
             }
         });
         showMessage(mEventData.id+"");
@@ -143,20 +158,20 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                     case MotionEvent.ACTION_DOWN: // нажатие
                         textViewRemainingTime.setVisibility(View.INVISIBLE);
                         chronometer.setVisibility(View.VISIBLE);
-                        chronometer.setBase(SystemClock.elapsedRealtime()+5000);
+                        chronometer.setBase(SystemClock.elapsedRealtime()+60000);
                         chronometer.start();
                         chronometer.setTextColor(Color.RED);
-                        isTouched = true;
+                        mIsTouched = true;
                         break;
                     case MotionEvent.ACTION_MOVE: // движение
                         break;
                     case MotionEvent.ACTION_UP: // отпускание
                         chronometerStop();
-                        isTouched = false;
+                        mIsTouched = false;
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         chronometerStop();
-                        isTouched = false;
+                        mIsTouched = false;
                         break;
                 }
                 return true;
@@ -170,20 +185,20 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                     case MotionEvent.ACTION_DOWN: // нажатие
                         textViewRemainingTime.setVisibility(View.INVISIBLE);
                         chronometer.setVisibility(View.VISIBLE);
-                        chronometer.setBase(SystemClock.elapsedRealtime()+5000);
+                        chronometer.setBase(SystemClock.elapsedRealtime()+60000);
                         chronometer.start();
                         chronometer.setTextColor(Color.RED);
-                        isTouched = true;
+                        mIsTouched = true;
                         break;
                     case MotionEvent.ACTION_MOVE: // движение
                         break;
                     case MotionEvent.ACTION_UP: // отпускание
                         chronometerStop();
-                        isTouched = false;
+                        mIsTouched = false;
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         chronometerStop();
-                        isTouched = false;
+                        mIsTouched = false;
                         break;
                 }
                 return true;
@@ -210,7 +225,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     private void chronometerStop(){
         chronometer.stop();
         chronometer.setTextColor(Color.GRAY);
-        progressBar.setProgress(-5000);
+        progressBar.setProgress(0);
         textViewRemainingTime.setVisibility(View.VISIBLE);
         chronometer.setVisibility(View.INVISIBLE);
     }
@@ -252,9 +267,20 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 @Override
                 public void run() {
                     try {
+                        if(mIsAnimated == 1){
+                            if(buttonCircle.getAnimation()==null) {
+                                buttonCircle.startAnimation(mAnimation);
+                            }
+                        }
+                        if(mIsAnimated == 2){
+                            if(buttonCircle.getAnimation()!=null) {
+                                buttonCircle.clearAnimation();
+                            }
+                        }
                         Date date = simpleDateFormat.parse(mEventData.startTime);
                         long difference = getTimeDifference(date);
                         if(difference>0) {
+                                mIsAnimated = 0;
                                 buttonSupport.setEnabled(false);
                                 textViewRemainingTime.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
                                 buttonSupport.setBackground(getResources().getDrawable(R.drawable.rect_red));
@@ -263,6 +289,8 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                                 buttonCircle.setEnabled(false);
                         }else {
                             if (difference > -300*1000) {
+                                mIsAnimated = 1;
+
                                 textViewRemainingTime.setText("You can vote!");
                                 buttonSupport.setEnabled(true);
                                 buttonSupport.setBackground(getResources().getDrawable(R.drawable.rect_green));
@@ -270,11 +298,14 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                                 buttonCircle.setVisibility(View.VISIBLE);
                                 buttonCircle.setEnabled(true);
                             }else{
-                                buttonSupport.setEnabled(false);
-                                buttonSupport.setVisibility(View.GONE);
-                                textViewRemainingTime.setText("You late");
-                                buttonCircle.setVisibility(View.INVISIBLE);
-                                buttonCircle.setEnabled(false);
+                                if(!mIsTouched) {
+                                    mIsAnimated = 2;
+                                    buttonSupport.setEnabled(false);
+                                    buttonSupport.setVisibility(View.GONE);
+                                    textViewRemainingTime.setText("You late");
+                                    buttonCircle.setVisibility(View.INVISIBLE);
+                                    buttonCircle.setEnabled(false);
+                                }
                             }
                         }
                     } catch (ParseException e) {

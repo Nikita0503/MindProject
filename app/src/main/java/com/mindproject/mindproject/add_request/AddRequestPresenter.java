@@ -130,17 +130,30 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         TimeZone tZ = TimeZone.getDefault();
         int timeZone = tZ.getRawOffset()/3600000;
         ArrayList<Integer> hours = new ArrayList<Integer>();
-        for(int i = 0; i < 24; i++){
-            hours.add(i);
-        }
+        ArrayList<Integer> eventHours = new ArrayList<Integer>();
         for(int i = 0; i < events.size(); i++){
-            String hour = events.get(i).startTime.split("T")[1].substring(0, 2);
-            for(int j = 0; j < hours.size(); j++){
-                if(hours.get(j)==Integer.parseInt(hour)+timeZone){
-                    hours.remove(j);
-                    break;
+            int hour = Integer.parseInt(events.get(i).startTime.split("T")[1].substring(0, 2));
+            hour+=timeZone;
+            if(hour<0){
+                hour+=24;
+            }
+            eventHours.add(hour);
+        }
+        boolean isAvailable;
+        for(int i = 0; i < 24; i++){
+            isAvailable = true;
+            for(int j = 0; j < eventHours.size(); j++){
+                if(i == eventHours.get(j)){
+                    isAvailable = false;
                 }
             }
+            if(isAvailable){
+                hours.add(i);
+            }
+        }
+
+        for(int i = 0; i < hours.size(); i++){
+            Log.d("time", "h " + hours.get(i));
         }
         return hours;
     }
