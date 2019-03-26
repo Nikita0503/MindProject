@@ -83,6 +83,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
         }
         if(difference < 0){
+            if(difference < -300 * 1000){
+                mFragment.fetchEvents();
+            }
             holder.textViewTimer.setText("You can vote!");
             holder.textViewTimer.setTextColor(Color.GREEN);
         }else {

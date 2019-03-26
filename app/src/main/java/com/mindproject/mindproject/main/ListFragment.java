@@ -64,9 +64,8 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
         mPresenter.fetchToken(mDeviceId);
         rotateLoading.setVisibility(View.VISIBLE);
         rotateLoading.start();
-        mEventAdapter = new EventListAdapter(this, mToken);
-        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewEvents.setAdapter(mEventAdapter);
+
+
     }
 
     public void setDeviceId(String deviceId){
@@ -75,7 +74,14 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
 
     public void setToken(String token){
         mToken = token;
+        fetchEvents();
+    }
+
+    public void fetchEvents(){
         mPresenter.fetchEvents(mToken);
+        mEventAdapter = new EventListAdapter(this, mToken);
+        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewEvents.setAdapter(mEventAdapter);
     }
 
     public void setKarmaPoints(int karmaPoints){

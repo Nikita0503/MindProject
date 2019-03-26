@@ -1,5 +1,11 @@
 package com.mindproject.mindproject.support;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +49,8 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by Nikita on 07.03.2019.
@@ -253,6 +262,42 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     public void onDestroy(){
         super.onDestroy();
         mTimer.cancel();
+        if(checkBox.isChecked()){
+            //NotificationManager notificationManager =
+            //        (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+//
+            //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            //    NotificationChannel channel = new NotificationChannel("1", "InMindChannel",
+            //            NotificationManager.IMPORTANCE_HIGH);
+            //    channel.setDescription("Notifications");
+            //    channel.enableLights(true);
+            //    channel.setLightColor(Color.GREEN);
+            //    channel.enableVibration(true);
+            //    notificationManager.createNotificationChannel(channel);
+            //    NotificationCompat.Builder builder =
+            //            new NotificationCompat.Builder(getContext(), "1")
+            //                    .setSmallIcon(R.drawable.brain)
+            //                    .setContentTitle("Vote me!")
+            //                    .setContentText(mEventData.description);
+//
+            //    notificationManager.notify(mEventData.id, builder.build());
+            //}
+            AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(getContext(), TimeNotification.class);
+            intent.putExtra("id", mEventData.id);
+            intent.putExtra("description", mEventData.description);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0,
+                    intent, PendingIntent.FLAG_CANCEL_CURRENT );
+            am.cancel(pendingIntent);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            try {
+                Date date = simpleDateFormat.parse(mEventData.startTime);
+                am.set(AlarmManager.RTC_WAKEUP, date.getTime(), pendingIntent);
+            } catch (Exception c){
+                c.printStackTrace();
+            }
+        }
+
     }
 
 

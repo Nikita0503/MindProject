@@ -17,7 +17,6 @@
         <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -42,6 +41,7 @@
             android:name=".add_request.AddRequestActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".support.SupportActivity"/>
+        <receiver android:name=".support.TimeNotification" />
         <activity android:name=".my_requests.MyRequestsActivity"></activity>
     </application>
 
