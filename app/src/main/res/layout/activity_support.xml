@@ -53,39 +53,41 @@
         android:textColor="@color/colorPrimaryDark"
         android:elevation="2dp"
         android:padding="4dp"
+        android:buttonTint="@color/colorPrimary"
         android:text="Notify me of the beginning"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewName" />
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/linear"
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/rect"
-                android:elevation="2dp"
-                android:padding="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/viewPager">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/rect"
+        android:elevation="2dp"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewPager">
 
-                    <TextView
-                        android:id="@+id/textViewDescription"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Description\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\Description\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\n"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-                </LinearLayout>
+            <TextView
+                android:id="@+id/textViewDescription"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\Description\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\nDescription\n"/>
 
-            </android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
     <Button
@@ -105,78 +107,78 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:max="60"
-                android:indeterminate="false"
-                android:scaleY="10"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewTimer"
-                app:layout_constraintEnd_toEndOf="@+id/textViewTimer"
-                app:layout_constraintStart_toStartOf="@+id/textViewTimer"
-                app:layout_constraintTop_toTopOf="@+id/textViewTimer" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:max="60"
+        android:indeterminate="false"
+        android:scaleY="10"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewTimer"
+        app:layout_constraintEnd_toEndOf="@+id/textViewTimer"
+        app:layout_constraintStart_toStartOf="@+id/textViewTimer"
+        app:layout_constraintTop_toTopOf="@+id/textViewTimer" />
 
-            <Chronometer
-                android:id="@+id/textViewTimer"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:elevation="2dp"
-                android:background="@null"
-                android:gravity="center"
-                android:padding="4dp"
-                android:text="00:05"
-                android:textColor="@android:color/white"
-                android:textSize="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear" />
+    <Chronometer
+        android:id="@+id/textViewTimer"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:elevation="2dp"
+        android:background="@null"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="00:05"
+        android:textColor="@android:color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear" />
 
-            <TextView
-                android:id="@+id/textViewRemainingTime"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:elevation="2dp"
-                android:background="@null"
-                android:gravity="center"
-                android:padding="4dp"
-                android:text="00:05"
-                android:textColor="@android:color/white"
-                android:textSize="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear" />
+    <TextView
+        android:id="@+id/textViewRemainingTime"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:elevation="2dp"
+        android:background="@null"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="00:05"
+        android:textColor="@android:color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear" />
 
-            <Button
-                android:id="@+id/buttonSupport"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/rect_green"
-                android:backgroundTint="@android:color/holo_green_light"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:text="Support!"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonSendToFriend"
-                app:layout_constraintVertical_bias="0.0" />
+    <Button
+        android:id="@+id/buttonSupport"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rect_green"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:elevation="2dp"
+        android:padding="4dp"
+        android:text="Support!"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSendToFriend"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/buttonFillCircle"

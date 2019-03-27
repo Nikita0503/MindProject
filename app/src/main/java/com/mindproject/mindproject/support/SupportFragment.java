@@ -10,8 +10,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.service.notification.StatusBarNotification;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
@@ -25,6 +28,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Chronometer;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -113,6 +117,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
         View view = inflater.inflate(R.layout.activity_support, container, false);
         Toast.makeText(getContext(), mEventData.title, Toast.LENGTH_SHORT).show();
         ButterKnife.bind(this, view);
+        mPresenter.isExistId(mEventData.id);
         mPresenter.downloadPhotos(mEventData.photos);
         textViewRemainingTime.setVisibility(View.VISIBLE);
         chronometer.setVisibility(View.INVISIBLE);
@@ -127,7 +132,6 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 //progressBar.setProgress( Math.abs((int)elapsedMillis));
                 if(elapsedMillis > 0) {
                     chronometer.setText("0");
-                    String strElapsedMillis = "Прошло больше 5 секунд";
                     mPresenter.voteForEvent(mToken, mEventData.id);
                     chronometerStop();
                 }
@@ -148,7 +152,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 //}
                 //if(elapsedMillis < -2000 && elapsedMillis > -3000){
                 //    chronometer.setText("3");
-                //}
+                //}z
                 //if(elapsedMillis < -1000 && elapsedMillis > -2000){
                 //    chronometer.setText("2");
                 //}
@@ -158,7 +162,6 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
 
             }
         });
-        showMessage(mEventData.id+"");
         buttonCircle.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -213,6 +216,31 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                 return true;
             }
         });
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(getContext(), TimeNotification.class);
+                intent.putExtra("id", mEventData.id);
+                intent.putExtra("description", mEventData.description);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0,
+                        intent, PendingIntent.FLAG_CANCEL_CURRENT );
+                am.cancel(pendingIntent);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                if(isChecked){
+                    try {
+                        Date date = simpleDateFormat.parse(mEventData.startTime);
+                        am.set(AlarmManager.RTC_WAKEUP, date.getTime(), pendingIntent);
+                    } catch (Exception c){
+                        c.printStackTrace();
+                    }
+                    mPresenter.addEventId(mEventData.id);
+                }else{
+                    am.cancel(pendingIntent);
+                    mPresenter.deleteEventId(mEventData.id);
+                }
+            }
+        });
         return view;
     }
 
@@ -247,6 +275,10 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
         mToken = token;
     }
 
+    public void setIsReminded(boolean isReminded){
+        checkBox.setChecked(isReminded);
+    }
+
     @Override
     public void showMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -262,44 +294,8 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     public void onDestroy(){
         super.onDestroy();
         mTimer.cancel();
-        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getContext(), TimeNotification.class);
-        intent.putExtra("id", mEventData.id);
-        intent.putExtra("description", mEventData.description);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT );
-        am.cancel(pendingIntent);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        if(checkBox.isChecked()){
-            //NotificationManager notificationManager =
-            //        (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-//
-            //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            //    NotificationChannel channel = new NotificationChannel("1", "InMindChannel",
-            //            NotificationManager.IMPORTANCE_HIGH);
-            //    channel.setDescription("Notifications");
-            //    channel.enableLights(true);
-            //    channel.setLightColor(Color.GREEN);
-            //    channel.enableVibration(true);
-            //    notificationManager.createNotificationChannel(channel);
-            //    NotificationCompat.Builder builder =
-            //            new NotificationCompat.Builder(getContext(), "1")
-            //                    .setSmallIcon(R.drawable.brain)
-            //                    .setContentTitle("Vote me!")
-            //                    .setContentText(mEventData.description);
-//
-            //    notificationManager.notify(mEventData.id, builder.build());
-            //}
 
-            try {
-                Date date = simpleDateFormat.parse(mEventData.startTime);
-                am.set(AlarmManager.RTC_WAKEUP, date.getTime(), pendingIntent);
-            } catch (Exception c){
-                c.printStackTrace();
-            }
-        }else{
-            am.cancel(pendingIntent);
-        }
+
 
     }
 
@@ -331,17 +327,14 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
                                 mIsAnimated = 0;
                                 buttonSupport.setEnabled(false);
                                 textViewRemainingTime.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
-                                buttonSupport.setBackground(getResources().getDrawable(R.drawable.rect_red));
                                 buttonSupport.setText("Not active");
                                 buttonCircle.setVisibility(View.INVISIBLE);
                                 buttonCircle.setEnabled(false);
                         }else {
                             if (difference > -300*1000) {
                                 mIsAnimated = 1;
-
                                 textViewRemainingTime.setText("You can vote!");
                                 buttonSupport.setEnabled(true);
-                                buttonSupport.setBackground(getResources().getDrawable(R.drawable.rect_green));
                                 buttonSupport.setText("Support!");
                                 buttonCircle.setVisibility(View.VISIBLE);
                                 buttonCircle.setEnabled(true);

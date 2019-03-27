@@ -126,6 +126,8 @@
                 android:visibility="gone"
                 android:elevation="2dp"
                 android:padding="4dp"
+                app:mcv_showOtherDates="all"
+                app:mcv_selectionColor="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"

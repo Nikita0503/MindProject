@@ -1,5 +1,7 @@
 package com.mindproject.mindproject.support;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
@@ -7,6 +9,7 @@ import android.widget.Toast;
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.main.MainActivity;
+import com.mindproject.mindproject.model.DBHelper;
 import com.mindproject.mindproject.model.MyMindAPIUtils;
 import com.mindproject.mindproject.model.PhotoDownloader;
 import com.mindproject.mindproject.model.data.EventData;
@@ -26,6 +29,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
@@ -38,6 +42,7 @@ public class SupportPresenter implements BaseContract.BasePresenter {
     private SupportFragment mFragment;
     private CompositeDisposable mDisposable;
     private MyMindAPIUtils mAPIUtils;
+    private DBHelper mDbHelper;
 
     public SupportPresenter(SupportFragment fragment){
         mFragment = fragment;
@@ -47,6 +52,68 @@ public class SupportPresenter implements BaseContract.BasePresenter {
     @Override
     public void onStart() {
         mDisposable = new CompositeDisposable();
+        mDbHelper = new DBHelper(mFragment.getContext());
+    }
+
+    public void isExistId(int eventId){
+        Disposable isExist = mDbHelper.isExistIdInDatabase(eventId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Integer>() {
+                    @Override
+                    public void onSuccess(Integer count) {
+                        if(count>=1){
+                            mFragment.setIsReminded(true);
+                        }else{
+                            mFragment.setIsReminded(false);
+                        }
+                        //mFragment.showMessage("count = " + count);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.getMessage();
+                    }
+                });
+        mDisposable.add(isExist);
+    }
+
+    public void addEventId(int eventId){
+        ContentValues cv = new ContentValues();
+        cv.put("event_id", eventId);
+        Disposable addEvent = mDbHelper.addIdToDatabase(cv)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        Log.d("Database","Added");
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.getMessage();
+                    }
+                });
+        mDisposable.add(addEvent);
+    }
+
+    public void deleteEventId(int eventId){
+        Disposable deleteEvent = mDbHelper.deleteIdFromDatabase(eventId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        Log.d("Database","Deleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.getMessage();
+                    }
+                });
+        mDisposable.add(deleteEvent);
     }
 
     public void downloadPhotos(List<Photo> photos){
@@ -114,5 +181,6 @@ public class SupportPresenter implements BaseContract.BasePresenter {
     @Override
     public void onStop() {
         mDisposable.clear();
+        mDbHelper.close();
     }
 }

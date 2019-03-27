@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@drawable/brain"
         android:label="@string/app_name"
@@ -41,7 +42,8 @@
             android:name=".add_request.AddRequestActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".support.SupportActivity"/>
-        <receiver android:name=".support.TimeNotification" />
+        <receiver android:name=".support.TimeNotification"
+            />
         <activity android:name=".my_requests.MyRequestsActivity"></activity>
     </application>
 

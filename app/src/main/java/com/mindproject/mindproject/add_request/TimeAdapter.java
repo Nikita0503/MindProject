@@ -58,11 +58,9 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(mFragment.getContext(), position+"", Toast.LENGTH_SHORT).show();
-                if(mAllowed.get(position)) {
-                    mFragment.setTime(position + ":00");
-                }else{
-                    Toast.makeText(mFragment.getContext(), "Time not available", Toast.LENGTH_SHORT).show();
-                }
+
+                    mFragment.setTime(mNumbers.get(position) + ":00");
+
             }
         });
     }
