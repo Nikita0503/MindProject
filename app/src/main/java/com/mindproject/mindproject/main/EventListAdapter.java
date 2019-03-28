@@ -42,8 +42,10 @@ public class EventListAdapter extends RecyclerView.Adapter {
     private SimpleDateFormat mEventDateFormat;
     private ArrayList<EventDataForEventList> mEvents;
     private ListFragment mFragment;
+    private AdRequest mAdRequest;
 
     public EventListAdapter(ListFragment fragment, String token) {
+        mAdRequest = new AdRequest.Builder().build();
         mEventDateFormat = new SimpleDateFormat("d MMM H:mm", Locale.ENGLISH);
         TimeZone timeZone = TimeZone.getDefault();
         mDifferenceDateFormat = new SimpleDateFormat("H:mm:ss", Locale.ENGLISH);
@@ -54,27 +56,53 @@ public class EventListAdapter extends RecyclerView.Adapter {
         AdapterTimerTask mMyTimerTask = new AdapterTimerTask();
         mTimer.schedule(mMyTimerTask, 0, 500);
         mToken = token;
+
     }
 
     public void setEvents(ArrayList<EventDataForEventList> events){
         mEvents.clear();
         mEvents.addAll(events);
+        for(int i = 0; i < mEvents.size(); i++){
+            Log.d("sssaa", mEventDateFormat.format(mEvents.get(i).eventDate));
+        }
         notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public int getItemViewType(int position) {
+        if (position % 5 == 0) {
+            return ADVERTISEMENT_ROW_TYPE;
+        }else {
+            return EVENT_ROW_TYPE;
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.event_list_item, parent, false);
-        return new EventListAdapter.ViewHolder(view);
+        View view;
+        if(viewType == ADVERTISEMENT_ROW_TYPE){
+            view = inflater.inflate(R.layout.advertisement_list_item, parent, false);
+            return new EventListAdapter.AdvertisementViewHolder(view);
+        }else {
+            view = inflater.inflate(R.layout.event_list_item, parent, false);
+            return new EventListAdapter.EventViewHolder(view);
+        }
+
     }
 
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if(viewHolder instanceof EventListAdapter.ViewHolder) {
-            ViewHolder holder = (ViewHolder) viewHolder;
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position1) {
+        if(position1 % 5 != 0) {
+            for(int i = 0; i < 10; i++){
+                if(position1>i*4){
+                    position1-=1;
+                }
+            }
+            int position = position1;
+            EventViewHolder holder = (EventViewHolder) viewHolder;
             holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
             Glide
                     .with(mFragment.getContext())
@@ -108,26 +136,27 @@ public class EventListAdapter extends RecyclerView.Adapter {
                 }
             });
         }
-        if(viewHolder instanceof EventListAdapter.AdvertisementViewHolder){
+        else {
             AdvertisementViewHolder holder = (AdvertisementViewHolder) viewHolder;
-            AdRequest adRequest = new AdRequest.Builder().build();
-            holder.adView.loadAd(adRequest);
+            holder.adView.loadAd(mAdRequest);
+            //holder.setIsRecyclable(false);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mEvents.size();
+        int advertisementCount = mEvents.size()/4;
+        return mEvents.size() + advertisementCount;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class EventViewHolder extends RecyclerView.ViewHolder{
 
         TextView textViewEventTitle;
         TextView textViewActivationTime;
         TextView textViewTimer;
         ImageView imageViewEvent;
 
-        public ViewHolder(View itemView) {
+        public EventViewHolder(View itemView) {
             super(itemView);
             imageViewEvent = (ImageView) itemView.findViewById(R.id.imageViewEvent);
             textViewEventTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
@@ -138,11 +167,12 @@ public class EventListAdapter extends RecyclerView.Adapter {
 
     public static class AdvertisementViewHolder extends RecyclerView.ViewHolder{
 
-        AdView adView;
+       AdView adView;
 
-        public AdvertisementViewHolder(@NonNull View itemView) {
+        public AdvertisementViewHolder(View itemView) {
             super(itemView);
             adView = (AdView) itemView.findViewById(R.id.adView);
+            //setIsRecyclable(false);
         }
     }
 
@@ -161,7 +191,12 @@ public class EventListAdapter extends RecyclerView.Adapter {
             mFragment.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    notifyDataSetChanged();
+                    //notifyDataSetChanged();
+                    for(int i = 0; i < getItemCount(); i++) {
+                        if (i % 5 != 0) {
+                            notifyItemChanged(i);
+                        }
+                    }
                 }
             });
         }

@@ -81,6 +81,7 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
     public void fetchEvents(){
         mPresenter.fetchEvents(mToken);
         mEventAdapter = new EventListAdapter(this, mToken);
+        recyclerViewEvents.setItemAnimator(null);
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewEvents.setAdapter(mEventAdapter);
     }
