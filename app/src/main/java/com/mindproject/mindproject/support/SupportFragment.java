@@ -115,7 +115,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_support, container, false);
-        Toast.makeText(getContext(), mEventData.title, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), mEventData.title, Toast.LENGTH_SHORT).show();
         ButterKnife.bind(this, view);
         mPresenter.isExistId(mEventData.id);
         mPresenter.downloadPhotos(mEventData.photos);

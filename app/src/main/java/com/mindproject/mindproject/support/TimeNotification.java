@@ -26,7 +26,7 @@ public class TimeNotification extends BroadcastReceiver {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, "1")
-                        .setSmallIcon(R.drawable.brain)
+                        .setSmallIcon(R.drawable.launcher)
                         .setContentTitle("Vote me!")
                         .setContentText(description)
                         .setContentIntent(resultPendingIntent);

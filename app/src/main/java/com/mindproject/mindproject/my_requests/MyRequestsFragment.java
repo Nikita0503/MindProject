@@ -86,8 +86,8 @@ public class MyRequestsFragment extends Fragment implements BaseContract.BaseVie
     }
 
     @Override
-    public void onStop(){
-        super.onStop();
+    public void onDestroy(){
+        super.onDestroy();
         mPresenter.onStop();
     }
 

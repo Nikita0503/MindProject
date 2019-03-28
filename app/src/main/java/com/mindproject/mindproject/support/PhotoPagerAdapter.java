@@ -25,12 +25,15 @@ public class PhotoPagerAdapter extends PagerAdapter {
     private Context mContext;
     private LayoutInflater layoutInflater;
     private ArrayList<Bitmap> mImages;
+    private ArrayList<Boolean> mScaled;
 
     public PhotoPagerAdapter(Context context, ArrayList<Bitmap> images) {
         mContext = context;
         mImages = images;
+        mScaled = new ArrayList<Boolean>();
         for(int i = 0; i < mImages.size(); i++){
             Log.d("PHOTO", mImages.get(i).toString());
+            mScaled.add(false);
         }
     }
 
@@ -50,6 +53,18 @@ public class PhotoPagerAdapter extends PagerAdapter {
         layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.image_slider_item, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+        //imageView.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        if(mScaled.get(position)) {
+        //            mScaled.set(position, false);
+        //            v.animate().scaleX(3.5f).scaleY(3.5f).setDuration(500);
+        //        }else{
+        //            mScaled.set(position, true);
+        //            v.animate().scaleX(1f).scaleY(1f).setDuration(500);
+        //        }
+        //    }
+        //});
         imageView.setImageBitmap(mImages.get(position));
         ViewPager vp = (ViewPager) container;
         vp.addView(view, 0);

@@ -103,8 +103,8 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
     }
 
     @Override
-    public void onStop(){
-        super.onStop();
+    public void onDestroy(){
+        super.onDestroy();
         mPresenter.onStop();
     }
 }

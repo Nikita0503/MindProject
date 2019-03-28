@@ -56,7 +56,6 @@ public class EventListAdapter extends RecyclerView.Adapter {
         AdapterTimerTask mMyTimerTask = new AdapterTimerTask();
         mTimer.schedule(mMyTimerTask, 0, 500);
         mToken = token;
-
     }
 
     public void setEvents(ArrayList<EventDataForEventList> events){
@@ -96,7 +95,7 @@ public class EventListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position1) {
         if(position1 % 5 != 0) {
-            for(int i = 0; i < 10; i++){
+            for(int i = 0; i < 25; i++){
                 if(position1>i*4){
                     position1-=1;
                 }
@@ -141,6 +140,11 @@ public class EventListAdapter extends RecyclerView.Adapter {
             holder.adView.loadAd(mAdRequest);
             //holder.setIsRecyclable(false);
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override

@@ -121,7 +121,7 @@ public class MyMindAPIUtils {
                     }else {
                         image = Glide.with(context)
                                 .asBitmap()
-                                .load(R.drawable.ic_photo)
+                                .load(R.drawable.launcher)
                                 .into(200, 200)
                                 .get();
                     }
