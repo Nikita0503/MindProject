@@ -2,6 +2,7 @@ package com.mindproject.mindproject.main;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.data.EventDataForEventList;
 import com.mindproject.mindproject.support.SupportFragment;
@@ -30,8 +33,10 @@ import java.util.TimerTask;
  * Created by Nikita on 12.02.2019.
  */
 
-public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
+public class EventListAdapter extends RecyclerView.Adapter {
 
+    private static final int EVENT_ROW_TYPE = 0;
+    private static final int ADVERTISEMENT_ROW_TYPE = 1;
     private String mToken;
     private SimpleDateFormat mDifferenceDateFormat;
     private SimpleDateFormat mEventDateFormat;
@@ -55,10 +60,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         mEvents.clear();
         mEvents.addAll(events);
         notifyDataSetChanged();
-        //for(int i = 0; i < events.size(); i++){
-        //    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        //    Log.d("TIMEZONE", simpleDateFormat.format(events.get(i).eventDate));
-        //}
     }
 
     @Override
@@ -69,41 +70,49 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         return new EventListAdapter.ViewHolder(view);
     }
 
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
-        Glide
-                .with(mFragment.getContext())
-                .load(mEvents.get(position).eventImage)
-                .into(holder.imageViewEvent);
-        //holder.imageViewEvent.setImageDrawable(mEvents.get(position).eventImage);
-        holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
-        long difference = getTimeDifference(mEvents.get(position).eventDate);
-        if(position == 0 && difference < 1800000){
-            holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
-        }
-        if(difference < 0){
-            if(difference < -300 * 1000){
-                mFragment.fetchEvents();
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        if(viewHolder instanceof EventListAdapter.ViewHolder) {
+            ViewHolder holder = (ViewHolder) viewHolder;
+            holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
+            Glide
+                    .with(mFragment.getContext())
+                    .load(mEvents.get(position).eventImage)
+                    .into(holder.imageViewEvent);
+            holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
+            long difference = getTimeDifference(mEvents.get(position).eventDate);
+            if (position == 0 && difference < 1800000) {
+                holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
             }
-            holder.textViewTimer.setText("You can vote!");
-            holder.textViewTimer.setTextColor(Color.GREEN);
-        }else {
-            holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
-        }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SupportFragment supportFragment = new SupportFragment();
-                supportFragment.setToken(mToken);
-                supportFragment.setEventData(mEvents.get(position).eventData);
-                FragmentManager manager = mFragment.getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.fragment_container, supportFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+            if (difference < 0) {
+                if (difference < -300 * 1000) {
+                    mFragment.fetchEvents();
+                }
+                holder.textViewTimer.setText("You can vote!");
+                holder.textViewTimer.setTextColor(Color.GREEN);
+            } else {
+                holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
             }
-        });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SupportFragment supportFragment = new SupportFragment();
+                    supportFragment.setToken(mToken);
+                    supportFragment.setEventData(mEvents.get(position).eventData);
+                    FragmentManager manager = mFragment.getFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.fragment_container, supportFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
+        }
+        if(viewHolder instanceof EventListAdapter.AdvertisementViewHolder){
+            AdvertisementViewHolder holder = (AdvertisementViewHolder) viewHolder;
+            AdRequest adRequest = new AdRequest.Builder().build();
+            holder.adView.loadAd(adRequest);
+        }
     }
 
     @Override
@@ -124,6 +133,16 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             textViewEventTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
             textViewActivationTime = (TextView) itemView.findViewById(R.id.textViewActivationTime);
             textViewTimer = (TextView) itemView.findViewById(R.id.textViewTimerToEvent);
+        }
+    }
+
+    public static class AdvertisementViewHolder extends RecyclerView.ViewHolder{
+
+        AdView adView;
+
+        public AdvertisementViewHolder(@NonNull View itemView) {
+            super(itemView);
+            adView = (AdView) itemView.findViewById(R.id.adView);
         }
     }
 

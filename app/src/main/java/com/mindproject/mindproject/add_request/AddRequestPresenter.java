@@ -134,9 +134,9 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         for(int i = 0; i < events.size(); i++){
             int hour = Integer.parseInt(events.get(i).startTime.split("T")[1].substring(0, 2));
             hour+=timeZone;
-            if(hour<0){
-                hour+=24;
-            }
+            //if(hour<0){
+            //    hour+=24;
+            //}
             eventHours.add(hour);
         }
         boolean isAvailable;

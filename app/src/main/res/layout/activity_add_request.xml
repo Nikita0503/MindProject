@@ -48,8 +48,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">>
-
+                app:layout_constraintTop_toTopOf="parent">
                 <studio.carbonylgroup.textfieldboxes.ExtendedEditText
                     android:id="@+id/extended_edit_text_description"
                     android:layout_width="wrap_content"
@@ -101,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/rect_button"
                 android:drawableLeft="@drawable/ic_send"
@@ -112,8 +111,26 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@id/adView" />
+
+            <TextView
+                android:id="@+id/textViewAttention"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:elevation="2dp"
+                android:padding="4dp"
+                android:text="@string/attention"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="12sp"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recycler_view_photos" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonSend" />
 
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                 android:id="@+id/datePicker"
@@ -150,7 +167,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewTime" />
 
-
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
+                ads:layout_constraintTop_toBottomOf="@id/recycler_view_photos"
+                ads:layout_constraintBottom_toTopOf="@id/buttonSend"
+                ads:layout_constraintEnd_toEndOf="parent"
+                ads:layout_constraintStart_toStartOf="parent"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+            </com.google.android.gms.ads.AdView>
 
             <TextView
                 android:id="@+id/textViewDate"
@@ -198,6 +230,8 @@
                 android:layout_marginStart="12dp"
                 android:background="@drawable/rect"
                 app:layout_constraintTop_toBottomOf="@+id/buttonAddPhotos" />
+
+
         </android.support.constraint.ConstraintLayout>
 
 

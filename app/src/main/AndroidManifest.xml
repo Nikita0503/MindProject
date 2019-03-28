@@ -7,14 +7,18 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <application
-        android:usesCleartextTraffic="true"
+    <application android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@drawable/brain"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3433509722016307~3903051726"/>
+
         <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +49,7 @@
         <receiver android:name=".support.TimeNotification"
             />
         <activity android:name=".my_requests.MyRequestsActivity"></activity>
+
     </application>
 
 </manifest>

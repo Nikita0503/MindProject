@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -64,7 +66,8 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     Button buttonSend;
     @BindView(R.id.datePicker)
     MaterialCalendarView datePicker;
-
+    @BindView(R.id.adView)
+    AdView adView;
     @BindView(R.id.textViewDate)
     TextView textViewDate;
     @BindView(R.id.textViewTime)
@@ -158,6 +161,8 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_add_request, container, false);
         ButterKnife.bind(this, view);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
         datePicker.state().edit().setMinimumDate(CalendarDay.today().getDate()).commit();
         datePicker.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override

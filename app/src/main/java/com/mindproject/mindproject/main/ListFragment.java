@@ -37,6 +37,7 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
     private ListPresenter mPresenter;
     private EventListAdapter mEventAdapter;
 
+
     @BindView(R.id.rotateloading)
     RotateLoading rotateLoading;
     @BindView(R.id.textViewKarmaPoint)

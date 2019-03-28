@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.add_request.AddRequestFragment;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        MobileAds.initialize(this, "ca-app-pub-3433509722016307~3903051726");
         mDeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         bottomNavigation.setVisibility(View.INVISIBLE);
