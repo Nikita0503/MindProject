@@ -23,47 +23,47 @@ import io.reactivex.schedulers.Schedulers;
 
 public class PastEventPresenter implements BaseContract.BasePresenter {
 
-    private PastEventFragment mFragment;
-    private CompositeDisposable mDisposable;
-    private MyMindAPIUtils mAPIUtils;
+	private PastEventFragment mFragment;
+	private CompositeDisposable mDisposable;
+	private MyMindAPIUtils mAPIUtils;
 
-    public PastEventPresenter(PastEventFragment fragment){
-        mFragment = fragment;
-        mAPIUtils = new MyMindAPIUtils();
-    }
+	public PastEventPresenter(PastEventFragment fragment){
+		mFragment = fragment;
+		mAPIUtils = new MyMindAPIUtils();
+	}
 
-    @Override
-    public void onStart() {
-        mDisposable = new CompositeDisposable();
-    }
+	@Override
+	public void onStart() {
+		mDisposable = new CompositeDisposable();
+	}
 
-    public void downloadPhotos(List<Photo> photos){
-        ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-        PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext(), this);
-        Disposable data = downloader.fetchPhotos(photos)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<Bitmap>() {
-                    @Override
-                    public void onNext(Bitmap bitmap) {
-                        bitmaps.add(bitmap);
-                    }
+	public void downloadPhotos(List<Photo> photos){
+		ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+		PhotoDownloader downloader = new PhotoDownloader(mFragment.getContext(), this);
+		Disposable data = downloader.fetchPhotos(photos)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribeWith(new DisposableObserver<Bitmap>() {
+					@Override
+					public void onNext(Bitmap bitmap) {
+						bitmaps.add(bitmap);
+					}
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
+					@Override
+					public void onError(Throwable e) {
+						e.printStackTrace();
+					}
 
-                    @Override
-                    public void onComplete() {
-                        mFragment.showData(bitmaps);
-                    }
-                });
-        mDisposable.add(data);
-    }
+					@Override
+					public void onComplete() {
+						mFragment.showData(bitmaps);
+					}
+				});
+		mDisposable.add(data);
+	}
 
-    @Override
-    public void onStop() {
-        mDisposable.clear();
-    }
+	@Override
+	public void onStop() {
+		mDisposable.clear();
+	}
 }

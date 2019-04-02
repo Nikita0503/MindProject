@@ -76,7 +76,7 @@ public class PastEventFragment extends Fragment implements BaseContract.BaseView
             PhotoPagerAdapter photoPagerAdapter = new PhotoPagerAdapter(getContext(), photos);
             viewPagerPhotos.setAdapter(photoPagerAdapter);
         }
-        textViewTitle.setText(mEventData.title);
+        textViewTitle.setText(String.valueOf(mEventData.user.username));
         textViewDescription.setText(mEventData.description);
         try {
 
@@ -87,7 +87,7 @@ public class PastEventFragment extends Fragment implements BaseContract.BaseView
         }catch (Exception c){
             c.printStackTrace();
         }
-        textViewVotesCount.setText(String.valueOf(mEventData.votedCount) + " votes");
+        textViewVotesCount.setText(String.valueOf(mEventData.votedCount) + " " + getResources().getString(R.string.votes));
     }
 
     public void setEventData(EventData eventData){

@@ -29,10 +29,10 @@ public class TimeNotification extends BroadcastReceiver {
                         .setSmallIcon(R.drawable.launcher)
                         .setContentTitle("Vote me!")
                         .setContentText(description)
-                        .setContentIntent(resultPendingIntent);
+                        .setContentIntent(resultPendingIntent)
+                        .setAutoCancel(true);
 
         Notification notification = builder.build();
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("1", "InMindChannel",
                     NotificationManager.IMPORTANCE_HIGH);
@@ -46,6 +46,10 @@ public class TimeNotification extends BroadcastReceiver {
             notificationManager.notify(id, notification);
 
             Log.d("Notification", description);
+        }else{
+            NotificationManager notificationManager =
+                    (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(id, notification);
         }
 
 

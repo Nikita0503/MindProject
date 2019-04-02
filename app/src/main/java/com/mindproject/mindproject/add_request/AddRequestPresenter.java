@@ -15,6 +15,7 @@ import com.mindproject.mindproject.model.MyMindAPIUtils;
 import com.mindproject.mindproject.model.data.AddRequestData;
 import com.mindproject.mindproject.model.data.EventData;
 import com.mindproject.mindproject.model.data.Response;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,8 +26,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.acl.LastOwnerException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -116,7 +119,11 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                         for(int i = 0; i < events.size(); i++){
                             Log.d("time", events.get(i).startTime);
                         }
-                        mFragment.setAvailableTime(getAvailableTime(events));
+                        try {
+                            mFragment.setAvailableTime(getAvailableTime(events));
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -126,7 +133,21 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         mDisposable.add(dayEvents);
     }
 
-    private ArrayList<Integer> getAvailableTime(ArrayList<EventData> events){
+    private ArrayList<Integer> getAvailableTime(ArrayList<EventData> events) throws ParseException {
+        int hourCurrent = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int dayCurrent = CalendarDay.today().getDay();
+        String thatDay;
+        int thatDayint;
+        if(events.size()>0) {
+            thatDay = events.get(0).startTime.split("T")[0];
+            thatDayint = Integer.parseInt(thatDay.substring(thatDay.length() - 2));
+        }else{
+            thatDayint = -1;
+        }
+
+        Log.d("time_that_day", thatDayint+"");
+        Log.d("time_hour", hourCurrent+"");
+        Log.d("time_day", dayCurrent+"");
         TimeZone tZ = TimeZone.getDefault();
         int timeZone = tZ.getRawOffset()/3600000;
         ArrayList<Integer> hours = new ArrayList<Integer>();
@@ -145,6 +166,11 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
             for(int j = 0; j < eventHours.size(); j++){
                 if(i == eventHours.get(j)){
                     isAvailable = false;
+                }
+                if(thatDayint == dayCurrent) {
+                    if (i <= hourCurrent) {
+                        isAvailable = false;
+                    }
                 }
             }
             if(isAvailable){

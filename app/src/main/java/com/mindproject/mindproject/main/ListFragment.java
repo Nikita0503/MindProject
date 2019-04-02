@@ -88,7 +88,7 @@ public class ListFragment extends Fragment implements BaseContract.BaseView{
 
     public void setKarmaPoints(int karmaPoints){
         mKarmaPoints = karmaPoints;
-        textViewKarmaPoint.setText("Your karma " + mKarmaPoints);
+        textViewKarmaPoint.setText(getResources().getString(R.string.your_karma)+ " " + mKarmaPoints);
     }
 
     public void addEventsToList(ArrayList<EventDataForEventList> events){

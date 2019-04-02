@@ -103,10 +103,14 @@ public class EventListAdapter extends RecyclerView.Adapter {
             int position = position1;
             EventViewHolder holder = (EventViewHolder) viewHolder;
             holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
-            Glide
-                    .with(mFragment.getContext())
-                    .load(mEvents.get(position).eventImage)
-                    .into(holder.imageViewEvent);
+            if(mEvents.get(position).eventImage!=null) {
+                Glide
+                        .with(mFragment.getContext())
+                        .load(mEvents.get(position).eventImage)
+                        .into(holder.imageViewEvent);
+            }else{
+                holder.imageViewEvent.setVisibility(View.GONE);
+            }
             holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
             long difference = getTimeDifference(mEvents.get(position).eventDate);
             if (position == 0 && difference < 1800000) {

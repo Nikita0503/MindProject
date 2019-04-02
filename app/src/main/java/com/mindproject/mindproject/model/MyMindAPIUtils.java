@@ -119,11 +119,7 @@ public class MyMindAPIUtils {
                                 .into(200,200)
                                 .get();
                     }else {
-                        image = Glide.with(context)
-                                .asBitmap()
-                                .load(R.drawable.launcher)
-                                .into(200, 200)
-                                .get();
+                        image = null;
                     }
                     EventDataForEventList event = new EventDataForEventList(title, date, image, events.get(i));
                     e.onNext(event);

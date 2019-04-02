@@ -7,8 +7,21 @@
     tools:context="com.mindproject.mindproject.add_request.AddRequestActivity">
 
 
-    <ScrollView
-        android:id="@+id/scroll"
+  <ScrollView
+      android:id="@+id/scroll"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginEnd="0dp"
+      android:layout_marginStart="0dp"
+      android:layout_marginTop="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="parent">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginEnd="0dp"
@@ -20,231 +33,218 @@
         app:layout_constraintTop_toBottomOf="parent">
 
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent">
 
 
+      <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+          android:id="@+id/text_field_boxes_description"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="8dp"
+          app:labelText="@string/description"
+          android:textColor="@color/colorPrimaryDark"
+          app:secondaryColor="@color/colorPrimaryDark"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent">
+        <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+            android:id="@+id/extended_edit_text_description"
+            android:layout_width="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:imeOptions="actionDone"
+            android:layout_height="wrap_content" />
+
+      </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+
+      <Button
+          android:id="@+id/buttonMakePhoto"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="8dp"
+          android:background="@drawable/rect_button"
+          android:drawableLeft="@drawable/ic_photo"
+          android:elevation="2dp"
+          android:padding="4dp"
+          android:text="@string/make_a_photo"
+          android:textColor="@color/colorPrimaryDark"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/timePicker" />
+
+      <Button
+          android:id="@+id/buttonAddPhotos"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="8dp"
+          android:background="@drawable/rect_button"
+          android:drawableLeft="@drawable/plus"
+          android:elevation="2dp"
+          android:padding="4dp"
+          android:text="@string/add_photos"
+          android:textColor="@color/colorPrimaryDark"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/buttonMakePhoto" />
+
+      <Button
+          android:id="@+id/buttonSend"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="4dp"
+          android:layout_marginBottom="8dp"
+          android:background="@drawable/rect_button"
+          android:drawableLeft="@drawable/ic_send"
+          android:elevation="2dp"
+          android:padding="4dp"
+          android:text="@string/send"
+          android:textColor="@color/colorPrimaryDark"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+
+          app:layout_constraintTop_toBottomOf="@id/adView" />
+
+      <TextView
+          android:id="@+id/textViewAttention"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="8dp"
+          android:elevation="2dp"
+          android:padding="4dp"
+          android:text="@string/attention"
+          android:textColor="@color/colorPrimaryDark"
+          android:textSize="12sp"
+          android:gravity="center"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/buttonSend" />
+
+      <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+          android:id="@+id/datePicker"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="4dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:background="@drawable/rect"
+          android:visibility="gone"
+          android:elevation="2dp"
+          android:padding="4dp"
+          app:mcv_showOtherDates="all"
+          app:mcv_selectionColor="@color/colorPrimary"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
 
-            <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
-                android:id="@+id/text_field_boxes_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                app:labelText="Description"
-                android:textColor="@color/colorPrimaryDark"
-                app:secondaryColor="@color/colorPrimaryDark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-                <studio.carbonylgroup.textfieldboxes.ExtendedEditText
-                    android:id="@+id/extended_edit_text_description"
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:imeOptions="actionDone"
-                    android:layout_height="wrap_content" />
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/timePicker"
+          android:layout_width="match_parent"
+          android:layout_height="160dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginBottom="8dp"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:background="@drawable/rect"
+          android:elevation="2dp"
+          android:padding="4dp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/textViewTime" />
 
-            </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+      <com.google.android.gms.ads.AdView
+          xmlns:ads="http://schemas.android.com/apk/res-auto"
+          android:id="@+id/adView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:layout_alignParentBottom="true"
+          android:layout_marginTop="8dp"
+          android:layout_marginBottom="12dp"
+          ads:layout_constraintTop_toBottomOf="@id/recycler_view_photos"
+          ads:layout_constraintBottom_toTopOf="@id/buttonSend"
+          ads:layout_constraintEnd_toEndOf="parent"
+          ads:layout_constraintStart_toStartOf="parent"
+          ads:adSize="BANNER"
+          ads:adUnitId="ca-app-pub-3433509722016307/7459153358">
+      </com.google.android.gms.ads.AdView>
 
-            <Button
-                android:id="@+id/buttonMakePhoto"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rect_button"
-                android:drawableLeft="@drawable/ic_photo"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:text="Make a photo"
-                android:textColor="@color/colorPrimaryDark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/timePicker" />
+      <TextView
+          android:id="@+id/textViewDate"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="8dp"
+          android:background="@drawable/rect"
+          android:elevation="2dp"
+          android:padding="4dp"
+          android:text="@string/pick_date"
+          android:textColor="@color/colorPrimaryDark"
+          android:textSize="16sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/text_field_boxes_description" />
 
-            <Button
-                android:id="@+id/buttonAddPhotos"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rect_button"
-                android:drawableLeft="@drawable/plus"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:text="Add photos"
-                android:textColor="@color/colorPrimaryDark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonMakePhoto" />
+      <TextView
+          android:id="@+id/textViewTime"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="8dp"
+          android:background="@drawable/rect"
+          android:elevation="2dp"
+          android:padding="4dp"
+          android:text="@string/pick_time"
+          android:textColor="@color/colorPrimaryDark"
+          android:textSize="16sp"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/datePicker" />
 
-            <Button
-                android:id="@+id/buttonSend"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/rect_button"
-                android:drawableLeft="@drawable/ic_send"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:text="Send"
-                android:textColor="@color/colorPrimaryDark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-
-                app:layout_constraintTop_toBottomOf="@id/adView" />
-
-            <TextView
-                android:id="@+id/textViewAttention"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:text="@string/attention"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="12sp"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonSend" />
-
-            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                android:id="@+id/datePicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:background="@drawable/rect"
-                android:visibility="gone"
-                android:elevation="2dp"
-                android:padding="4dp"
-                app:mcv_showOtherDates="all"
-                app:mcv_selectionColor="@color/colorPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/recycler_view_photos"
+          android:layout_width="match_parent"
+          android:layout_height="110dp"
+          android:elevation="2dp"
+          android:padding="4dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:background="@drawable/rect"
+          app:layout_constraintTop_toBottomOf="@+id/buttonAddPhotos" />
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/timePicker"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/rect"
-                android:elevation="2dp"
-                android:padding="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewTime" />
-
-            <com.google.android.gms.ads.AdView
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/adView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="12dp"
-                ads:layout_constraintTop_toBottomOf="@id/recycler_view_photos"
-                ads:layout_constraintBottom_toTopOf="@id/buttonSend"
-                ads:layout_constraintEnd_toEndOf="parent"
-                ads:layout_constraintStart_toStartOf="parent"
-                ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
-            </com.google.android.gms.ads.AdView>
-
-            <TextView
-                android:id="@+id/textViewDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rect"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:text="Pick date"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_field_boxes_description" />
-
-            <TextView
-                android:id="@+id/textViewTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rect"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:text="Pick time"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/datePicker" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_photos"
-                android:layout_width="match_parent"
-                android:layout_height="110dp"
-                android:elevation="2dp"
-                android:padding="4dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:background="@drawable/rect"
-                app:layout_constraintTop_toBottomOf="@+id/buttonAddPhotos" />
+    </android.support.constraint.ConstraintLayout>
 
 
-        </android.support.constraint.ConstraintLayout>
+  </ScrollView>
 
-
-    </ScrollView>
-
-    <com.victor.loading.rotate.RotateLoading
-        android:id="@+id/rotateloading"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:loading_color="@color/colorPrimary"
-        app:loading_width="5dp" />
+  <com.victor.loading.rotate.RotateLoading
+      android:id="@+id/rotateloading"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_marginBottom="20dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:loading_color="@color/colorPrimary"
+      app:loading_width="5dp" />
 </android.support.constraint.ConstraintLayout>

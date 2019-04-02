@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">InMind</string>
+    <string name="attention">Запрещено размещать пропагандирующий опасные и незаконные действия или способствующий таким действиям. К ним относятся в том числе причинение вреда самому себе или другим лицам</string>
+    <string name="your_karma">Ваша карма </string>
+
+    <string name="description">Описание</string>
+    <string name="pick_date">Дата</string>
+    <string name="pick_time">Время</string>
+    <string name="make_a_photo">Сделать фото</string>
+    <string name="add_photos">Добавить фото</string>
+    <string name="send">Отправить</string>
+
+    <string name="name">Имя</string>
+    <string name="phone">Телефон</string>
+    <string name="email">Эл. адрес</string>
+    <string name="edit_profile">Редактировать</string>
+
+    <string name="votes">голосов</string>
+
+    <string name="notify">Уведомить меня о начале</string>
+    <string name="send_to_friends">Поделиться с друзьями</string>
+    <string name="support">Поддержать!</string>
+    <string name="not_active">Неактивно</string>
+    <string name="you_late">Вы опоздали</string>
+    <string name="you_can_vote">Вы можете поддержать!</string>
+
+    <string name="events">События</string>
+    <string name="add">Добавить</string>
+    <string name="profile">Профиль</string>
+    <string name="archive">Архив</string>
+</resources>
