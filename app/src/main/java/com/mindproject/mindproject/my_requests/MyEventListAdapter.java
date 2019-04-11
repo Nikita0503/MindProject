@@ -1,6 +1,7 @@
 package com.mindproject.mindproject.my_requests;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,10 @@ import java.util.Timer;
  * Created by Nikita on 15.03.2019.
  */
 
-public class MyEventListAdapter extends RecyclerView.Adapter<MyEventListAdapter.ViewHolder> {
+public class MyEventListAdapter extends RecyclerView.Adapter {
+
+    private static final int EVENT_ROW_TYPE = 0;
+    private static final int EVENT_ROW_TYPE_WITHOUT_PHOTO = 1;
 
     private String mToken;
     private SimpleDateFormat mEventDateFormat;
@@ -52,39 +56,70 @@ public class MyEventListAdapter extends RecyclerView.Adapter<MyEventListAdapter.
     }
 
     @Override
-    public MyEventListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.my_event_list_item, parent, false);
-        return new MyEventListAdapter.ViewHolder(view);
+        View view;
+        if(viewType == EVENT_ROW_TYPE) {
+            view = inflater.inflate(R.layout.my_event_list_item, parent, false);
+            return new MyEventListAdapter.ViewHolder(view);
+        }else{
+            view = inflater.inflate(R.layout.my_event_list_item_without_photo, parent, false);
+            return new MyEventListAdapter.ViewWithoutPhotoHolder(view);
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(MyEventListAdapter.ViewHolder holder, int position) {
-        holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
-        Glide
-                .with(mFragment.getContext())
-                .load(mEvents.get(position).eventImage)
-                .into(holder.imageViewEvent);
-        holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PastEventFragment pastEventFragment = new PastEventFragment();
-                pastEventFragment.setToken(mToken);
-                pastEventFragment.setEventData(mEvents.get(position).eventData);
-                FragmentManager manager = mFragment.getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.fragment_container, pastEventFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+    public int getItemViewType(int position) {
+        if (mEvents.get(position).eventImage != null) {
+            return EVENT_ROW_TYPE;
+        }else {
+            return EVENT_ROW_TYPE_WITHOUT_PHOTO;
+        }
+    }
 
-        //if(position > mEvents.size()-3){
-        //    mActivity.fetchMoreEvents(mEvents.size());
-        //    Log.d("COUNT", mEvents.size()+"");
-        //}
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        if(mEvents.get(position).eventImage != null) {
+            ViewHolder holder = (ViewHolder) viewHolder;
+            holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
+            Glide
+                    .with(mFragment.getContext())
+                    .load(mEvents.get(position).eventImage)
+                    .into(holder.imageViewEvent);
+            holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PastEventFragment pastEventFragment = new PastEventFragment();
+                    pastEventFragment.setToken(mToken);
+                    pastEventFragment.setEventData(mEvents.get(position).eventData);
+                    FragmentManager manager = mFragment.getFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.fragment_container, pastEventFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
+        }else{
+            ViewWithoutPhotoHolder holder = (ViewWithoutPhotoHolder) viewHolder;
+            holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
+            holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PastEventFragment pastEventFragment = new PastEventFragment();
+                    pastEventFragment.setToken(mToken);
+                    pastEventFragment.setEventData(mEvents.get(position).eventData);
+                    FragmentManager manager = mFragment.getFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.fragment_container, pastEventFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
+        }
     }
 
     @Override
@@ -101,6 +136,18 @@ public class MyEventListAdapter extends RecyclerView.Adapter<MyEventListAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
             imageViewEvent = (ImageView) itemView.findViewById(R.id.imageViewEvent);
+            textViewEventTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
+            textViewActivationTime = (TextView) itemView.findViewById(R.id.textViewActivationTime);
+        }
+    }
+
+    public static class ViewWithoutPhotoHolder extends RecyclerView.ViewHolder{
+
+        TextView textViewEventTitle;
+        TextView textViewActivationTime;
+
+        public ViewWithoutPhotoHolder(View itemView) {
+            super(itemView);
             textViewEventTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
             textViewActivationTime = (TextView) itemView.findViewById(R.id.textViewActivationTime);
         }

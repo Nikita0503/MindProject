@@ -63,7 +63,6 @@ public class PastEventFragment extends Fragment implements BaseContract.BaseView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_past_event, container, false);
-        Toast.makeText(getContext(), mEventData.title, Toast.LENGTH_SHORT).show();
         ButterKnife.bind(this, view);
         mPresenter.downloadPhotos(mEventData.photos);
         return view;
@@ -81,13 +80,17 @@ public class PastEventFragment extends Fragment implements BaseContract.BaseView
         try {
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            SimpleDateFormat showFormat = new SimpleDateFormat("yyy MMM dd',' HH:mm", Locale.ENGLISH);
+            SimpleDateFormat showFormat = new SimpleDateFormat("dd'.'MM'.'yyyy',' HH:mm", Locale.ENGLISH);
             Date date = simpleDateFormat.parse(mEventData.startTime);
             textViewDate.setText(showFormat.format(date));
         }catch (Exception c){
             c.printStackTrace();
         }
-        textViewVotesCount.setText(String.valueOf(mEventData.votedCount) + " " + getResources().getString(R.string.votes));
+        if(mEventData.votedCount==1) {
+            textViewVotesCount.setText(String.valueOf(mEventData.votedCount) + " " + getResources().getString(R.string.vote));
+        }else {
+            textViewVotesCount.setText(String.valueOf(mEventData.votedCount) + " " + getResources().getString(R.string.votes));
+        }
     }
 
     public void setEventData(EventData eventData){

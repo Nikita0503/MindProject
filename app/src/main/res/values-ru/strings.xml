@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">InMind</string>
-    <string name="attention">Запрещено размещать пропагандирующий опасные и незаконные действия или способствующий таким действиям. К ним относятся в том числе причинение вреда самому себе или другим лицам</string>
+    <string name="attention">Запрещено размещать пропагандирующие, опасные и незаконные действия или способствования таким действиям. К ним относятся, в том числе, причинение вреда самому себе или другим лицам</string>
     <string name="your_karma">Ваша карма </string>
 
     <string name="description">Описание</string>
@@ -15,6 +15,7 @@
     <string name="email">Эл. адрес</string>
     <string name="edit_profile">Редактировать</string>
 
+    <string name="vote">голос</string>
     <string name="votes">голосов</string>
 
     <string name="notify">Уведомить меня о начале</string>
@@ -28,4 +29,7 @@
     <string name="add">Добавить</string>
     <string name="profile">Профиль</string>
     <string name="archive">Архив</string>
+
+    <string name="help_me">Поддержи меня, пожалуйста</string>
+    <string name="event_created">Событие создано успешно!</string>
 </resources>

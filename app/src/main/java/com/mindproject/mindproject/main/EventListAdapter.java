@@ -36,7 +36,8 @@ import java.util.TimerTask;
 public class EventListAdapter extends RecyclerView.Adapter {
 
     private static final int EVENT_ROW_TYPE = 0;
-    private static final int ADVERTISEMENT_ROW_TYPE = 1;
+    private static final int EVENT_ROW_TYPE_WITHOUT_PHOTO = 1;
+    private static final int ADVERTISEMENT_ROW_TYPE = 2;
     private String mToken;
     private SimpleDateFormat mDifferenceDateFormat;
     private SimpleDateFormat mEventDateFormat;
@@ -68,11 +69,21 @@ public class EventListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (position % 5 == 0) {
+    public int getItemViewType(int position1) {
+        if (position1 % 5 == 0) {
             return ADVERTISEMENT_ROW_TYPE;
         }else {
-            return EVENT_ROW_TYPE;
+            for(int i = 0; i < 25; i++){
+                if(position1>i*4){
+                    position1-=1;
+                }
+            }
+            int position = position1;
+            if(mEvents.get(position).eventImage!=null) {
+                return EVENT_ROW_TYPE;
+            }else{
+                return EVENT_ROW_TYPE_WITHOUT_PHOTO;
+            }
         }
     }
 
@@ -84,9 +95,12 @@ public class EventListAdapter extends RecyclerView.Adapter {
         if(viewType == ADVERTISEMENT_ROW_TYPE){
             view = inflater.inflate(R.layout.advertisement_list_item, parent, false);
             return new EventListAdapter.AdvertisementViewHolder(view);
-        }else {
+        }else if(viewType == EVENT_ROW_TYPE){
             view = inflater.inflate(R.layout.event_list_item, parent, false);
             return new EventListAdapter.EventViewHolder(view);
+        }else{
+            view = inflater.inflate(R.layout.event_list_item_without_photo, parent, false);
+            return new EventListAdapter.EventWithoutPhotoViewHolder(view);
         }
 
     }
@@ -95,49 +109,79 @@ public class EventListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position1) {
         if(position1 % 5 != 0) {
+
             for(int i = 0; i < 25; i++){
                 if(position1>i*4){
                     position1-=1;
                 }
             }
             int position = position1;
-            EventViewHolder holder = (EventViewHolder) viewHolder;
-            holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
-            if(mEvents.get(position).eventImage!=null) {
+            if(mEvents.get(position).eventImage != null){
+                EventViewHolder holder = (EventViewHolder) viewHolder;
+                holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
                 Glide
                         .with(mFragment.getContext())
                         .load(mEvents.get(position).eventImage)
                         .into(holder.imageViewEvent);
+                holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
+                long difference = getTimeDifference(mEvents.get(position).eventDate);
+                if (position == 0 && difference < 1800000) {
+                    holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
+                }
+                if (difference < 0) {
+                    if (difference < -300 * 1000) {
+                        mFragment.fetchEvents();
+                    }
+                    holder.textViewTimer.setText("You can vote!");
+                    holder.textViewTimer.setTextColor(Color.GREEN);
+                } else {
+                    holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
+                }
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SupportFragment supportFragment = new SupportFragment();
+                        supportFragment.setToken(mToken);
+                        supportFragment.setEventData(mEvents.get(position).eventData);
+                        FragmentManager manager = mFragment.getFragmentManager();
+                        FragmentTransaction transaction = manager.beginTransaction();
+                        transaction.replace(R.id.fragment_container, supportFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
             }else{
-                holder.imageViewEvent.setVisibility(View.GONE);
-            }
-            holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
-            long difference = getTimeDifference(mEvents.get(position).eventDate);
-            if (position == 0 && difference < 1800000) {
-                holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
-            }
-            if (difference < 0) {
-                if (difference < -300 * 1000) {
-                    mFragment.fetchEvents();
+                EventWithoutPhotoViewHolder holder = (EventWithoutPhotoViewHolder) viewHolder;
+                holder.textViewEventTitle.setText(mEvents.get(position).eventData.description);
+                holder.textViewActivationTime.setText(mEventDateFormat.format(mEvents.get(position).eventDate));
+                long difference = getTimeDifference(mEvents.get(position).eventDate);
+                if (position == 0 && difference < 1800000) {
+                    holder.textViewTimer.setTextColor(mFragment.getResources().getColor(R.color.A400red));
                 }
-                holder.textViewTimer.setText("You can vote!");
-                holder.textViewTimer.setTextColor(Color.GREEN);
-            } else {
-                holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
-            }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SupportFragment supportFragment = new SupportFragment();
-                    supportFragment.setToken(mToken);
-                    supportFragment.setEventData(mEvents.get(position).eventData);
-                    FragmentManager manager = mFragment.getFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.fragment_container, supportFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                if (difference < 0) {
+                    if (difference < -300 * 1000) {
+                        mFragment.fetchEvents();
+                    }
+                    holder.textViewTimer.setText("You can vote!");
+                    holder.textViewTimer.setTextColor(Color.GREEN);
+                } else {
+                    holder.textViewTimer.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
                 }
-            });
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SupportFragment supportFragment = new SupportFragment();
+                        supportFragment.setToken(mToken);
+                        supportFragment.setEventData(mEvents.get(position).eventData);
+                        FragmentManager manager = mFragment.getFragmentManager();
+                        FragmentTransaction transaction = manager.beginTransaction();
+                        transaction.replace(R.id.fragment_container, supportFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
+            }
+
         }
         else {
             AdvertisementViewHolder holder = (AdvertisementViewHolder) viewHolder;
@@ -167,6 +211,20 @@ public class EventListAdapter extends RecyclerView.Adapter {
         public EventViewHolder(View itemView) {
             super(itemView);
             imageViewEvent = (ImageView) itemView.findViewById(R.id.imageViewEvent);
+            textViewEventTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
+            textViewActivationTime = (TextView) itemView.findViewById(R.id.textViewActivationTime);
+            textViewTimer = (TextView) itemView.findViewById(R.id.textViewTimerToEvent);
+        }
+    }
+
+    public static class EventWithoutPhotoViewHolder extends RecyclerView.ViewHolder{
+
+        TextView textViewEventTitle;
+        TextView textViewActivationTime;
+        TextView textViewTimer;
+
+        public EventWithoutPhotoViewHolder(View itemView) {
+            super(itemView);
             textViewEventTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
             textViewActivationTime = (TextView) itemView.findViewById(R.id.textViewActivationTime);
             textViewTimer = (TextView) itemView.findViewById(R.id.textViewTimerToEvent);

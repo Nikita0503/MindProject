@@ -94,7 +94,8 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
   void onClickSendToFriend(){
     Intent myIntent = new Intent(Intent.ACTION_SEND);
     myIntent.setType("text/plain");
-    myIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.mindproject.mindproject&event_id=" + mEventData.id);
+    myIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.help_me) + "\n"
+            + "https://play.google.com/store/apps/details?id=com.mindproject.mindproject&event_id=" + mEventData.id);
     startActivity(Intent.createChooser(myIntent, "Share with"));
   }
 

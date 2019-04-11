@@ -38,9 +38,6 @@
 
             <TextView
                 android:id="@+id/textViewTitle"
-                android:lines = "3"
-                android:ems = "3"
-                android:ellipsize="end"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

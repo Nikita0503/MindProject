@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mindproject.mindproject.BaseContract;
+import com.mindproject.mindproject.R;
 import com.mindproject.mindproject.model.MyMindAPIUtils;
 import com.mindproject.mindproject.model.data.AddRequestData;
 import com.mindproject.mindproject.model.data.EventData;
@@ -79,7 +80,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        mFragment.showMessage("Event has been created!");
+                        mFragment.showMessage(mFragment.getResources().getString(R.string.event_created));
                         mFragment.stopLoading();
                         //mFragment.finish();
                     }
@@ -148,8 +149,14 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
         Log.d("time_that_day", thatDayint+"");
         Log.d("time_hour", hourCurrent+"");
         Log.d("time_day", dayCurrent+"");
-        TimeZone tZ = TimeZone.getDefault();
-        int timeZone = tZ.getRawOffset()/3600000;
+
+        TimeZone tz = TimeZone.getDefault();
+        Date now = new Date();
+//Import part : x.0 for double number
+        double timeZone = tz.getOffset(now.getTime()) / 3600000.0;
+
+        //TimeZone tZ = TimeZone.getDefault();
+        //int timeZone = tZ.getRawOffset()/3600000;
         ArrayList<Integer> hours = new ArrayList<Integer>();
         ArrayList<Integer> eventHours = new ArrayList<Integer>();
         for(int i = 0; i < events.size(); i++){
@@ -190,8 +197,13 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
             SimpleDateFormat dateFormatBefore = new SimpleDateFormat("dd MMM yyyy H:mm", Locale.ENGLISH);
             Date date1 = dateFormatBefore.parse(date + " " + time);
             SimpleDateFormat dateFormatAfter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
-            TimeZone timeZone = TimeZone.getDefault();
-            int timeZoneInt = timeZone.getRawOffset()/3600000;
+            //TimeZone timeZone = TimeZone.getDefault();
+            //int timeZoneInt = timeZone.getRawOffset()/3600000;
+
+            TimeZone tz = TimeZone.getDefault();
+            Date now = new Date();
+//Import part : x.0 for double number
+            int timeZoneInt = tz.getOffset(now.getTime()) / 3600000;
             //Log.d("TIMEZONE_ADD", String.valueOf(timeZoneInt));
             String timeZoneStr = "";
             if(timeZoneInt > 0) {

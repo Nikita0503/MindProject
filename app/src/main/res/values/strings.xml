@@ -15,6 +15,7 @@
     <string name="email">Email</string>
     <string name="edit_profile">Edit profile</string>
 
+    <string name="vote">vote</string>
     <string name="votes">votes</string>
 
     <string name="notify">Notify me of the beginning</string>
@@ -28,4 +29,7 @@
     <string name="add">Add</string>
     <string name="profile">Profile</string>
     <string name="archive">Archive</string>
+
+    <string name="help_me">Support me, please</string>
+    <string name="event_created">Event has been created!</string>
 </resources>
