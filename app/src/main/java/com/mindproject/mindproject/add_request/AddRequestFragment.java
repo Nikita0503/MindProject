@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -74,7 +75,7 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
   @BindView(R.id.textViewTime)
   TextView textViewTime;
   @BindView(R.id.extended_edit_text_description)
-  ExtendedEditText editTextDescription;
+  EditText editTextDescription;
   @BindView(R.id.recycler_view_photos)
   RecyclerView recyclerViewPhotos;
   @BindView(R.id.timePicker)
@@ -124,28 +125,28 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     if(mAdapter.getFileList().size()<=5) {
       if(!title.equals("")) {
         if(!description.equals("")) {
-          if(!date.equals("Pick date")) {
-            if(!time.equals("Pick time")) {
+          if(!date.equals(getResources().getString(R.string.pick_date))) {
+            if(!time.equals(getResources().getString(R.string.pick_time))) {
               startLoading();
               mPresenter.generateData(mToken, title, description, date, time, mAdapter.getFileList());
             }else{
-              showMessage("Select time, please");
+              showMessage(getResources().getString(R.string.select_time));
               return;
             }
           }else {
-            showMessage("Select date, please");
+            showMessage(getResources().getString(R.string.select_date));
             return;
           }
         }else{
-          showMessage("The description must not be empty");
+          showMessage(getResources().getString(R.string.enter_description));
           return;
         }
       }else{
-        showMessage("The title must not be empty");
+        showMessage(getResources().getString(R.string.enter_title));
         return;
       }
     }else{
-      showMessage("Number of photos should not be more than 5");
+      showMessage(getResources().getString(R.string.photo_count));
       return;
     }
   }
@@ -175,7 +176,7 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
           SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
           textViewDate.setText(newFormat.format(date));
           datePicker.setVisibility(View.GONE);
-          textViewTime.setText("Pick time");
+          textViewTime.setText(getResources().getString(R.string.pick_time));
           textViewTime.setVisibility(View.GONE);
           mPresenter.fetchForDateEvents(mToken, date);
           rotateLoading.start();

@@ -35,55 +35,51 @@
 
 
 
-      <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
-          android:id="@+id/text_field_boxes_description"
+      <EditText
+          android:id="@+id/extended_edit_text_description"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="12dp"
           android:layout_marginStart="12dp"
           android:layout_marginTop="8dp"
-          app:labelText="@string/description"
+          android:hint="@string/description"
           android:textColor="@color/colorPrimaryDark"
-          app:secondaryColor="@color/colorPrimaryDark"
+          android:backgroundTint="@color/colorPrimary"
+          android:textColorHint="@color/colorPrimaryDark"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintHorizontal_bias="0.0"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent">
-        <studio.carbonylgroup.textfieldboxes.ExtendedEditText
-            android:id="@+id/extended_edit_text_description"
-            android:layout_width="wrap_content"
-            android:maxLength="100"
-            android:textColor="@color/colorPrimaryDark"
-            android:imeOptions="actionDone"
-            android:layout_height="wrap_content" />
 
-      </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+
+      </EditText>
 
       <Button
           android:id="@+id/buttonMakePhoto"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="12dp"
           android:layout_marginStart="12dp"
-          android:layout_marginTop="8dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginTop="18dp"
           android:background="@drawable/rect_button"
           android:drawableLeft="@drawable/ic_photo"
           android:elevation="2dp"
           android:padding="4dp"
           android:text="@string/make_a_photo"
           android:textColor="@color/colorPrimaryDark"
+          app:layout_constraintTop_toBottomOf="@id/timePicker"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintHorizontal_bias="0.0"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/timePicker" />
+          tools:layout_editor_absoluteY="144dp" />
 
       <Button
           android:id="@+id/buttonAddPhotos"
           android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="12dp"
+          android:layout_height="60dp"
           android:layout_marginStart="12dp"
           android:layout_marginTop="8dp"
+          android:layout_marginEnd="12dp"
           android:background="@drawable/rect_button"
           android:drawableLeft="@drawable/plus"
           android:elevation="2dp"
@@ -200,7 +196,7 @@
           android:textSize="16sp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/text_field_boxes_description" />
+          app:layout_constraintTop_toBottomOf="@+id/extended_edit_text_description" />
 
       <TextView
           android:id="@+id/textViewTime"

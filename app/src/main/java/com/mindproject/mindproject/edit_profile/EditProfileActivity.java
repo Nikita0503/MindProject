@@ -35,11 +35,6 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
     private Uri mImageURL;
     private EditProfilePresenter mPresenter;
 
-    @BindView(R.id.text_field_boxes_name)
-    TextFieldBoxes textFieldBoxesName;
-    @BindView(R.id.text_field_boxes_phone)
-    TextFieldBoxes textFieldBoxesPhone;
-    @BindView(R.id.text_field_boxes_email)
     TextFieldBoxes textFieldBoxesEmail;
     @BindView(R.id.extended_edit_text_name)
     ExtendedEditText extendedEditTextName;
@@ -69,13 +64,13 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
                     mPresenter.changeAvatar(mToken, mImageURL);
                     startLoading();
                 }else{
-                    showMessage("Not correct email");
+                    showMessage(getResources().getString(R.string.not_correct_email));
                 }
             }else{
-                showMessage("Not correct phone");
+                showMessage(getResources().getString(R.string.not_correct_phone));
             }
         }else{
-            showMessage("Not correct name");
+            showMessage(getResources().getString(R.string.not_correct_name));
         }
     }
 
@@ -152,8 +147,6 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
     }
 
     public void startLoading(){
-        textFieldBoxesName.setEnabled(false);
-        textFieldBoxesPhone.setEnabled(false);
         textFieldBoxesEmail.setEnabled(false);
         buttonEdit.setEnabled(false);
         imageViewUser.setEnabled(false);
@@ -161,8 +154,7 @@ public class EditProfileActivity extends AppCompatActivity implements BaseContra
     }
 
     public void stopLoading(){
-        textFieldBoxesName.setEnabled(true);
-        textFieldBoxesPhone.setEnabled(true);
+
         textFieldBoxesEmail.setEnabled(true);
         buttonEdit.setEnabled(true);
         imageViewUser.setEnabled(true);

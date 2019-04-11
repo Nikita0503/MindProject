@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -41,18 +42,12 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
     private Uri mImageURL;
     private EditProfilePresenter mPresenter;
 
-    @BindView(R.id.text_field_boxes_name)
-    TextFieldBoxes textFieldBoxesName;
-    @BindView(R.id.text_field_boxes_phone)
-    TextFieldBoxes textFieldBoxesPhone;
-    @BindView(R.id.text_field_boxes_email)
-    TextFieldBoxes textFieldBoxesEmail;
     @BindView(R.id.extended_edit_text_name)
-    ExtendedEditText extendedEditTextName;
+    EditText extendedEditTextName;
     @BindView(R.id.extended_edit_text_phone)
-    ExtendedEditText extendedEditTextPhone;
+    EditText extendedEditTextPhone;
     @BindView(R.id.extended_edit_text_email)
-    ExtendedEditText extendedEditTextEmail;
+    EditText extendedEditTextEmail;
     @BindView(R.id.imageViewUser)
     ImageView imageViewUser;
     @BindView(R.id.rotateloading)
@@ -75,13 +70,13 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
                     mPresenter.changeAvatar(mToken, mImageURL);
                     startLoading();
                 }else{
-                    showMessage("Not correct email");
+                    showMessage(getResources().getString(R.string.not_correct_email));
                 }
             }else{
-                showMessage("Not correct phone");
+                showMessage(getResources().getString(R.string.not_correct_phone));
             }
         }else{
-            showMessage("Not correct name");
+            showMessage(getResources().getString(R.string.not_correct_name));
         }
     }
 
@@ -185,18 +180,12 @@ public class EditProfileFragment extends Fragment implements BaseContract.BaseVi
     }
 
     public void startLoading(){
-        textFieldBoxesName.setEnabled(false);
-        textFieldBoxesPhone.setEnabled(false);
-        textFieldBoxesEmail.setEnabled(false);
         buttonEdit.setEnabled(false);
         imageViewUser.setEnabled(false);
         rotateLoading.start();
     }
 
     public void stopLoading(){
-        textFieldBoxesName.setEnabled(true);
-        textFieldBoxesPhone.setEnabled(true);
-        textFieldBoxesEmail.setEnabled(true);
         buttonEdit.setEnabled(true);
         imageViewUser.setEnabled(true);
         rotateLoading.stop();

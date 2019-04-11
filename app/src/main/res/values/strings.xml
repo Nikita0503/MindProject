@@ -33,4 +33,15 @@
     <string name="help_me">Support me, please</string>
     <string name="event_created">Event has been created!</string>
     <string name="you_can_not_support">You can support through</string>
+
+    <string name="not_correct_name">Not correct name</string>
+    <string name="not_correct_phone">Not correct phone</string>
+    <string name="not_correct_email">Not correct email</string>
+
+    <string name="select_time">Select time, please</string>
+    <string name="select_date">Select date, please</string>
+    <string name="enter_description">The description must not be empty</string>
+    <string name="enter_title">The title must not be empty</string>
+    <string name="photo_count">Number of photos should not be more than 5</string>
+
 </resources>

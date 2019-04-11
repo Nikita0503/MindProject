@@ -33,4 +33,15 @@
     <string name="help_me">Поддержи меня, пожалуйста</string>
     <string name="event_created">Событие создано успешно!</string>
     <string name="you_can_not_support">Поддрежать сможете через</string>
+
+    <string name="not_correct_name">Некорректно введено имя</string>
+    <string name="not_correct_phone">Некорректно введен номер телефона</string>
+    <string name="not_correct_email">Некорректно введен email</string>
+
+    <string name="select_time">Выберите время, пожалуйста</string>
+    <string name="select_date">Выберите дату, пожалуйста</string>
+    <string name="enter_description">Описание не должно быть пустым</string>
+    <string name="enter_title">Название не должно быть пустым</string>
+    <string name="photo_count">Количество фото не должно быть больше чем 5</string>
+
 </resources>
