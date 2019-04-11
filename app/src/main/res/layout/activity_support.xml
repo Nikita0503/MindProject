@@ -98,14 +98,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textViewDescription"
                 android:textColor="@color/colorPrimaryDark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:text="Description"
                 android:textSize="18dp"/>
 
@@ -213,6 +213,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/buttonSupport"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonSupport" />
+
+            <Button
+                android:id="@+id/buttonEmpty"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@null"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonSupport"
+                app:layout_constraintEnd_toEndOf="@+id/buttonSupport"
+                app:layout_constraintStart_toStartOf="@+id/buttonSupport"
+                app:layout_constraintTop_toTopOf="@+id/buttonSupport" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

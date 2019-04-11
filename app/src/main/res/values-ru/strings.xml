@@ -32,4 +32,5 @@
 
     <string name="help_me">Поддержи меня, пожалуйста</string>
     <string name="event_created">Событие создано успешно!</string>
+    <string name="you_can_not_support">Поддрежать сможете через</string>
 </resources>

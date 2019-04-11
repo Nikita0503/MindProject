@@ -126,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         }
     }
 
+    public void openListEventFragment(){
+        bottomNavigation.setSelectedItemId(R.id.eventsFragment);
+    }
+
     public void openSupportFragmentByInvitation(EventData event){
         SupportFragment supportFragment = new SupportFragment();
         supportFragment.setToken(mToken);

@@ -1,11 +1,13 @@
 package com.mindproject.mindproject.support;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -86,6 +88,8 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
   Button buttonSendToFriend;
   @BindView(R.id.buttonSupport)
   Button buttonSupport;
+  @BindView(R.id.buttonEmpty)
+  Button buttonEmpty;
   @BindView(R.id.buttonFillCircle)
   Button buttonCircle;
   @BindView(R.id.progressBar)
@@ -97,6 +101,23 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
     myIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.help_me) + "\n"
             + "https://play.google.com/store/apps/details?id=com.mindproject.mindproject&event_id=" + mEventData.id);
     startActivity(Intent.createChooser(myIntent, "Share with"));
+  }
+  @OnClick(R.id.textViewDescription)
+  void onClickDescription(){
+    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    builder
+            .setMessage(mEventData.description);
+    AlertDialog alert = builder.create();
+    alert.show();
+  }
+  @OnClick(R.id.buttonEmpty)
+  void onClickEmpty(){
+    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    builder
+            .setMessage(getResources().getString(R.string.you_can_not_support)
+                    +" "+textViewRemainingTime.getText().toString());
+    AlertDialog alert = builder.create();
+    alert.show();
   }
 
   @Override
@@ -316,6 +337,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
           try {
             if(mIsAnimated == 1){
               if(buttonCircle.getAnimation()==null) {
+                buttonEmpty.setVisibility(View.GONE);
                 buttonCircle.startAnimation(mAnimation);
               }
             }
@@ -331,6 +353,7 @@ public class SupportFragment extends Fragment implements BaseContract.BaseView {
               buttonSupport.setEnabled(false);
               textViewRemainingTime.setText(String.format("%02d:%02d:%02d", difference / 1000 / 3600, difference / 1000 / 60 % 60, difference / 1000 % 60));
               buttonSupport.setText(getResources().getString(R.string.not_active));
+              buttonEmpty.setVisibility(View.VISIBLE);
               buttonCircle.setVisibility(View.INVISIBLE);
               buttonCircle.setEnabled(false);
             }else {

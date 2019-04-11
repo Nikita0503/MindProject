@@ -27,6 +27,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mindproject.mindproject.BaseContract;
 import com.mindproject.mindproject.R;
+import com.mindproject.mindproject.main.MainActivity;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -266,6 +267,12 @@ public class AddRequestFragment extends Fragment implements BaseContract.BaseVie
     recyclerViewtimePicker.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerViewtimePicker.setAdapter(timeAdapter);
     rotateLoading.stop();
+  }
+
+  public void showMainPage(){
+    MainActivity activity = (MainActivity) getActivity();
+    activity.openListEventFragment();
+    editTextDescription.setText("");
   }
 
   public void startLoading(){

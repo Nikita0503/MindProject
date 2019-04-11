@@ -82,6 +82,7 @@ public class AddRequestPresenter implements BaseContract.BasePresenter {
                     public void onComplete() {
                         mFragment.showMessage(mFragment.getResources().getString(R.string.event_created));
                         mFragment.stopLoading();
+                        mFragment.showMainPage();
                         //mFragment.finish();
                     }
 
