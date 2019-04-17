@@ -53,7 +53,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyMindAPIUtils {
 
-    public static final String BASE_URL = "http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com/api/v1/";
+    //public static final String BASE_URL = "http://ec2-63-34-126-19.eu-west-1.compute.amazonaws.com/api/v1/";
+    public static final String BASE_URL = "https://in-mind.sooprit.com/api/v1/";
 
     public Single<UserData> getToken(String deviceId){
         Retrofit retrofit = getClient(BASE_URL);
